@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="ta">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UZHAVAN உழவன் — every farmer's satellite</title>
+<meta name="description" content="Crop-rotation advice for a village, built on open NASA data. Tamil and English.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Tamil:wdth,wght@75..125,400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{
+  --wash:#FBF0C4;      /* turmeric-washed cloth */
+  --paper:#FFFCF0;
+  --ink:#16261D;       /* wet-leaf black */
+  --ink2:#4A5A50;
+  --leaf:#1F6B3A;
+  --kumkum:#B4232A;
+  --manjal:#E2A300;    /* turmeric */
+  --rain:#2C6FA8;
+  --line:#DCCB8E;
+  --font:"Anek Tamil","Nirmala UI","Latha","Noto Sans Tamil",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--wash);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.5;padding-bottom:128px}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--rain);outline-offset:2px}
+h1,h2,h3{margin:0;line-height:1.15}
+h2{font-size:1.55rem;font-weight:750;font-stretch:112%}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+.muted{color:var(--ink2);font-size:.9rem}
+
+/* top band */
+.band{background:var(--ink);color:#FFF8DC;
+  background-image:radial-gradient(circle,#ffffff2b 1.6px,transparent 2px);background-size:22px 22px}
+.bar{display:flex;align-items:center;gap:12px;padding:12px 0;flex-wrap:wrap}
+.brand{font-weight:800;font-stretch:120%;font-size:1.25rem;letter-spacing:.01em}
+.brand span{color:var(--manjal)}
+.grow{flex:1}
+.lang{display:flex;border:1.5px solid #FFF8DC66;border-radius:999px;overflow:hidden}
+.lang button{background:none;border:0;padding:6px 14px;cursor:pointer;color:#FFF8DC}
+.lang button[aria-pressed=true]{background:var(--manjal);color:var(--ink);font-weight:700}
+.status{font-size:.82rem;padding:4px 10px;border-radius:999px;background:#ffffff1c}
+.status.live::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#6EE7A0;margin-right:6px}
+.status.saved::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--manjal);margin-right:6px}
+.hero{padding:26px 0 30px;display:grid;gap:22px}
+.hero h1{font-size:clamp(2.1rem,5vw,3.7rem);font-weight:800;font-stretch:118%;line-height:1.08}
+.hero p.lead{max-width:56ch;font-size:1.08rem;color:#FFF8DCd9;margin-top:10px}
+.villages{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.villages button{background:#FFF8DC14;border:1.5px solid #FFF8DC55;color:#FFF8DC;border-radius:14px;padding:10px 14px;text-align:left;cursor:pointer;min-width:150px}
+.villages button b{display:block;font-size:1.05rem}
+.villages button small{opacity:.8}
+.villages button[aria-pressed=true]{background:var(--manjal);border-color:var(--manjal);color:var(--ink)}
+#map{height:270px;border-radius:14px;overflow:hidden;background:#0d1a13;border:1.5px solid #FFF8DC33}
+.mapnote{font-size:.82rem;color:#FFF8DCb0;margin-top:6px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.mapnote label{display:flex;gap:6px;align-items:center;cursor:pointer}
+@media(min-width:900px){.hero{grid-template-columns:1.1fr .9fr;align-items:end}#map{height:310px}}
+
+section.block{padding:30px 0 6px}
+.sechead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.src{font-size:.82rem;color:var(--ink2)}
+.src a{color:inherit}
+.panel{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:16px}
+.two{display:grid;gap:16px}
+@media(min-width:900px){.two{grid-template-columns:1.6fr 1fr}}
+
+/* chart */
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem;margin-top:8px;color:var(--ink2)}
+.sw{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.facts div{border-top:2px solid var(--ink);padding-top:6px}
+.facts b{display:block;font-size:1.35rem;font-stretch:112%;line-height:1.1}
+.facts span{font-size:.8rem;color:var(--ink2)}
+
+/* soil */
+.soilrow{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.soilrow:last-of-type{border-bottom:0}
+.soilrow b{font-size:1.1rem}
+.tex{display:flex;height:16px;border-radius:8px;overflow:hidden;margin:6px 0 4px}
+.tex i{display:block}
+
+/* advisor */
+.controls{display:grid;gap:14px}
+@media(min-width:900px){.controls{grid-template-columns:1fr 1fr 1.6fr;align-items:start}}
+.field label{display:block;font-size:.88rem;font-weight:650;margin-bottom:4px}
+select{width:100%;padding:9px 10px;border-radius:10px;border:1.5px solid var(--line);background:#fff}
+.prio{display:grid;gap:8px}
+.prio .row{display:grid;grid-template-columns:118px 1fr 44px;gap:8px;align-items:center;font-size:.9rem}
+input[type=range]{width:100%;accent-color:var(--leaf)}
+.cards{display:grid;gap:14px;margin-top:16px}
+@media(min-width:900px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;position:relative}
+.card.first{border-color:var(--leaf);border-width:2.5px}
+.card .rank{font-size:.82rem;color:var(--ink2)}
+.card .name{font-size:1.5rem;font-weight:760;font-stretch:110%;line-height:1.15}
+.card .name small{font-size:.85rem;font-weight:500;color:var(--ink2);display:block}
+.score{position:absolute;right:14px;top:12px;text-align:right}
+.score b{font-size:2.3rem;font-weight:800;font-stretch:118%;line-height:1}
+.score span{font-size:.8rem;color:var(--ink2)}
+.ing{margin-top:12px;display:grid;gap:7px}
+.ing .r{display:grid;grid-template-columns:104px 1fr 38px;gap:8px;align-items:center;font-size:.85rem}
+.track{height:10px;background:#EFE3B4;border-radius:5px;overflow:hidden}
+.track i{display:block;height:100%;border-radius:5px;transition:width .35s}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:.78rem;padding:3px 9px;border-radius:999px;background:#EFE3B4}
+.chip.bad{background:#F6D5D3;color:#7d1218}
+.chip.good{background:#D3EBD9;color:#12491f}
+.chip.warn{background:#FCE3A6;color:#6a4a00}
+details.math{margin-top:10px;font-size:.84rem}
+details.math summary{cursor:pointer;color:var(--leaf);font-weight:650}
+details.math pre{white-space:pre-wrap;font-family:inherit;background:#F6ECC6;border-radius:10px;padding:10px;margin:8px 0 0;line-height:1.55}
+.rest{margin-top:14px}
+.rest table{width:100%;border-collapse:collapse;font-size:.9rem}
+.rest td,.rest th{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left}
+.rest td.n,.rest th.n{text-align:right;font-variant-numeric:tabular-nums}
+
+/* chat */
+.chat{display:grid;gap:10px}
+.log{min-height:120px;max-height:380px;overflow:auto;display:grid;gap:8px;align-content:start}
+.msg{max-width:88%;padding:10px 13px;border-radius:14px;white-space:pre-wrap}
+.msg.q{justify-self:end;background:var(--ink);color:#FFF8DC;border-bottom-right-radius:4px}
+.msg.a{background:#F1E6B8;border-bottom-left-radius:4px}
+.msg .tag{display:block;font-size:.74rem;color:var(--ink2);margin-top:6px}
+.ask{display:flex;gap:8px}
+.ask input{flex:1;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;min-width:0}
+.btn{background:var(--leaf);color:#fff;border:0;border-radius:12px;padding:11px 16px;font-weight:700;cursor:pointer}
+.btn.ghost{background:none;color:var(--leaf);border:1.5px solid var(--leaf)}
+.sugg{display:flex;gap:6px;flex-wrap:wrap}
+.sugg button{background:none;border:1.5px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:.88rem}
+.aiset{font-size:.85rem}
+.aiset summary{cursor:pointer;color:var(--ink2)}
+.aiset .ask{margin-top:8px}
+
+/* proof */
+.tests{display:grid;gap:8px}
+.test{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:start;font-size:.92rem;padding:8px 0;border-bottom:1px dashed var(--line)}
+.test:last-child{border-bottom:0}
+.ok{color:var(--leaf);font-weight:800}.no{color:var(--kumkum);font-weight:800}
+ul.data{margin:0;padding-left:18px;font-size:.92rem}
+ul.data li{margin:5px 0}
+ul.data a{color:var(--leaf)}
+
+/* time machine */
+.tm{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#FFF8DC;z-index:1000;border-top:3px solid var(--manjal)}
+.tm .in{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:center;padding:10px 16px 12px}
+.tm .yr{font-size:2.4rem;font-weight:800;font-stretch:122%;line-height:1;color:var(--manjal);font-variant-numeric:tabular-nums;min-width:4.6ch}
+.tm .lab{font-size:.8rem;opacity:.85}
+.tm input[type=range]{accent-color:var(--manjal);height:28px}
+.ticks{display:flex;justify-content:space-between;font-size:.74rem;opacity:.8;position:relative;height:1.1em}
+.ticks span{position:absolute;transform:translateX(-50%)}
+.tm .delta{grid-column:1/-1;font-size:.82rem;opacity:.92}
+.tm .delta b{color:var(--manjal)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="wrap">
+    <div class="bar">
+      <div class="brand">உழவன் <span>UZHAVAN</span></div>
+      <div class="grow"></div>
+      <span id="status" class="status saved"></span>
+      <div class="lang" role="group" aria-label="Language">
+        <button id="lang-ta" aria-pressed="true">தமிழ்</button>
+        <button id="lang-en" aria-pressed="false">English</button>
+      </div>
+    </div>
+    <div class="hero">
+      <div>
+        <h1 data-t="hero"></h1>
+        <p class="lead" data-t="lead"></p>
+        <div class="villages" id="villages"></div>
+      </div>
+      <div>
+        <div id="map"></div>
+        <div class="mapnote">
+          <label><input type="checkbox" id="ndvi" checked> <span data-t="ndvi"></span></label>
+          <span data-t="mapnote"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="block wrap" id="dash">
+  <div class="sechead"><h2 id="dashTitle"></h2><span class="src" id="dashSrc"></span></div>
+  <div class="two">
+    <div class="panel chart">
+      <div id="chart"></div>
+      <div class="legend" id="legend"></div>
+      <div class="facts" id="facts"></div>
+    </div>
+    <div class="panel" id="soil"></div>
+  </div>
+</section>
+
+<section class="block wrap" id="advisor">
+  <div class="sechead"><h2 data-t="advTitle"></h2><span class="src" data-t="advSrc"></span></div>
+  <div class="panel controls">
+    <div class="field"><label for="sow" data-t="sowLabel"></label><select id="sow"></select></div>
+    <div class="field"><label for="prev" data-t="prevLabel"></label><select id="prev"></select></div>
+    <div class="field">
+      <label data-t="prioLabel"></label>
+      <div class="prio">
+        <div class="row"><span data-t="wWater"></span><input type="range" id="w-water" min="0" max="10" value="5" aria-label="Save water"><b id="p-water"></b></div>
+        <div class="row"><span data-t="wSoil"></span><input type="range" id="w-soil" min="0" max="10" value="5" aria-label="Soil health"><b id="p-soil"></b></div>
+        <div class="row"><span data-t="wProfit"></span><input type="range" id="w-profit" min="0" max="10" value="5" aria-label="Profit"><b id="p-profit"></b></div>
+      </div>
+    </div>
+  </div>
+  <div class="cards" id="cards"></div>
+  <div class="panel rest" id="rest"></div>
+</section>
+
+<section class="block wrap" id="chatsec">
+  <div class="sechead"><h2 data-t="chatTitle"></h2><span class="src" data-t="chatSrc"></span></div>
+  <div class="panel chat">
+    <div class="log" id="log" aria-live="polite"></div>
+    <div class="sugg" id="sugg"></div>
+    <form class="ask" id="askform">
+      <input id="q" autocomplete="off">
+      <button class="btn" data-t="askBtn"></button>
+    </form>
+    <details class="aiset">
+      <summary data-t="aiSummary"></summary>
+      <p class="muted" data-t="aiNote" style="margin-top:6px"></p>
+      <div class="ask">
+        <input id="aikey" type="password" autocomplete="off" placeholder="sk-ant-…">
+        <button class="btn ghost" id="aisave" type="button" data-t="aiSave"></button>
+      </div>
+      <p class="muted" id="aistate" style="margin-top:6px"></p>
+    </details>
+  </div>
+</section>
+
+<section class="block wrap" id="proof">
+  <div class="sechead"><h2 data-t="proofTitle"></h2></div>
+  <div class="two">
+    <div class="panel">
+      <h3 data-t="testsTitle"></h3>
+      <p class="muted" data-t="testsNote" style="margin:4px 0 8px"></p>
+      <div class="tests" id="tests"></div>
+    </div>
+    <div class="panel">
+      <h3 data-t="dataTitle"></h3>
+      <ul class="data" id="datalist"></ul>
+    </div>
+  </div>
+</section>
+
+<div class="tm" role="region" aria-label="Climate Time Machine">
+  <div class="wrap in">
+    <div><div class="lab" data-t="tmLabel"></div><div class="yr" id="yr">2026</div></div>
+    <div>
+      <input type="range" id="year" min="2026" max="2050" step="1" value="2026" aria-label="Year">
+      <div class="ticks"><span style="left:16.67%">2030</span><span style="left:58.33%">2040</span><span style="left:100%;transform:translateX(-100%)">2050</span></div>
+    </div>
+    <div class="delta" id="delta"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+"use strict";
+/* ============================================================
+   DATA
+   ============================================================ */
+const DAYS=[31,28.25,31,30,31,30,31,31,30,31,30,31];
+const MKEY=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+const MON={en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+           ta:["ஜன","பிப்","மார்","ஏப்","மே","ஜூன்","ஜூலை","ஆக","செப்","அக்","நவ","டிச"]};
+const MONL={en:["January","February","March","April","May","June","July","August","September","October","November","December"],
+            ta:["ஜனவரி","பிப்ரவரி","மார்ச்","ஏப்ரல்","மே","ஜூன்","ஜூலை","ஆகஸ்ட்","செப்டம்பர்","அக்டோபர்","நவம்பர்","டிசம்பர்"]};
+
+/* Saved copy of NASA POWER climatology (API v2.10.1, MERRA-2, Jan 2001 - Dec 2025),
+   fetched 15 Nov 2026. PRECTOTCORR in mm/day, T2M and T2M_MAX in deg C.
+   Soil: ISRIC SoilGrids v2.0, 0-5 cm mean, nearest cell with data. */
+const VILLAGES={
+ vellode:{lat:11.34,lon:77.72,name:{en:"Vellode",ta:"வெள்ளோடு"},place:{en:"Erode, Tamil Nadu, India",ta:"ஈரோடு, தமிழ்நாடு"},
+  note:{en:"Rain-shadow; north-east monsoon",ta:"மழை மறைவுப் பகுதி; வடகிழக்குப் பருவமழை"},
+  p:[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],
+  t:[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],
+  tx:[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],
+  soil:{lat:11.32,lon:77.75,clay:31.2,sand:35.3,silt:33.4,ph:7.1,soc:20.2},
+  scen:{dT:1.3,dR:0.06},prev:"paddy"},
+ fresno:{lat:36.60,lon:-119.90,name:{en:"Fresno County",ta:"ஃப்ரெஸ்னோ"},place:{en:"California, USA",ta:"கலிபோர்னியா, அமெரிக்கா"},
+  note:{en:"Mediterranean; irrigated",ta:"மத்தியதரைக் காலநிலை; பாசன விவசாயம்"},
+  p:[1.8,1.74,1.52,0.91,0.39,0.08,0.03,0.02,0.05,0.47,0.88,1.88],
+  t:[9.46,10.65,13.27,16.03,21.06,26.45,30.24,28.82,25.7,19.69,13.48,9.12],
+  tx:[26.33,27.44,33.34,38.03,44.65,46.98,48.42,47.0,45.76,40.48,32.35,25.18],
+  soil:{lat:36.60,lon:-119.90,clay:18.7,sand:42.4,silt:38.9,ph:7.8,soc:19.0},
+  scen:{dT:1.8,dR:-0.06},prev:"tomato"},
+ kano:{lat:12.00,lon:8.52,name:{en:"Kano",ta:"கானோ"},place:{en:"Nigeria",ta:"நைஜீரியா"},
+  note:{en:"Sahel; one rainy season",ta:"சஹேல்; ஒரே மழைக்காலம்"},
+  p:[0,0,0.26,0.61,1.55,2.37,4.63,6.59,3.5,0.73,0.25,0],
+  t:[20.75,24.27,27.87,30.8,31.31,30.17,28.13,26.44,27.04,27.08,24.09,21.24],
+  tx:[38.92,40.64,42.6,44.05,43.12,43.02,41.9,39.32,40.0,39.89,38.69,37.46],
+  soil:{lat:11.95,lon:8.45,clay:16.0,sand:60.3,silt:23.7,ph:6.1,soc:7.6},
+  scen:{dT:1.6,dR:0.04},prev:"millet"}
+};
+const SAVED_PERIOD="2001–2025";
+
+/* CROP TABLE - agronomy placeholders (FAO-56 style typical values).
+   need = seasonal water need (mm); dur = months in the field;
+   hot / cold = mean monthly temperature limits (deg C); soil = effect on soil 0-1.
+   >>> Agronomy role: replace with TNAU / KVK table values and re-check with the farmer. <<< */
+const CROPS={
+ turmeric:{en:"Turmeric",ta:"மஞ்சள்",fam:"ginger",dur:9,need:1400,hot:30,cold:18,soil:0.2,exh:true,al:["turmeric","manjal","மஞ்சள்"]},
+ paddy:{en:"Paddy",ta:"நெல்",fam:"cereal",dur:4,need:1200,hot:31,cold:18,soil:0.15,exh:true,al:["paddy","rice","nel","நெல்"]},
+ sugarcane:{en:"Sugarcane",ta:"கரும்பு",fam:"cereal",dur:12,need:1800,hot:32,cold:16,soil:0.1,exh:true,al:["sugarcane","karumbu","கரும்பு"]},
+ groundnut:{en:"Groundnut",ta:"நிலக்கடலை",fam:"legume",dur:4,need:500,hot:31,cold:18,soil:0.9,leg:true,al:["groundnut","peanut","நிலக்கடலை","கடலை"]},
+ blackgram:{en:"Black gram",ta:"உளுந்து",fam:"legume",dur:3,need:290,hot:31,cold:18,soil:0.9,leg:true,al:["black gram","blackgram","urad","ulundu","உளுந்து"]},
+ greengram:{en:"Green gram",ta:"பச்சைப்பயறு",fam:"legume",dur:3,need:280,hot:32,cold:18,soil:0.9,leg:true,al:["green gram","greengram","moong","mung","பச்சைப்பயறு","பாசிப்பயறு"]},
+ cowpea:{en:"Cowpea",ta:"தட்டைப்பயறு",fam:"legume",dur:3,need:320,hot:33,cold:18,soil:0.9,leg:true,al:["cowpea","blackeye","தட்டைப்பயறு","காராமணி"]},
+ soybean:{en:"Soybean",ta:"சோயா",fam:"legume",dur:4,need:500,hot:30,cold:15,soil:0.85,leg:true,al:["soybean","soya","சோயா"]},
+ alfalfa:{en:"Alfalfa",ta:"குதிரைமசால்",fam:"legume",dur:8,need:1100,hot:30,cold:5,soil:0.95,leg:true,al:["alfalfa","lucerne","குதிரைமசால்"]},
+ maize:{en:"Maize",ta:"மக்காச்சோளம்",fam:"cereal",dur:4,need:550,hot:30,cold:12,soil:0.4,al:["maize","corn","மக்காச்சோளம்"]},
+ sorghum:{en:"Sorghum",ta:"சோளம்",fam:"cereal",dur:4,need:450,hot:33,cold:15,soil:0.5,al:["sorghum","cholam","jowar","சோளம்"]},
+ millet:{en:"Pearl millet",ta:"கம்பு",fam:"cereal",dur:3,need:350,hot:34,cold:18,soil:0.5,al:["millet","kambu","bajra","கம்பு"]},
+ wheat:{en:"Wheat",ta:"கோதுமை",fam:"cereal",dur:5,need:480,hot:24,cold:3,soil:0.4,al:["wheat","கோதுமை"]},
+ cotton:{en:"Cotton",ta:"பருத்தி",fam:"mallow",dur:6,need:750,hot:32,cold:16,soil:0.35,al:["cotton","paruthi","பருத்தி"]},
+ sesame:{en:"Sesame",ta:"எள்",fam:"sesame",dur:3,need:320,hot:32,cold:18,soil:0.5,al:["sesame","gingelly","ellu","எள்"]},
+ tomato:{en:"Tomato",ta:"தக்காளி",fam:"nightshade",dur:4,need:600,hot:30,cold:12,soil:0.35,al:["tomato","தக்காளி"]},
+ onion:{en:"Onion",ta:"வெங்காயம்",fam:"allium",dur:4,need:450,hot:29,cold:8,soil:0.4,al:["onion","வெங்காயம்"]},
+ garlic:{en:"Garlic",ta:"பூண்டு",fam:"allium",dur:7,need:450,hot:25,cold:3,soil:0.4,al:["garlic","பூண்டு"]}
+};
+/* Per-region: [crop, relative gross margin 1-5, irrigated?]  (placeholders - validate locally) */
+const REGION={
+ vellode:[["turmeric",4,1],["paddy",3,1],["sugarcane",4,1],["groundnut",3,0],["blackgram",2,0],["greengram",2,0],["maize",3,0],["sorghum",2,0],["cotton",3,0],["sesame",2,0],["onion",3,1]],
+ fresno:[["tomato",4,1],["cotton",3,1],["wheat",2,0],["alfalfa",3,1],["garlic",4,1],["maize",2,1],["onion",3,1],["cowpea",2,1]],
+ kano:[["millet",2,0],["sorghum",2,0],["cowpea",3,0],["groundnut",3,0],["maize",3,0],["paddy",4,1],["sesame",3,0],["soybean",3,0],["tomato",4,1],["onion",4,1]]
+};
+const USABLE=0.7, TOPUP=0.45, HEAT_K=0.6, HEAT_SPAN=4, ROT_PEN=50, LEG_BONUS=8;
+
+/* ============================================================
+   TEXT
+   ============================================================ */
+const TX={
+en:{hero:"What should this field grow next?",
+ lead:"Free NASA satellites have watched every field on Earth for decades. Pick a village to see its rain, heat and soil, and the three crops that fit next season.",
+ ndvi:"Show crop greenness (NASA MODIS NDVI)",mapnote:"Tap anywhere on the map to load that place live.",
+ dashTitle:v=>`${v} village health`,dashSrc:(p,live)=>`Rain and temperature: NASA POWER climatology ${p}${live?" (live)":" (saved copy)"}`,
+ rain:"Monthly rain (mm)",temp:"Mean temperature (°C)",base:"Today's climate",
+ fAnn:"rain per year",fWet:"wettest month",fHot:"hottest month (mean)",
+ soilTitle:"Soil card",soilSrc:(live)=>`ISRIC SoilGrids, top 5 cm${live?" (live)":" (saved copy)"}`,texture:"Texture",ph:"pH",soc:"Organic carbon",
+ sand:"Sand",silt:"Silt",clay:"Clay",soilNone:"No soil data for this spot (SoilGrids has no value here).",
+ phAcid:"acidic",phNeutral:"near neutral",phAlk:"alkaline",socLow:"low",socMed:"medium",socHigh:"good",
+ advTitle:"Crop rotation advisor",advSrc:"Score = your priorities × (water fit, soil effect, profit), then temperature and rotation rules",
+ sowLabel:"Sowing month",prevLabel:"Crop just harvested",none:"None / fallow",prioLabel:"What matters most to you",
+ wWater:"Save water",wSoil:"Soil health",wProfit:"Profit",
+ rank:n=>`Choice ${n}`,of100:"out of 100",iWater:"Water fit",iSoil:"Soil effect",iProfit:"Profit",
+ cHeat:p=>`Heat risk ${p}%`,cCold:p=>`Cold risk ${p}%`,cRot:"Same family as last crop −50",cLeg:"Legume after hungry crop +8",cIrr:"Needs assured irrigation",cOk:"No temperature stress",
+ math:"See the math",restTitle:"All crops for this village",crop:"Crop",window:"In the field",
+ chatTitle:"Ask your field",chatSrc:"Answers use only this village's data and scores",
+ qph:"Can I sow turmeric this month?",askBtn:"Ask",
+ s1:"Can I sow turmeric this month?",s2:"What should I grow next?",s3:"What happens in 2050?",s4:"How is my soil?",
+ aiSummary:"Connect an AI model (optional)",aiNote:"Without a key, answers are computed by the scoring engine and work offline. With an Anthropic API key, the model is given only this village's numbers and told to refuse anything beyond them. The key stays in this browser.",
+ aiSave:"Save key",aiOn:"AI model connected.",aiOff:"Using the offline answer engine.",
+ tagRule:"Offline answer engine",tagAI:"AI model, grounded in village data",tagFail:"AI unreachable; offline answer engine",
+ proofTitle:"Check our work",testsTitle:"Engine self-test",testsNote:"These run in your browser right now, on the Vellode data, with equal priorities.",
+ dataTitle:"Where every number comes from",
+ tmLabel:"Climate time machine",
+ deltaNow:"Today's climate. Drag to see 2030, 2040 and 2050.",
+ delta:(dt,dr)=>`<b>+${dt} °C</b>, rain <b>${dr>=0?"+":""}${dr}%</b>. Illustrative scenario shift in the direction of IPCC AR6; to be replaced with NASA NEX-GDDP-CMIP6 values.`,
+ custom:"Custom location",loading:"Loading NASA POWER…",failCustom:"Could not reach NASA POWER for that spot. Check the connection and tap again.",
+ nearest:v=>`Crop list borrowed from ${v}`,
+ live:"Live NASA data",saved:"Saved NASA data (offline-ready)"},
+ta:{hero:"இந்த வயலில் அடுத்து எந்தப் பயிர்?",
+ lead:"நாசா செயற்கைக்கோள்கள் பல ஆண்டுகளாக ஒவ்வொரு வயலையும் கவனித்து வருகின்றன. உங்கள் கிராமத்தைத் தேர்ந்தெடுங்கள்; மழை, வெப்பம், மண், அடுத்த பருவத்துக்கு ஏற்ற மூன்று பயிர்கள் தெரியும்.",
+ ndvi:"பயிர்ப் பசுமையைக் காட்டு (NASA MODIS NDVI)",mapnote:"வரைபடத்தில் எந்த இடத்தையும் தொட்டால் அந்த இடத்தின் தரவு வரும்.",
+ dashTitle:v=>`${v} கிராம நலம்`,dashSrc:(p,live)=>`மழை, வெப்பநிலை: NASA POWER ${p} சராசரி${live?" (நேரடி)":" (சேமித்த நகல்)"}`,
+ rain:"மாத மழை (மி.மீ)",temp:"சராசரி வெப்பநிலை (°C)",base:"இன்றைய காலநிலை",
+ fAnn:"ஆண்டு மழை",fWet:"அதிக மழை மாதம்",fHot:"அதிக வெப்ப மாதம் (சராசரி)",
+ soilTitle:"மண் அட்டை",soilSrc:(live)=>`ISRIC SoilGrids, மேல் 5 செ.மீ${live?" (நேரடி)":" (சேமித்த நகல்)"}`,texture:"மண் வகை",ph:"கார அமில நிலை (pH)",soc:"கரிமக் கரி",
+ sand:"மணல்",silt:"வண்டல்",clay:"களி",soilNone:"இந்த இடத்துக்கு மண் தரவு இல்லை.",
+ phAcid:"அமிலத்தன்மை",phNeutral:"நடுநிலை",phAlk:"காரத்தன்மை",socLow:"குறைவு",socMed:"நடுத்தரம்",socHigh:"நல்லது",
+ advTitle:"பயிர் சுழற்சி ஆலோசகர்",advSrc:"மதிப்பெண் = உங்கள் முன்னுரிமை × (நீர் பொருத்தம், மண் விளைவு, லாபம்); பிறகு வெப்பம், சுழற்சி விதிகள்",
+ sowLabel:"விதைக்கும் மாதம்",prevLabel:"இப்போது அறுவடை செய்த பயிர்",none:"இல்லை / தரிசு",prioLabel:"உங்களுக்கு எது முக்கியம்",
+ wWater:"நீர் சேமிப்பு",wSoil:"மண் வளம்",wProfit:"லாபம்",
+ rank:n=>`தேர்வு ${n}`,of100:"100-க்கு",iWater:"நீர் பொருத்தம்",iSoil:"மண் விளைவு",iProfit:"லாபம்",
+ cHeat:p=>`வெப்ப அபாயம் ${p}%`,cCold:p=>`குளிர் அபாயம் ${p}%`,cRot:"முந்தைய பயிரின் அதே குடும்பம் −50",cLeg:"சத்து உறிஞ்சும் பயிருக்குப் பின் பயறு +8",cIrr:"உறுதியான பாசனம் தேவை",cOk:"வெப்ப அழுத்தம் இல்லை",
+ math:"கணக்கைப் பாருங்கள்",restTitle:"இந்தக் கிராமத்துக்கான எல்லாப் பயிர்களும்",crop:"பயிர்",window:"வயலில் இருக்கும் காலம்",
+ chatTitle:"உங்கள் வயலிடம் கேளுங்கள்",chatSrc:"இந்தக் கிராமத்தின் தரவு, மதிப்பெண்களை மட்டுமே வைத்துப் பதில்",
+ qph:"இந்த மாதம் மஞ்சள் விதைக்கலாமா?",askBtn:"கேள்",
+ s1:"இந்த மாதம் மஞ்சள் விதைக்கலாமா?",s2:"அடுத்து எந்தப் பயிர் போடலாம்?",s3:"2050-இல் என்ன ஆகும்?",s4:"என் மண் எப்படி இருக்கிறது?",
+ aiSummary:"AI மாதிரியை இணைக்க (விருப்பம்)",aiNote:"சாவி இல்லாமல், மதிப்பெண் இயந்திரமே பதில் தரும்; இணையம் இல்லாமலும் வேலை செய்யும். Anthropic API சாவி கொடுத்தால், AI-க்கு இந்தக் கிராமத்தின் எண்கள் மட்டுமே தரப்படும்; அதற்கு அப்பால் பதில் சொல்ல மறுக்கும். சாவி இந்த உலாவியிலேயே இருக்கும்.",
+ aiSave:"சாவியைச் சேமி",aiOn:"AI மாதிரி இணைக்கப்பட்டது.",aiOff:"இணையமில்லாப் பதில் இயந்திரம் பயன்பாட்டில்.",
+ tagRule:"இணையமில்லாப் பதில் இயந்திரம்",tagAI:"AI மாதிரி, கிராமத் தரவின் அடிப்படையில்",tagFail:"AI கிடைக்கவில்லை; இணையமில்லாப் பதில் இயந்திரம்",
+ proofTitle:"எங்கள் கணக்கைச் சரிபாருங்கள்",testsTitle:"இயந்திர சுய சோதனை",testsNote:"இவை இப்போதே உங்கள் உலாவியில், வெள்ளோடு தரவில், சம முன்னுரிமையுடன் ஓடுகின்றன.",
+ dataTitle:"ஒவ்வொரு எண்ணும் எங்கிருந்து வருகிறது",
+ tmLabel:"காலநிலை கால இயந்திரம்",
+ deltaNow:"இன்றைய காலநிலை. 2030, 2040, 2050-ஐப் பார்க்க இழுங்கள்.",
+ delta:(dt,dr)=>`<b>+${dt} °C</b>, மழை <b>${dr>=0?"+":""}${dr}%</b>. IPCC AR6 திசையிலான மாதிரிச் சூழல்; NASA NEX-GDDP-CMIP6 மதிப்புகளால் மாற்றப்படும்.`,
+ custom:"தேர்ந்த இடம்",loading:"NASA POWER தரவு வருகிறது…",failCustom:"அந்த இடத்துக்கு NASA POWER கிடைக்கவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் தொடுங்கள்.",
+ nearest:v=>`பயிர்ப் பட்டியல்: ${v}-இலிருந்து`,
+ live:"நேரடி NASA தரவு",saved:"சேமித்த NASA தரவு (இணையமின்றி இயங்கும்)"}
+};
+const TEXTURE={ta:{"clay":"களிமண்","sandy clay":"மணல் கலந்த களிமண்","silty clay":"வண்டல் கலந்த களிமண்","clay loam":"களி கலந்த இருபொறை மண்","silty clay loam":"வண்டல்-களி இருபொறை மண்","sandy clay loam":"மணல்-களி இருபொறை மண்","silt loam":"வண்டல் இருபொறை மண்","sand":"மணல்","loamy sand":"இருபொறை கலந்த மணல்","sandy loam":"மணல் கலந்த இருபொறை மண்","loam":"இருபொறை மண்"}};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const S={lang:"ta",vid:"vellode",year:2026,sow:new Date().getMonth(),prev:"paddy",
+  w:{water:5,soil:5,profit:5},live:false,soilLive:false,period:SAVED_PERIOD,custom:null};
+const $=id=>document.getElementById(id);
+const t=k=>TX[S.lang][k];
+const cn=id=>CROPS[id][S.lang];
+function village(){
+  if(S.vid==="custom")return S.custom;
+  const v=VILLAGES[S.vid];
+  if(!v.rain)v.rain=v.p.map((x,i)=>x*DAYS[i]);
+  return v;
+}
+function regionId(){return S.vid==="custom"?S.custom.region:S.vid}
+
+/* ============================================================
+   CLIMATE + SCORING ENGINE
+   ============================================================ */
+function climate(v,year){
+  const f=(year-2026)/24, dT=v.scen.dT*f, dR=v.scen.dR*f;
+  return {rain:v.rain.map(r=>r*(1+dR)),t:v.t.map(x=>x+dT),dT,dR};
+}
+function windowMonths(sow,dur){const a=[];for(let i=0;i<dur;i++)a.push((sow+i)%12);return a}
+function scoreCrop(id,margin,irr,clim,sow,prev,w){
+  const c=CROPS[id], ms=windowMonths(sow,c.dur);
+  const rain=ms.reduce((s,m)=>s+clim.rain[m],0), eff=USABLE*rain;
+  const topup=irr?TOPUP*c.need:0;
+  const wf=Math.min(1,(eff+topup)/c.need);
+  const profit=margin/5, soil=c.soil;
+  let ws=w.water+w.soil+w.profit, ww=w;
+  if(ws<=0){ww={water:1,soil:1,profit:1};ws=3}
+  const base=(ww.water*wf+ww.soil*soil+ww.profit*profit)/ws;
+  const hotT=Math.max(...ms.map(m=>clim.t[m])), coldT=Math.min(...ms.map(m=>clim.t[m]));
+  const heat=Math.max(0,Math.min(1,(hotT-c.hot)/HEAT_SPAN));
+  const cold=Math.max(0,Math.min(1,(c.cold-coldT)/HEAT_SPAN));
+  const stress=Math.max(heat,cold);
+  const pc=prev?CROPS[prev]:null;
+  const rot=pc&&pc.fam===c.fam?ROT_PEN:0;
+  const bonus=pc&&pc.exh&&c.leg?LEG_BONUS:0;
+  const raw=100*base*(1-HEAT_K*stress)-rot+bonus;
+  const score=Math.max(0,Math.min(100,Math.round(raw)));
+  return {id,score,raw,wf,soil,profit,base,heat,cold,stress,hotT,coldT,rot,bonus,rain,eff,topup,irr:!!irr,ms,
+          share:{water:ww.water/ws,soil:ww.soil/ws,profit:ww.profit/ws}};
+}
+function rankAll(year=S.year,sow=S.sow,prev=S.prev,w=S.w,vid){
+  const v=vid?VILLAGES[vid]:village(); if(vid&&!v.rain)v.rain=v.p.map((x,i)=>x*DAYS[i]);
+  const clim=climate(v,year);
+  return REGION[vid||regionId()].map(([id,m,irr])=>scoreCrop(id,m,irr,clim,sow,prev,w))
+    .sort((a,b)=>b.score-a.score||b.raw-a.raw);
+}
+
+/* ============================================================
+   LIVE DATA (each fetch has a fallback)
+   ============================================================ */
+async function getJSON(url,ms=9000){
+  const ac=new AbortController(), to=setTimeout(()=>ac.abort(),ms);
+  try{const r=await fetch(url,{signal:ac.signal}); if(!r.ok)throw new Error(r.status); return await r.json()}
+  finally{clearTimeout(to)}
+}
+async function fetchPower(lat,lon){
+  const d=await getJSON(`https://power.larc.nasa.gov/api/temporal/climatology/point?parameters=T2M,T2M_MAX,PRECTOTCORR&community=AG&longitude=${lon}&latitude=${lat}&format=JSON`);
+  const P=d.properties.parameter, get=k=>MKEY.map(m=>P[k][m]);
+  const p=get("PRECTOTCORR"), tt=get("T2M"), tx=get("T2M_MAX");
+  if([...p,...tt].some(x=>x==null||x<-900))throw new Error("fill");
+  const m=/(\d{4})\D+(\d{4})/.exec((d.header&&d.header.range)||"");
+  return {p,t:tt,tx,rain:p.map((x,i)=>x*DAYS[i]),period:m?`${m[1]}–${m[2]}`:SAVED_PERIOD};
+}
+async function fetchSoil(lat,lon){
+  const d=await getJSON(`https://rest.isric.org/soilgrids/v2.0/properties/query?lon=${lon}&lat=${lat}&property=clay&property=sand&property=silt&property=phh2o&property=soc&depth=0-5cm&value=mean`,12000);
+  const o={}; d.properties.layers.forEach(L=>o[L.name]=L.depths[0].values.mean);
+  if(o.clay==null)return null;
+  return {lat,lon,clay:o.clay/10,sand:o.sand/10,silt:o.silt/10,ph:o.phh2o/10,soc:o.soc/10};
+}
+async function refreshLive(){
+  const id=S.vid; if(id==="custom")return;
+  const v=VILLAGES[id];
+  S.live=!!v._live; S.soilLive=!!v._soilLive; S.period=v._period||SAVED_PERIOD;
+  if(!v._live){
+    fetchPower(v.lat,v.lon).then(d=>{Object.assign(v,{p:d.p,t:d.t,tx:d.tx,rain:d.rain,_live:true,_period:d.period});
+      if(S.vid===id){S.live=true;S.period=d.period;renderAll()}}).catch(()=>{});
+  }
+  if(!v._soilLive){
+    fetchSoil(v.soil.lat,v.soil.lon).then(s=>{if(!s)return;v.soil=s;v._soilLive=true;
+      if(S.vid===id){S.soilLive=true;renderSoil()}}).catch(()=>{});
+  }
+}
+function nearestPilot(lat,lon){
+  let best="vellode",bd=1e9;
+  for(const k in VILLAGES){const v=VILLAGES[k];const d=Math.hypot(v.lat-lat,(v.lon-lon)*Math.cos(lat*Math.PI/180));if(d<bd){bd=d;best=k}}
+  return best;
+}
+async function loadCustom(lat,lon){
+  lat=+lat.toFixed(2);lon=+lon.toFixed(2);
+  $("status").textContent=t("loading");
+  try{
+    const d=await fetchPower(lat,lon), region=nearestPilot(lat,lon);
+    S.custom={lat,lon,region,name:{en:`${lat}, ${lon}`,ta:`${lat}, ${lon}`},place:{en:TX.en.custom,ta:TX.ta.custom},
+      p:d.p,t:d.t,tx:d.tx,rain:d.rain,soil:null,scen:{dT:1.5,dR:0}};
+    S.vid="custom";S.live=true;S.soilLive=false;S.period=d.period;
+    S.prev=VILLAGES[region].prev;
+    renderAll();
+    fetchSoil(lat,lon).then(s=>{if(s&&S.vid==="custom"&&S.custom.lat===lat){S.custom.soil=s;S.soilLive=true;renderSoil()}}).catch(()=>{});
+  }catch(e){ $("status").textContent=t("failCustom"); }
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const fmt=(x,d=0)=>Number(x).toFixed(d);
+const pct=x=>Math.round(x*100);
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function renderStatic(){
+  document.documentElement.lang=S.lang;
+  document.querySelectorAll("[data-t]").forEach(el=>{const v=t(el.dataset.t); if(typeof v==="string")el.textContent=v});
+  $("lang-ta").setAttribute("aria-pressed",S.lang==="ta");
+  $("lang-en").setAttribute("aria-pressed",S.lang==="en");
+  $("q").placeholder=t("qph");
+  $("sow").innerHTML=MONL[S.lang].map((m,i)=>`<option value="${i}">${m}</option>`).join("");
+  $("sow").value=S.sow;
+  $("sugg").innerHTML=["s1","s2","s3","s4"].map(k=>`<button type="button">${esc(t(k))}</button>`).join("");
+  $("aistate").textContent=aiKey()?t("aiOn"):t("aiOff");
+  renderData();
+}
+function renderVillages(){
+  let h="";
+  for(const k in VILLAGES){const v=VILLAGES[k];
+    h+=`<button data-v="${k}" aria-pressed="${S.vid===k}"><b>${v.name[S.lang]}</b><small>${v.place[S.lang]}<br>${v.note[S.lang]}</small></button>`}
+  if(S.custom)h+=`<button data-v="custom" aria-pressed="${S.vid==="custom"}"><b>${S.custom.name[S.lang]}</b><small>${t("custom")}<br>${t("nearest")(VILLAGES[S.custom.region].name[S.lang])}</small></button>`;
+  $("villages").innerHTML=h;
+}
+function renderPrev(){
+  const ids=REGION[regionId()].map(r=>r[0]);
+  if(S.prev&&!ids.includes(S.prev))S.prev="";
+  $("prev").innerHTML=`<option value="">${t("none")}</option>`+ids.map(id=>`<option value="${id}">${cn(id)}</option>`).join("");
+  $("prev").value=S.prev||"";
+}
+function renderChart(){
+  const v=village(), c=climate(v,S.year), fut=S.year>2026;
+  const W=640,H=300,L=44,R=44,T=14,B=30,pw=W-L-R,ph=H-T-B;
+  const maxR=Math.max(60,...c.rain,...v.rain)*1.12;
+  const allT=[...c.t,...v.t], tmin=Math.floor(Math.min(...allT)-2), tmax=Math.ceil(Math.max(...allT)+2);
+  const bw=pw/12, x=i=>L+i*bw, yR=r=>T+ph-(r/maxR)*ph, yT=tt=>T+ph-((tt-tmin)/(tmax-tmin))*ph;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("rain"))}, ${esc(t("temp"))}">`;
+  for(let g=0;g<=4;g++){const r=maxR*g/4, y=yR(r);
+    s+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="#DCCB8E" stroke-width="1"/><text x="${L-6}" y="${y+4}" font-size="11" text-anchor="end" fill="#2C6FA8">${Math.round(r)}</text>`;
+    const tv=tmin+(tmax-tmin)*g/4; s+=`<text x="${W-R+6}" y="${y+4}" font-size="11" fill="#B4232A">${fmt(tv,0)}°</text>`}
+  for(let i=0;i<12;i++){
+    const inWin=false;
+    if(fut){const yb=yR(v.rain[i]); s+=`<rect x="${x(i)+6}" y="${yb}" width="${bw-12}" height="${T+ph-yb}" fill="none" stroke="#2C6FA8" stroke-dasharray="3 3" stroke-width="1.2"/>`}
+    const y=yR(c.rain[i]);
+    s+=`<rect x="${x(i)+6}" y="${y}" width="${bw-12}" height="${T+ph-y}" rx="3" fill="#2C6FA8" opacity="${fut?.8:1}"><title>${MONL[S.lang][i]}: ${Math.round(c.rain[i])} mm, ${fmt(c.t[i],1)} °C</title></rect>`;
+    s+=`<text x="${x(i)+bw/2}" y="${y-4}" font-size="10.5" text-anchor="middle" fill="#16261D">${Math.round(c.rain[i])}</text>`;
+    s+=`<text x="${x(i)+bw/2}" y="${H-10}" font-size="12" text-anchor="middle" fill="#16261D">${MON[S.lang][i]}</text>`;
+  }
+  const path=a=>a.map((tt,i)=>`${i?"L":"M"}${x(i)+bw/2},${yT(tt)}`).join(" ");
+  if(fut)s+=`<path d="${path(v.t)}" fill="none" stroke="#B4232A" stroke-width="1.6" stroke-dasharray="5 4" opacity=".7"/>`;
+  s+=`<path d="${path(c.t)}" fill="none" stroke="#B4232A" stroke-width="3" stroke-linejoin="round"/>`;
+  c.t.forEach((tt,i)=>s+=`<circle cx="${x(i)+bw/2}" cy="${yT(tt)}" r="3.4" fill="#FFFCF0" stroke="#B4232A" stroke-width="2"/>`);
+  s+=`</svg>`;
+  $("chart").innerHTML=s;
+  $("legend").innerHTML=`<span><i class="sw" style="background:#2C6FA8"></i>${t("rain")}</span><span><i class="sw" style="background:#B4232A;height:3px"></i>${t("temp")}</span>`+(fut?`<span><i class="sw" style="border:1.2px dashed #2C6FA8;background:none"></i>${t("base")}</span>`:"");
+  const ann=c.rain.reduce((a,b)=>a+b,0), wet=c.rain.indexOf(Math.max(...c.rain)), hot=c.t.indexOf(Math.max(...c.t));
+  $("facts").innerHTML=`<div><b>${Math.round(ann)} mm</b><span>${t("fAnn")}</span></div><div><b>${MONL[S.lang][wet]}</b><span>${t("fWet")}, ${Math.round(c.rain[wet])} mm</span></div><div><b>${fmt(c.t[hot],1)} °C</b><span>${t("fHot")}, ${MONL[S.lang][hot]}</span></div>`;
+  const nm=village().name[S.lang];
+  $("dashTitle").textContent=t("dashTitle")(nm);
+  $("dashSrc").textContent=t("dashSrc")(S.period,S.live);
+  const st=$("status"); st.className="status "+(S.live?"live":"saved"); st.textContent=S.live?t("live"):t("saved");
+}
+function texture(sa,si,cl){
+  if(cl>=40)return sa>45?"sandy clay":si>=40?"silty clay":"clay";
+  if(cl>=27)return sa<=20?"silty clay loam":sa>45?"sandy clay loam":"clay loam";
+  if(cl>=20&&sa>45)return "sandy clay loam";
+  if(si>=50)return "silt loam";
+  if(sa>=85)return "sand"; if(sa>=70)return "loamy sand"; if(sa>=52)return "sandy loam";
+  return "loam";
+}
+function soilWords(s){
+  const tx=texture(s.sand,s.silt,s.clay);
+  return {tx:S.lang==="ta"?(TEXTURE.ta[tx]||tx):tx.replace(/^./,c=>c.toUpperCase()),
+    ph:s.ph<6.5?t("phAcid"):s.ph<=7.5?t("phNeutral"):t("phAlk"),
+    soc:s.soc<6?t("socLow"):s.soc<12?t("socMed"):t("socHigh")};
+}
+function renderSoil(){
+  const s=village().soil;
+  let h=`<h3>${t("soilTitle")}</h3><p class="muted">${t("soilSrc")(S.soilLive)}</p>`;
+  if(!s){$("soil").innerHTML=h+`<p style="margin-top:12px">${t("soilNone")}</p>`;return}
+  const w=soilWords(s);
+  h+=`<div class="soilrow" style="display:block"><div style="display:flex;justify-content:space-between"><span>${t("texture")}</span><b>${w.tx}</b></div>
+   <div class="tex" aria-hidden="true"><i style="width:${s.sand}%;background:#D9B36A"></i><i style="width:${s.silt}%;background:#A9814B"></i><i style="width:${s.clay}%;background:#6B4423"></i></div>
+   <span class="muted">${t("sand")} ${fmt(s.sand)}%, ${t("silt")} ${fmt(s.silt)}%, ${t("clay")} ${fmt(s.clay)}%</span></div>
+   <div class="soilrow"><span>${t("ph")}</span><span><b>${fmt(s.ph,1)}</b> <span class="muted">${w.ph}</span></span></div>
+   <div class="soilrow"><span>${t("soc")}</span><span><b>${fmt(s.soc,1)} g/kg</b> <span class="muted">${w.soc}</span></span></div>
+   <p class="muted" style="margin-top:8px">${fmt(s.lat,2)}°, ${fmt(s.lon,2)}°</p>`;
+  $("soil").innerHTML=h;
+}
+function winText(r){const a=r.ms[0],b=r.ms[r.ms.length-1];return `${MON[S.lang][a]} – ${MON[S.lang][b]}`}
+function mathText(r){
+  const c=CROPS[r.id], L=S.lang==="ta";
+  const lines=[
+   `${t("iWater")}: (0.7 × ${Math.round(r.rain)} mm ${L?"மழை":"rain"}${r.irr?` + ${Math.round(r.topup)} mm ${L?"பாசனம்":"irrigation"}`:""}) ÷ ${c.need} mm = ${fmt(r.wf,2)}`,
+   `${t("iSoil")}: ${fmt(r.soil,2)}    ${t("iProfit")}: ${fmt(r.profit,2)}`,
+   `${L?"முன்னுரிமை எடை":"Priority weights"}: ${pct(r.share.water)}% / ${pct(r.share.soil)}% / ${pct(r.share.profit)}%  →  ${fmt(r.base*100,1)}`,
+   `${L?"வெப்பநிலை":"Temperature"}: ${L?"காலத்தின் அதிக மாத சராசரி":"hottest month in window"} ${fmt(r.hotT,1)} °C (${L?"வரம்பு":"limit"} ${c.hot} °C), ${L?"குறைந்த":"coldest"} ${fmt(r.coldT,1)} °C (${L?"வரம்பு":"limit"} ${c.cold} °C) → × ${fmt(1-HEAT_K*r.stress,2)}`,
+   `${L?"சுழற்சி":"Rotation"}: −${r.rot}    ${L?"பயறு ஊக்கம்":"Legume bonus"}: +${r.bonus}`,
+   `= ${r.score} / 100`];
+  return lines.join("\n");
+}
+function cardHTML(r,i){
+  const c=CROPS[r.id];
+  const chips=[];
+  if(r.rot)chips.push(`<span class="chip bad">${t("cRot")}</span>`);
+  if(r.heat>0)chips.push(`<span class="chip ${r.heat>=.5?"bad":"warn"}">${t("cHeat")(pct(r.heat))}</span>`);
+  if(r.cold>0)chips.push(`<span class="chip ${r.cold>=.5?"bad":"warn"}">${t("cCold")(pct(r.cold))}</span>`);
+  if(!r.heat&&!r.cold)chips.push(`<span class="chip good">${t("cOk")}</span>`);
+  if(r.bonus)chips.push(`<span class="chip good">${t("cLeg")}</span>`);
+  if(r.irr)chips.push(`<span class="chip warn">${t("cIrr")}</span>`);
+  const bar=(lab,val,col)=>`<div class="r"><span>${lab}</span><div class="track"><i style="width:${pct(val)}%;background:${col}"></i></div><b>${fmt(val,2)}</b></div>`;
+  return `<article class="card ${i===0?"first":""}" data-id="${r.id}">
+    <div class="rank">${t("rank")(i+1)}, ${winText(r)}</div>
+    <div class="name">${S.lang==="ta"?c.ta:c.en}<small>${S.lang==="ta"?c.en:c.ta}</small></div>
+    <div class="score"><b>${r.score}</b><br><span>${t("of100")}</span></div>
+    <div class="ing">${bar(t("iWater"),r.wf,"#2C6FA8")}${bar(t("iSoil"),r.soil,"#6B4423")}${bar(t("iProfit"),r.profit,"#E2A300")}</div>
+    <div class="chips">${chips.join("")}</div>
+    <details class="math"><summary>${t("math")}</summary><pre>${esc(mathText(r))}</pre></details>
+  </article>`;
+}
+function renderAdvisor(animate){
+  const ws=S.w.water+S.w.soil+S.w.profit||1;
+  ["water","soil","profit"].forEach(k=>$("p-"+k).textContent=(S.w.water+S.w.soil+S.w.profit?pct(S.w[k]/ws):33)+"%");
+  const ranked=rankAll(), box=$("cards");
+  const open=new Set([...box.querySelectorAll("details[open]")].map(d=>d.closest(".card").dataset.id));
+  const before={}; if(animate)box.querySelectorAll(".card").forEach(el=>before[el.dataset.id]=el.getBoundingClientRect());
+  box.innerHTML=ranked.slice(0,3).map(cardHTML).join("");
+  box.querySelectorAll(".card").forEach(el=>{
+    if(open.has(el.dataset.id))el.querySelector("details").open=true;
+    if(!animate||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+    const b=before[el.dataset.id], a=el.getBoundingClientRect();
+    if(b){const dx=b.left-a.left,dy=b.top-a.top; if(dx||dy)el.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],{duration:420,easing:"cubic-bezier(.2,.8,.2,1)"})}
+    else el.animate([{opacity:0,transform:"scale(.94)"},{opacity:1,transform:"none"}],{duration:420});
+  });
+  $("rest").innerHTML=`<h3>${t("restTitle")}</h3><table><tr><th>${t("crop")}</th><th>${t("window")}</th><th class="n">${t("iWater")}</th><th class="n">${t("of100")}</th></tr>`+
+    ranked.map(r=>`<tr><td>${cn(r.id)}</td><td>${winText(r)}</td><td class="n">${fmt(r.wf,2)}</td><td class="n"><b>${r.score}</b></td></tr>`).join("")+`</table>`;
+}
+function renderTM(){
+  $("yr").textContent=S.year; $("year").value=S.year;
+  const v=village(), f=(S.year-2026)/24;
+  $("delta").innerHTML=S.year===2026?t("deltaNow"):t("delta")(fmt(v.scen.dT*f,1),Math.round(v.scen.dR*f*100));
+}
+function renderTests(){
+  const w={water:5,soil:5,profit:5}, v=VILLAGES.vellode; if(!v.rain)v.rain=v.p.map((x,i)=>x*DAYS[i]);
+  const c=climate(v,2026);
+  const tu=scoreCrop("turmeric",4,1,c,5,"paddy",w), bg=scoreCrop("blackgram",2,0,c,9,"paddy",w), pp=scoreCrop("paddy",3,1,c,5,"paddy",w);
+  const L=S.lang==="ta";
+  const rows=[
+   [Math.abs(tu.score-58)<=3&&tu.heat===0, L?`ஜூனில் நெல்லுக்குப் பின் மஞ்சள்: நீர் பொருத்தம் ${fmt(tu.wf,2)}, வெப்ப அபாயம் ${pct(tu.heat)}%. எதிர்பார்ப்பு சுமார் 58.`:`Turmeric sown in June after paddy: water fit ${fmt(tu.wf,2)}, heat risk ${pct(tu.heat)}%. Expected about 58.`, tu.score],
+   [Math.abs(bg.score-74)<=3, L?`அக்டோபரில் (வடகிழக்குப் பருவமழை) நெல்லுக்குப் பின் உளுந்து. எதிர்பார்ப்பு சுமார் 74.`:`Black gram sown in October (north-east monsoon) after paddy. Expected about 74.`, bg.score],
+   [pp.score===0, L?`நெல்லுக்குப் பின் நெல்: சுழற்சி அபராதத்தால் 0 ஆக வேண்டும்.`:`Paddy after paddy: the rotation penalty must take it to 0.`, pp.score]
+  ];
+  $("tests").innerHTML=rows.map(r=>`<div class="test"><span class="${r[0]?"ok":"no"}">${r[0]?"✓":"✗"}</span><span>${r[1]}</span><b>${r[2]}</b></div>`).join("");
+}
+function renderData(){
+  const L=S.lang==="ta";
+  const items=[
+   ["NASA POWER","https://power.larc.nasa.gov/docs/services/api/",L?`மாத மழை (PRECTOTCORR), வெப்பநிலை (T2M, T2M_MAX). ${SAVED_PERIOD} சராசரி, MERRA-2. நேரடியாக அழைக்கப்படும்; தோல்வியானால் சேமித்த நகல்.`:`Monthly rain (PRECTOTCORR) and temperature (T2M, T2M_MAX). ${SAVED_PERIOD} climatology, MERRA-2. Called live; saved copy if the call fails.`],
+   ["ISRIC SoilGrids v2.0","https://rest.isric.org",L?"மண் வகை, pH, கரிமக் கரி; 250 மீ, மேல் 5 செ.மீ.":"Soil texture, pH and organic carbon at 250 m, top 5 cm."],
+   ["NASA GIBS, MODIS Terra NDVI (8-day)","https://nasa-gibs.github.io/gibs-api-docs/",L?"வரைபடத்தில் பயிர்ப் பசுமை அடுக்கு.":"The crop-greenness layer on the map."],
+   ["NASA NEX-GDDP-CMIP6","https://www.nasa.gov/nex",L?"கால இயந்திரத்துக்கான சரியான தரவு. தற்போதைய மாற்றங்கள் IPCC AR6 திசையிலான மாதிரி மதிப்புகள்; இன்னும் NEX-GDDP எண்கள் அல்ல.":"The right dataset for the time machine. The shifts shown today are illustrative values in the direction of IPCC AR6, not yet NEX-GDDP numbers."],
+   ["NASA SMAP, NISAR (NASA + ISRO)","https://worldview.earthdata.nasa.gov",L?"மண் ஈரப்பதம்: அடுத்த கட்டத் திட்டம். இந்தச் செயலியில் இன்னும் பயன்படுத்தப்படவில்லை.":"Soil moisture: on the roadmap. Not used in this app yet."],
+   [L?"பயிர் அட்டவணை":"Crop table","https://agritech.tnau.ac.in",L?"நீர்த் தேவை, காலம், வெப்ப வரம்பு, லாப நிலை: பொதுவான வேளாண் மதிப்புகள்; TNAU / KVK அட்டவணையுடன் சரிபார்க்கப்பட வேண்டும்.":"Water need, duration, temperature limits and margin rank are typical agronomy values, to be checked against TNAU / KVK tables."]
+  ];
+  $("datalist").innerHTML=items.map(i=>`<li><a href="${i[1]}" target="_blank" rel="noopener">${i[0]}</a>: ${i[2]}</li>`).join("");
+}
+function renderAll(animate){
+  renderVillages();renderPrev();renderChart();renderSoil();renderAdvisor(animate);renderTM();renderTests();syncMap();
+}
+
+/* ============================================================
+   MAP (Leaflet + NASA GIBS; falls back to plain panel)
+   ============================================================ */
+let map=null,ndviLayer=null,marks={},customMark=null;
+function initMap(){
+  if(!window.L){$("map").style.display="none";document.querySelector(".mapnote").style.display="none";return}
+  map=L.map("map",{scrollWheelZoom:false,worldCopyJump:true}).setView([11.34,77.72],8);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:12,attribution:"© OpenStreetMap"}).addTo(map);
+  ndviLayer=L.tileLayer("https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",
+    {maxNativeZoom:9,maxZoom:12,opacity:.72,attribution:"NASA GIBS MODIS NDVI"}).addTo(map);
+  for(const k in VILLAGES){const v=VILLAGES[k];
+    marks[k]=L.circleMarker([v.lat,v.lon],{radius:9,color:"#16261D",weight:2,fillColor:"#E2A300",fillOpacity:1}).addTo(map)
+      .on("click",e=>{L.DomEvent.stopPropagation(e);pick(k)});}
+  map.on("click",e=>loadCustom(e.latlng.lat,e.latlng.lng));
+  $("ndvi").onchange=e=>{e.target.checked?ndviLayer.addTo(map):map.removeLayer(ndviLayer)};
+}
+function syncMap(){
+  if(!map)return;
+  const v=village();
+  for(const k in marks)marks[k].setStyle({fillColor:k===S.vid?"#B4232A":"#E2A300"}).bindTooltip(VILLAGES[k].name[S.lang]);
+  if(customMark){map.removeLayer(customMark);customMark=null}
+  if(S.vid==="custom")customMark=L.circleMarker([v.lat,v.lon],{radius:9,color:"#16261D",weight:2,fillColor:"#B4232A",fillOpacity:1}).addTo(map);
+  if(syncMap.last!==S.vid+v.lat){syncMap.last=S.vid+v.lat;map.flyTo([v.lat,v.lon],S.vid==="custom"?map.getZoom():8,{duration:.8})}
+}
+function pick(k){
+  S.vid=k; if(k!=="custom")S.prev=VILLAGES[k].prev; else {S.live=true;S.soilLive=!!S.custom.soil}
+  refreshLive(); renderAll();
+}
+
+/* ============================================================
+   ASK YOUR FIELD
+   ============================================================ */
+function aiKey(){try{return localStorage.getItem("uzhavan_ai_key")||""}catch(e){return ""}}
+function findCrop(q){
+  const s=q.toLowerCase(); const ids=REGION[regionId()].map(r=>r[0]);
+  let hit=null;
+  for(const id in CROPS)for(const a of CROPS[id].al)if(s.includes(a)){ if(!hit||ids.includes(id))hit=id }
+  return hit;
+}
+function findMonth(q){
+  const s=q.toLowerCase();
+  for(let i=0;i<12;i++){ if(s.includes(MONL.en[i].toLowerCase())||q.includes(MONL.ta[i]))return i }
+  for(let i=0;i<12;i++){ if(new RegExp("\\b"+MON.en[i].toLowerCase()+"\\b").test(s))return i }
+  if(/this month|now|today|இந்த மாத|இப்போ|இன்று/.test(s))return new Date().getMonth();
+  return null;
+}
+function ruleAnswer(q){
+  const ta=/[஀-௿]/.test(q)||(S.lang==="ta"&&!/[a-z]{3}/i.test(q));
+  const lang=ta?"ta":"en", M=MONL[lang], v=village(), nm=v.name[lang], N=id=>CROPS[id][lang];
+  const yr=S.year, yrNote=yr>2026?(ta?` (${yr} சூழலில்)`:` (in the ${yr} scenario)`):"";
+  const src=ta?`\nஆதாரம்: NASA POWER ${S.period}${v.soil?", SoilGrids":""}.`:`\nSource: NASA POWER ${S.period}${v.soil?", SoilGrids":""}.`;
+  const s=q.toLowerCase(), crop=findCrop(q), mon=findMonth(q);
+  const ids=REGION[regionId()].map(r=>r[0]);
+  // sow question
+  if(crop){
+    if(!ids.includes(crop))return (ta?`${nm}-க்கான பயிர்ப் பட்டியலில் ${N(crop)} இல்லை; அதனால் அதற்கு மதிப்பெண் தர இயலாது. பட்டியலில் உள்ளவை: ${ids.map(N).join(", ")}.`:`${N(crop)} is not in the crop table for ${nm}, so I cannot score it. I can score: ${ids.map(N).join(", ")}.`);
+    const m=mon==null?S.sow:mon, all=rankAll(yr,m), r=all.find(x=>x.id===crop), c=CROPS[crop], best=all[0];
+    let a;
+    if(ta){
+      a=(r.score>=65?`ஆம். ${nm}-இல் ${M[m]} மாதம் ${N(crop)} விதைக்கலாம்`:r.score>=45?`கவனத்துடன் விதைக்கலாம். ${nm}-இல் ${M[m]} மாதம் ${N(crop)}`:`பரிந்துரைக்கவில்லை. ${nm}-இல் ${M[m]} மாதம் ${N(crop)}`)+`: மதிப்பெண் ${r.score}/100${yrNote}.`;
+      a+=`\nபயிர்க் காலத்தில் (${MON.ta[r.ms[0]]}–${MON.ta[r.ms[r.ms.length-1]]}) பயன்படும் மழை ${Math.round(r.eff)} மி.மீ; தேவை ${c.need} மி.மீ. நீர் பொருத்தம் ${fmt(r.wf,2)}.`;
+      if(r.irr)a+=` மீதிக்குக் கால்வாய் அல்லது கிணற்றுப் பாசனம் உறுதியாக இருக்க வேண்டும்.`;
+      if(r.heat>0)a+=`\nவெப்ப அபாயம் ${pct(r.heat)}%: காலத்தின் அதிக மாத சராசரி ${fmt(r.hotT,1)} °C, வரம்பு ${c.hot} °C.`;
+      if(r.cold>0)a+=`\nகுளிர் அபாயம் ${pct(r.cold)}%: குறைந்த மாத சராசரி ${fmt(r.coldT,1)} °C, வரம்பு ${c.cold} °C.`;
+      if(r.rot)a+=`\n${N(S.prev)}-க்குப் பிறகு அதே குடும்பப் பயிர்; சுழற்சி அபராதம் −50.`;
+      if(r.bonus)a+=`\n${N(S.prev)}-க்குப் பிறகு பயறு வகை மண்ணுக்கு நல்லது: +8.`;
+      if(best.id!==crop)a+=`\nஇந்த மாதத்துக்கு முதல் தேர்வு: ${N(best.id)} (${best.score}/100).`;
+    }else{
+      a=(r.score>=65?`Yes. ${N(crop)} sown in ${M[m]} at ${nm} is a good fit`:r.score>=45?`Possible, with care. ${N(crop)} sown in ${M[m]} at ${nm}`:`Not advised. ${N(crop)} sown in ${M[m]} at ${nm}`)+`: score ${r.score}/100${yrNote}.`;
+      a+=`\nUsable rain over its season (${MON.en[r.ms[0]]}–${MON.en[r.ms[r.ms.length-1]]}) is ${Math.round(r.eff)} mm against a need of ${c.need} mm. Water fit ${fmt(r.wf,2)}.`;
+      if(r.irr)a+=` The rest must come from assured canal or well irrigation.`;
+      if(r.heat>0)a+=`\nHeat risk ${pct(r.heat)}%: hottest month in the season averages ${fmt(r.hotT,1)} °C, limit ${c.hot} °C.`;
+      if(r.cold>0)a+=`\nCold risk ${pct(r.cold)}%: coldest month averages ${fmt(r.coldT,1)} °C, limit ${c.cold} °C.`;
+      if(r.rot)a+=`\nIt is the same plant family as ${N(S.prev)}, which you just harvested: rotation penalty −50.`;
+      if(r.bonus)a+=`\nA legume after ${N(S.prev)} rebuilds the soil: +8.`;
+      if(best.id!==crop)a+=`\nTop choice for that month: ${N(best.id)} (${best.score}/100).`;
+    }
+    return a+src;
+  }
+  // future
+  if(/2030|2040|2050|future|climate|எதிர்கால|காலநிலை/.test(s)){
+    const y=+(/20[345]0/.exec(s)||[2050])[0], m=mon==null?S.sow:mon, now=rankAll(2026,m), fut=rankAll(y,m), f=(y-2026)/24;
+    const line=a=>a.slice(0,3).map(r=>`${N(r.id)} ${r.score}`).join(", ");
+    return (ta?`${nm}, ${y}: மாதிரிச் சூழலில் வெப்பம் +${fmt(v.scen.dT*f,1)} °C, மழை ${Math.round(v.scen.dR*f*100)}%.\nஇன்று முதல் மூன்று: ${line(now)}.\n${y}-இல் முதல் மூன்று: ${line(fut)}.\nஇது IPCC AR6 திசையிலான மாதிரி மாற்றம்; கணிப்பு அல்ல.`
+      :`${nm} in ${y}: the scenario adds ${fmt(v.scen.dT*f,1)} °C and changes rain by ${Math.round(v.scen.dR*f*100)}%.\nTop three today: ${line(now)}.\nTop three in ${y}: ${line(fut)}.\nThis is an illustrative shift in the direction of IPCC AR6, not a forecast.`)+src;
+  }
+  // soil
+  if(/soil|மண்/.test(s)){
+    if(!v.soil)return t("soilNone");
+    const so=v.soil, w=soilWords(so);
+    return (ta?`${nm} மண்: ${TEXTURE.ta[texture(so.sand,so.silt,so.clay)]} (மணல் ${fmt(so.sand)}%, வண்டல் ${fmt(so.silt)}%, களி ${fmt(so.clay)}%). pH ${fmt(so.ph,1)}, கரிமக் கரி ${fmt(so.soc,1)} g/kg.\nநெல், மஞ்சள், கரும்பு மண் சத்தை அதிகம் எடுக்கும்; அவற்றுக்குப் பின் பயறு வகை போட்டால் மண் வளம் திரும்பும்.`
+      :`Soil at ${nm}: ${texture(so.sand,so.silt,so.clay)} (sand ${fmt(so.sand)}%, silt ${fmt(so.silt)}%, clay ${fmt(so.clay)}%). pH ${fmt(so.ph,1)}, organic carbon ${fmt(so.soc,1)} g/kg.\nPaddy, turmeric and sugarcane draw the soil down; a legume after them rebuilds it.`)+(ta?"\nஆதாரம்: ISRIC SoilGrids.":"\nSource: ISRIC SoilGrids.");
+  }
+  // rain / temperature
+  if(/rain|water|monsoon|temperature|heat|hot|மழை|நீர்|வெப்ப|பருவ/.test(s)){
+    const c=climate(v,yr), ann=c.rain.reduce((a,b)=>a+b,0), wet=c.rain.indexOf(Math.max(...c.rain)), dry=c.rain.indexOf(Math.min(...c.rain)), hot=c.t.indexOf(Math.max(...c.t));
+    return (ta?`${nm}${yrNote}: ஆண்டு மழை ${Math.round(ann)} மி.மீ. அதிக மழை ${M[wet]} (${Math.round(c.rain[wet])} மி.மீ), குறைந்த மழை ${M[dry]} (${Math.round(c.rain[dry])} மி.மீ). அதிக வெப்ப மாதம் ${M[hot]}, சராசரி ${fmt(c.t[hot],1)} °C.`
+      :`${nm}${yrNote}: ${Math.round(ann)} mm of rain a year. Wettest month ${M[wet]} (${Math.round(c.rain[wet])} mm), driest ${M[dry]} (${Math.round(c.rain[dry])} mm). Hottest month ${M[hot]}, averaging ${fmt(c.t[hot],1)} °C.`)+src;
+  }
+  // best crop
+  if(/what|which|best|grow|sow|plant|next|recommend|எது|எந்த|என்ன|அடுத்து|போடலாம்|விதை|பயிர்/.test(s)){
+    const m=mon==null?S.sow:mon, all=rankAll(yr,m), top=all.slice(0,3);
+    const why=r=>ta?`${N(r.id)} ${r.score}/100 (நீர் ${fmt(r.wf,2)}, மண் ${fmt(r.soil,2)}, லாபம் ${fmt(r.profit,2)}${r.bonus?", பயறு ஊக்கம் +8":""}${r.irr?", பாசனம் தேவை":""})`
+                      :`${N(r.id)} ${r.score}/100 (water ${fmt(r.wf,2)}, soil ${fmt(r.soil,2)}, profit ${fmt(r.profit,2)}${r.bonus?", legume bonus +8":""}${r.irr?", needs irrigation":""})`;
+    return (ta?`${nm}-இல் ${M[m]} மாதம் விதைக்க${S.prev?`, ${N(S.prev)}-க்குப் பிறகு`:""}${yrNote}:\n`:`For sowing in ${M[m]} at ${nm}${S.prev?`, after ${N(S.prev)}`:""}${yrNote}:\n`)
+      +top.map((r,i)=>`${i+1}. ${why(r)}`).join("\n")+src;
+  }
+  return ta?`இந்தக் கிராமத்தின் மழை, வெப்பம், மண், பயிர் மதிப்பெண்கள் பற்றி மட்டுமே என்னால் பதில் சொல்ல முடியும். எடுத்துக்காட்டு: "இந்த மாதம் மஞ்சள் விதைக்கலாமா?"`
+           :`I can only answer from this village's rain, temperature, soil and crop scores. Try: "Can I sow turmeric this month?"`;
+}
+function groundingFacts(){
+  const v=village(), c=climate(v,S.year);
+  return {village:v.name.en,place:v.place.en,lat:v.lat,lon:v.lon,
+    climate_source:`NASA POWER climatology ${S.period}`,scenario_year:S.year,
+    scenario_note:S.year>2026?"illustrative shift in the direction of IPCC AR6, not a forecast":"baseline climate",
+    monthly_rain_mm:c.rain.map(x=>Math.round(x)),monthly_mean_temp_c:c.t.map(x=>+x.toFixed(1)),
+    soil:v.soil?{source:"ISRIC SoilGrids 0-5cm",texture:texture(v.soil.sand,v.soil.silt,v.soil.clay),sand_pct:v.soil.sand,silt_pct:v.soil.silt,clay_pct:v.soil.clay,ph:v.soil.ph,organic_carbon_g_per_kg:v.soil.soc}:null,
+    today_month:MONL.en[new Date().getMonth()],crop_just_harvested:S.prev?CROPS[S.prev].en:"none",
+    farmer_priorities:S.w,
+    scores_by_sowing_month:MONL.en.map((mn,m)=>({sow_in:mn,crops:rankAll(S.year,m).map(r=>({crop:CROPS[r.id].en,tamil:CROPS[r.id].ta,score:r.score,water_fit:+r.wf.toFixed(2),usable_rain_mm:Math.round(r.eff),need_mm:CROPS[r.id].need,needs_irrigation:r.irr,heat_risk_pct:pct(r.heat),cold_risk_pct:pct(r.cold),rotation_penalty:r.rot,legume_bonus:r.bonus}))}))};
+}
+async function aiAnswer(q){
+  const sys=`You are UZHAVAN, a crop-rotation helper for one farmer. Answer ONLY from the JSON below. Never use outside knowledge for numbers, prices, varieties, pesticides or forecasts. If the answer is not in the JSON, say you cannot answer from this village's data. Reply in the language of the question (Tamil or English), in at most 90 words, plain text, and quote the score and the numbers behind it.\n\nVILLAGE DATA:\n`+JSON.stringify(groundingFacts());
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+    headers:{"content-type":"application/json","x-api-key":aiKey(),"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:500,system:sys,messages:[{role:"user",content:q}]})});
+  if(!r.ok)throw new Error("AI "+r.status);
+  const d=await r.json(); const txt=(d.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("").trim();
+  if(!txt)throw new Error("empty"); return txt;
+}
+function addMsg(cls,text,tag){
+  const d=document.createElement("div"); d.className="msg "+cls; d.textContent=text;
+  if(tag){const s=document.createElement("span");s.className="tag";s.textContent=tag;d.appendChild(s)}
+  $("log").appendChild(d); $("log").scrollTop=$("log").scrollHeight; return d;
+}
+async function ask(q){
+  q=q.trim(); if(!q)return;
+  addMsg("q",q); $("q").value="";
+  if(aiKey()){
+    const wait=addMsg("a","…");
+    try{const a=await aiAnswer(q); wait.remove(); addMsg("a",a,t("tagAI")); return}
+    catch(e){wait.remove(); addMsg("a",ruleAnswer(q),t("tagFail")); return}
+  }
+  addMsg("a",ruleAnswer(q),t("tagRule"));
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+function setLang(l){S.lang=l;renderStatic();renderAll()}
+$("lang-ta").onclick=()=>setLang("ta");
+$("lang-en").onclick=()=>setLang("en");
+$("villages").onclick=e=>{const b=e.target.closest("button[data-v]"); if(b)pick(b.dataset.v)};
+$("sow").onchange=e=>{S.sow=+e.target.value;renderAdvisor(true)};
+$("prev").onchange=e=>{S.prev=e.target.value;renderAdvisor(true)};
+["water","soil","profit"].forEach(k=>$("w-"+k).oninput=e=>{S.w[k]=+e.target.value;renderAdvisor(true)});
+$("year").oninput=e=>{S.year=+e.target.value;renderChart();renderAdvisor(true);renderTM()};
+$("askform").onsubmit=e=>{e.preventDefault();ask($("q").value)};
+$("sugg").onclick=e=>{const b=e.target.closest("button"); if(b)ask(b.textContent)};
+$("aisave").onclick=()=>{try{const k=$("aikey").value.trim(); k?localStorage.setItem("uzhavan_ai_key",k):localStorage.removeItem("uzhavan_ai_key")}catch(e){}
+  $("aikey").value="";$("aistate").textContent=aiKey()?t("aiOn"):t("aiOff")};
+
+window.UZ={S,rankAll,scoreCrop,climate,VILLAGES,CROPS,ruleAnswer};
+initMap(); renderStatic(); renderAll(); refreshLive();
+</script>
+</body>
+</html>

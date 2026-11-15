@@ -98,7 +98,7 @@ Roadmap, not used yet: NASA SMAP soil moisture, and NISAR, the radar satellite b
 
 - [amalnathkp13-boop](https://github.com/amalnathkp13-boop)
 - [deexithamde](https://github.com/deexithamde)
-- Bairavi Alagesan
+- [Bairavi Alagesan](https://github.com/bairavialagesan123-lgtm)
 - [hariprasanna4047-jpg](https://github.com/hariprasanna4047-jpg)
 - [jeevanandham2428-bit](https://github.com/jeevanandham2428-bit)
 - [hariharish472008-debug](https://github.com/hariharish472008-debug)

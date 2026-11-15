@@ -6,7 +6,7 @@ Submit by 21:00 IST, 15 November. The form closes at 23:59.
 
 ## Still to do by the team
 
-- [ ] Fill in team names and the farmer's name and village (with his consent).
+- [ ] Add each team member's role, and the farmer's name and village (with his consent).
 - [ ] Record the screen demo using the shot list below.
 - [ ] Edit it with the farmer footage, keep it under 4:00, add subtitles, upload (YouTube unlisted).
 - [ ] Open the live site, the repo and the video in an incognito window. All three must load.
@@ -96,7 +96,15 @@ Roadmap, not used yet: NASA SMAP soil moisture, and NISAR, the radar satellite b
 
 ### Team
 
-[Names and roles]
+- [amalnathkp13-boop](https://github.com/amalnathkp13-boop)
+- [deexithamde](https://github.com/deexithamde)
+- Bairavi Alagesan
+- [hariprasanna4047-jpg](https://github.com/hariprasanna4047-jpg)
+- [jeevanandham2428-bit](https://github.com/jeevanandham2428-bit)
+- [hariharish472008-debug](https://github.com/hariharish472008-debug)
+- [sudharsanrajhan291-bit](https://github.com/sudharsanrajhan291-bit)
+
+[Add each person's role]
 
 ## Screenshots
 

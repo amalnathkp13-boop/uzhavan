@@ -6,6 +6,16 @@ A free Tamil + English web page that tells a farmer which crop to sow next, why,
 
 Live site: https://amalnathkp13-boop.github.io/uzhavan/
 
+## Team
+
+- [amalnathkp13-boop](https://github.com/amalnathkp13-boop)
+- [deexithamde](https://github.com/deexithamde)
+- Bairavi Alagesan
+- [hariprasanna4047-jpg](https://github.com/hariprasanna4047-jpg)
+- [jeevanandham2428-bit](https://github.com/jeevanandham2428-bit)
+- [hariharish472008-debug](https://github.com/hariharish472008-debug)
+- [sudharsanrajhan291-bit](https://github.com/sudharsanrajhan291-bit)
+
 ## Run it
 
 It is one file, `index.html`. No build step, no key, no login.

@@ -100,6 +100,7 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | NASA | **GPM IMERG** V07, through SERVIR ClimateSERV | Telling the rain of nearby Erode places apart (about 10 km) |
 | NASA | **NEX-GDDP-CMIP6**, SSP2-4.5, five models | The 2030, 2040 and 2050 climate |
 | NASA | **GIBS**: MODIS NDVI, **SMAP** soil moisture, **NISAR** radar (NASA + ISRO) | Three selectable satellite layers on the map |
+| NASA | **SMAP** soil moisture, 2015-2025 | Soil moisture at the sowing month, on the soil card |
 | ISRIC | **SoilGrids** v2.0 | Soil texture, pH and organic carbon |
 | TNAU, FAO | Crop water tables, **EcoCrop**, Crop Production Guide 2020 | Water need, temperature ranges, fertilizer, weeds and pests |
 | Govt of India, Fresno County, IITA | Cost of cultivation, crop report, field study | Profit rank |
@@ -130,6 +131,7 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | ICAR, Indian Farming 70(3):18-21, 2020 | Soil-test adjustment at Vellode | Low fertility +25%, high -25%, with the class limits |
 | TNAU Crop Production Guide 2020; PPQS / CIB&RC list of banned and restricted pesticides (31.10.2026) | Weeds, pests and diseases, Erode-district crops | Herbicides, pest and disease controls and seed treatment as printed; banned and restricted chemicals removed |
 | NASA SMAP L4 root-zone soil moisture; NISAR radar backscatter (NASA + ISRO), both through NASA GIBS | Selectable map layers | Shown as imagery: SMAP for the latest day, NISAR for 10 November 2026. They do not yet enter the crop score |
+| NASA SMAP soil moisture (NSIDC SMAP/Sentinel-1 1 km), via NASA SERVIR ClimateSERV | Soil moisture on the soil card | Monthly average 2015-2025 at each place, shown for the sowing month with a 12-month strip. No coverage at Kano. Shown for information; not in the score |
 
 </details>
 

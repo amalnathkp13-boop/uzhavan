@@ -49,9 +49,11 @@ score     = 100 x base x (1 - 0.6 x temperature stress)
             + 8 if a legume follows a soil-exhausting crop
 ```
 
+Profit is a rank from 1 to 5, set from published figures: 5 if the crop earns at least half of the village's best crop, 4 at least a quarter, 3 an eighth, 2 a sixteenth, otherwise 1.
+
 Temperature stress is 0 while the mean temperature over the crop's months in the field is inside the crop's optimal range, and rises to 1 at the crop's absolute limit.
 
-The irrigation top-up matters. Vellode gets about 727 mm of rain a year and turmeric needs about 1,390 mm. A plain rain-against-need formula would tell Erode, the turmeric city, to stop growing turmeric. With the top-up, turmeric sown in June after paddy scores 58 with the note "needs assured irrigation". Paddy after paddy scores 0. The page runs these checks in the browser, under "Check our work".
+The irrigation top-up matters. Vellode gets about 727 mm of rain a year and turmeric needs about 1,390 mm. A plain rain-against-need formula would tell Erode, the turmeric city, to stop growing turmeric. With the top-up, turmeric sown in June after paddy scores 65 with the note "needs assured irrigation". Paddy after paddy scores 0. The page runs these checks in the browser, under "Check our work".
 
 ### NASA and open data used
 
@@ -64,13 +66,21 @@ The irrigation top-up matters. Vellode gets about 727 mm of rain a year and turm
 | TNAU Agritech Portal | Water need and duration of Tamil Nadu crops | https://agritech.tnau.ac.in |
 | FAO Irrigation Water Management Training Manual 3 | Water need and duration of the other crops | https://www.fao.org/4/s2022e/s2022e00.htm |
 | FAO EcoCrop | Crop temperature ranges | https://gaez.fao.org/pages/ecocrop |
+| Govt of India DES, cost of cultivation 2021-22 | Profit rank for Tamil Nadu crops (net return per hectare) | https://desagri.gov.in/wp-content/uploads/2023/06/CS-Consolidated-Crop-year-wise-2021-22-4.xlsx |
+| Statistical Hand Book of Tamil Nadu 2022-23, Table 5.4 | Which Tamil Nadu crops are irrigated | https://des.tn.gov.in/sites/default/files/2025-07/5.%20IRRIGATION.pdf |
+| Fresno County Crop & Livestock Report 2025 | Profit rank for Fresno (gross value per acre) | https://www.fresnocountyca.gov/files/sharedassets/county/v/1/agricultural-commissioner/ag-crop-reports/ag-crop-and-livestock-report-2025.pdf |
+| USDA Census of Agriculture 2022 | Which Fresno crops are irrigated | https://www.nass.usda.gov/Publications/AgCensus/2022/ |
+| IITA KKM baseline study (Ayanwale et al. 2011) | Order of the rain-fed crops in Kano (gross margin) | https://cgspace.cgiar.org/bitstream/10568/88189/3/U11RepAyanwaleBaselineNothomDev.pdf |
+| FAO Fertilizer and Plant Nutrition Bulletin 16 | Soil effect classes: nitrogen fixed by legumes, nutrients taken up by other crops | https://www.fao.org/4/a0443e/a0443e03.pdf |
 
 Roadmap, not used yet: NASA SMAP soil moisture, and NISAR, the radar satellite built by NASA and ISRO.
 
 ### Honest limits
 
 - The 2050 view is a scenario, not a forecast. The projected change is modest: about +0.9 °C and +6% annual rain at Vellode, +1.1 °C at Fresno, +1.0 °C at Kano.
-- Soil effect, the profit rank (1 to 5) and which crops count as irrigated are the team's judgement and need checking with farmers and TNAU / KVK. Water need for green gram, cowpea and garlic is a team estimate.
+- Some values are still the team's estimate because no published figure was found: the profit rank for sesame at Vellode and for rice, vegetables, sesame and soybean at Kano; whether turmeric, maize, the pulses and sesame count as irrigated at Vellode; water need for green gram, cowpea and garlic. The page marks each one under "See the math".
+- The profit figures are net return in Tamil Nadu, gross value in Fresno and gross margin in Kano, so ranks are compared only inside one village.
+- The 0 to 1 soil effect given to each class of crop is the team's judgement; the classes come from FAO Bulletin 16.
 - SoilGrids has no value at the exact Vellode and Kano points; the soil card uses the nearest cell that has data and says how far away it is.
 
 ### Use of AI
@@ -87,7 +97,7 @@ In the `screenshots` folder, taken from the live site:
 
 1. `1-dashboard.png`: Vellode rain, temperature and soil card
 2. `2-crop-cards.png`: top three crops for Vellode, November, after paddy
-3. `3-time-machine-2050.png`: Kano at 2050, tomato has overtaken onion
+3. `3-time-machine-2050.png`: Vellode at 2050, onion has dropped out of the top three and turmeric has moved in
 4. `4-tamil-chat.png`: "Can I sow turmeric this month?" answered in Tamil
 
 ## Screen demo shot list (the 1:00–2:30 block, 90 seconds)
@@ -97,14 +107,14 @@ Record at 1280 × 720 or larger, in English with the Tamil toggle shown once. Ev
 | Time | Do this | Say this |
 |---|---|---|
 | 0:00 | Page open on Vellode. Click **English**, scroll to the chart. | "This is Vellode's rain and temperature from NASA POWER, and its soil from SoilGrids." |
-| 0:15 | Scroll to the advisor. Sowing month November, last crop paddy. | "For November after paddy: groundnut 65, black gram 63, green gram 63." |
+| 0:15 | Scroll to the advisor. Sowing month November, last crop paddy. | "For November after paddy: groundnut 65, onion 64, black gram 63." |
 | 0:25 | Drag **Save water** and **Soil health** almost to zero, leave **Profit** high. | "The farmer says profit matters most. Turmeric jumps to first place." |
 | 0:35 | Put the sliders back. Open **See the math** on the first card. | "Every number is visible. Rain, crop need, the rule, the result." |
-| 0:50 | Click **Kano**. Drag the bottom slider slowly from 2026 to 2050. | "Now the climate moves to 2050, using NASA NEX-GDDP-CMIP6. Onion loses 6 points to heat and tomato takes first place." |
+| 0:50 | Drag the bottom slider slowly from 2026 to 2050. Point at the **2050 outlook** panel. | "Now the climate moves to 2050, using NASA NEX-GDDP-CMIP6. Onion loses 8 points to heat and drops out; turmeric moves into the top three." |
+| 1:00 | Click **Kano**, slider still at 2050. | "Same engine in Nigeria: onion loses 6 points and tomato takes first place." |
 | 1:10 | Click **Vellode**, slider back to 2026, click **தமிழ்**. Tap the first suggested question. | "And in Tamil: can I sow turmeric this month? The answer uses only this village's numbers." |
 | 1:25 | Scroll to **Check our work**, show the three ticks. | "The page tests its own arithmetic every time it loads." |
 
-Two things in the playbook's video script do not match the finished app, so change the narration:
+One thing in the playbook's video script does not match the finished app, so change the narration:
 
-- At Vellode in November the top three do **not** change order between 2026 and 2050; only the scores drop by 2 to 3 points. Show the re-order on Kano (as above) or on Vellode with sowing month February.
 - The rain and temperature on screen are the 2001–2025 average, not 1981 onwards. Say "25 years of NASA data", not 45.

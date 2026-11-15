@@ -35,7 +35,9 @@ temperature stress = 0 while the mean temperature over the crop's months in the 
             (heat above the range, cold below it)
 ```
 
-The "Check our work" panel runs three tests in the browser on the Vellode data: turmeric in June after paddy (about 58), black gram in October after paddy (about 74), paddy after paddy (0).
+Profit is a rank from 1 to 5: 5 if the crop earns at least half of the village's best crop, 4 at least a quarter, 3 an eighth, 2 a sixteenth, otherwise 1.
+
+The "Check our work" panel runs three tests in the browser on the Vellode data: turmeric in June after paddy (water fit 0.73, about 65), black gram in October after paddy (about 74), paddy after paddy (0). The playbook's rehearsal figure for turmeric was 58, with an estimated profit rank of 4; the published figures put turmeric at 5, which gives 65.
 
 ## Data
 
@@ -48,12 +50,21 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | TNAU Agritech water-requirement table; TNAU ARS Bhavanisagar (turmeric) | Water need and duration for Tamil Nadu crops | Typed into the crop table |
 | FAO Irrigation Water Management Training Manual 3, Tables 4-5 | Water need and duration for the other crops | Midpoint of the published range |
 | FAO EcoCrop | Optimal and absolute temperature ranges | Typed into the crop table |
+| Govt of India DES, cost of cultivation estimates 2021-22 (Tamil Nadu) | Profit rank, Vellode: paddy, maize, sorghum, green gram, black gram, groundnut, cotton, onion, sugarcane | Net return per hectare = value of produce minus cost A2+FL. Turmeric comes from a separate Coimbatore study (Govindasamy et al. 2021); sesame has no figure |
+| Statistical Hand Book of Tamil Nadu 2022-23, Table 5.4; TRS report 2021-22 (onion) | Irrigated flag, Vellode: paddy, sorghum, sugarcane, cotton, groundnut, onion | Irrigated when more than half the crop's area is irrigated |
+| Fresno County Crop & Livestock Report 2025; UC Davis 2026 blackeye cost study | Profit rank, Fresno | Gross value per harvested acre (not net) |
+| USDA Census of Agriculture 2022, Fresno County | Irrigated flag, Fresno: cotton, alfalfa, maize, wheat | Irrigated share of harvested acres |
+| IITA KKM baseline (Ayanwale et al. 2011), Bunkure, 2008; Sufiyan et al. 2022 | Kano: order of millet, sorghum, maize, cowpea, groundnut; which crops are rain-fed or dry-season irrigated | Gross margin per hectare; the five are ranked against each other with groundnut held at 3 |
+| FAO Fertilizer and Plant Nutrition Bulletin 16, Tables 22 and 29, chapter 8 | Soil effect classes | Legumes fix nitrogen, other crops draw nutrients down. The 0-1 value per class is the team's |
 | NASA SMAP, NISAR | Soil moisture | Roadmap only, not used |
 
 ## Known gaps
 
 - No sourced seasonal water figure was found for green gram, cowpea or garlic; those three use the team's estimates.
-- Soil effect, margin rank (1-5) and the irrigated flag are team judgement, not sourced. Check them with the farmer and TNAU / KVK.
+- Still team estimates, because no published figure was found: profit rank for sesame (Vellode) and for rice, tomato, onion, sesame and soybean (Kano); the irrigated flag for turmeric, maize, the pulses and sesame (Vellode), tomato, garlic and onion (Fresno), sesame and soybean (Kano). The "See the math" panel marks each one.
+- The profit figures are not the same measure in the three places: net return in Tamil Nadu, gross value in Fresno, gross margin in Kano. Ranks are only compared inside one village.
+- The soil effect value given to each class of crop is team judgement; only the classes are sourced.
+- Fresno wheat was 16% irrigated in the 2022 census (a drought year) and 63% in 2017; the app treats it as not irrigated.
 - TNAU water figures are irrigation applied in Tamil Nadu; FAO figures are crop water need. They are different quantities and are used as published.
 - EcoCrop does not say whether its temperatures are daily means or daytime highs; the app compares them with mean temperature.
 - The time machine applies climate-model changes to a climatology. It is a scenario, not a forecast.

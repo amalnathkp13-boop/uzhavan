@@ -342,11 +342,21 @@ const CROPS={
  onion:{en:"Onion",ta:"வெங்காயம்",fam:"allium",dur:6,need:450,ws:"FAO",oLo:12,oHi:25,aLo:4,aHi:30,soil:0.4,al:["onion","வெங்காயம்"]},
  garlic:{en:"Garlic",ta:"பூண்டு",fam:"allium",dur:4,need:450,ws:"",oLo:18,oHi:30,aLo:7,aHi:35,soil:0.4,al:["garlic","பூண்டு"]}
 };
-/* Per-region: [crop, relative gross margin 1-5, irrigated?]  (placeholders - validate locally) */
+/* Per-region: [crop, profit rank 1-5, irrigated?, profit figure behind the rank, irrigation figure behind the flag]
+   An empty string means no published figure was found: that value is the team's estimate.
+   Profit rank rule: 5 if the crop earns at least half of the village's best crop, 4 at least a quarter,
+   3 at least an eighth, 2 at least a sixteenth, else 1.
+   vellode: net return over cost A2+FL, Rs/ha, Tamil Nadu 2021-22 (Govt of India DES cost of cultivation). Best: onion.
+            Irrigated share of crop area, Tamil Nadu (Statistical Hand Book 2022-23, Table 5.4; onion: TRS report 2021-22).
+   fresno:  gross value per harvested acre, Fresno County Crop & Livestock Report 2025. Best: garlic.
+            Irrigated share of harvested acres, USDA Census of Agriculture 2022, Fresno County.
+   kano:    gross margin, Naira/ha, Bunkure, 2008 (IITA KKM baseline, Ayanwale et al. 2011). These five rain-fed crops are
+            ranked against each other with groundnut held at 3; rice, vegetables, sesame and soybean are estimates.
+            Rain-fed or dry-season irrigated: Sufiyan et al. 2022. */
 const REGION={
- vellode:[["turmeric",4,1],["paddy",3,1],["sugarcane",4,1],["groundnut",3,0],["blackgram",2,0],["greengram",2,0],["maize",3,0],["sorghum",2,0],["cotton",3,0],["sesame",2,0],["onion",3,1]],
- fresno:[["tomato",4,1],["cotton",3,1],["wheat",2,0],["alfalfa",3,1],["garlic",4,1],["maize",2,1],["onion",3,1],["cowpea",2,1]],
- kano:[["millet",2,0],["sorghum",2,0],["cowpea",3,0],["groundnut",3,0],["maize",3,0],["paddy",4,1],["sesame",3,0],["soybean",3,0],["tomato",4,1],["onion",4,1]]
+ vellode:[["turmeric",5,1,"Rs 106,027 per acre net, Coimbatore (Govindasamy et al. 2021)",""],["paddy",3,1,"Rs 20,792/ha","93.8%"],["sugarcane",5,1,"Rs 117,484/ha","100%"],["groundnut",3,0,"Rs 21,632/ha","42.0%"],["blackgram",2,0,"Rs 11,443/ha",""],["greengram",1,0,"Rs 4,583/ha",""],["maize",3,0,"Rs 25,322/ha",""],["sorghum",1,0,"Rs 1,404/ha","10.4%"],["cotton",4,0,"Rs 54,251/ha","39.5%"],["sesame",2,0,"",""],["onion",5,1,"Rs 119,053/ha","91%"]],
+ fresno:[["tomato",5,1,"$5,686/acre (processing)",""],["cotton",4,1,"$2,989/acre","100%"],["wheat",1,0,"$658/acre","16%"],["alfalfa",3,1,"$1,664/acre","95%"],["garlic",5,1,"$10,828/acre",""],["maize",3,1,"$1,800/acre (silage)","102 of 105 farms"],["onion",5,1,"$7,993/acre",""],["cowpea",3,1,"$1,760/acre (UC Davis 2026 budget)","furrow irrigated (UC Davis 2026)"]],
+ kano:[["millet",3,0,"N52,219/ha","rain-fed"],["sorghum",3,0,"N51,001/ha","rain-fed"],["cowpea",2,0,"N22,868/ha","rain-fed"],["groundnut",3,0,"N65,013/ha","rain-fed"],["maize",3,0,"N64,557/ha","rain-fed"],["paddy",4,1,"","dry-season irrigated"],["sesame",3,0,"",""],["soybean",3,0,"",""],["tomato",4,1,"","dry-season irrigated"],["onion",4,1,"","dry-season irrigated"]]
 };
 const USABLE=0.7, TOPUP=0.45, HEAT_K=0.6, ROT_PEN=50, LEG_BONUS=8;
 
@@ -474,7 +484,7 @@ function scoreCrop(id,margin,irr,clim,sow,prev,w){
 function rankAll(year=S.year,sow=S.sow,prev=S.prev,w=S.w,vid){
   const v=vid?VILLAGES[vid]:village(); if(vid&&!v.rain)v.rain=v.p.map((x,i)=>x*DAYS[i]);
   const clim=climate(v,year);
-  return REGION[vid||regionId()].map(([id,m,irr])=>scoreCrop(id,m,irr,clim,sow,prev,w))
+  return REGION[vid||regionId()].map(([id,m,irr,ps,is])=>Object.assign(scoreCrop(id,m,irr,clim,sow,prev,w),{margin:m,ps:ps||"",is:is||""}))
     .sort((a,b)=>b.score-a.score||b.raw-a.raw);
 }
 
@@ -629,7 +639,8 @@ function mathText(r){
   const lines=[
    `${t("iWater")}: (0.7 × ${Math.round(r.rain)} mm ${L?"மழை":"rain"}${r.irr?` + ${Math.round(r.topup)} mm ${L?"பாசனம்":"irrigation"}`:""}) ÷ ${c.need} mm = ${fmt(r.wf,2)}`,
    `   (${L?"நீர்த் தேவை ஆதாரம்":"water need source"}: ${c.ws||(L?"ஆதாரம் இன்னும் இல்லை":"not yet sourced")}; ${L?"வெப்ப வரம்புகள்":"temperature ranges"}: FAO EcoCrop)`,
-   `${t("iSoil")}: ${fmt(r.soil,2)}    ${t("iProfit")}: ${fmt(r.profit,2)}`,
+   `${t("iSoil")}: ${fmt(r.soil,2)} (${L?"குழுவின் வகை மதிப்பு":"team's class value"})    ${t("iProfit")}: ${fmt(r.profit,2)}`,
+   `   (${L?"லாப நிலை":"profit rank"} ${r.margin}/5: ${r.ps||(L?"குழுவின் மதிப்பீடு":"team estimate")}; ${L?"பாசனம்":"irrigated share"}: ${r.is||(L?"குழுவின் மதிப்பீடு":"team estimate")})`,
    `${L?"முன்னுரிமை எடை":"Priority weights"}: ${pct(r.share.water)}% / ${pct(r.share.soil)}% / ${pct(r.share.profit)}%  →  ${fmt(r.base*100,1)}`,
    `${L?"வெப்பநிலை":"Temperature"}: ${L?"பயிர்க் கால சராசரி":"season mean"} ${fmt(r.hotT,1)} °C; ${L?"உகந்த வரம்பு":"optimal"} ${c.oLo}–${c.oHi} °C, ${L?"எல்லை":"limits"} ${c.aLo} / ${c.aHi} °C (FAO EcoCrop) → × ${fmt(1-HEAT_K*r.stress,2)}`,
    `${L?"சுழற்சி":"Rotation"}: −${r.rot}    ${L?"பயறு ஊக்கம்":"Legume bonus"}: +${r.bonus}`,
@@ -709,10 +720,11 @@ function renderTM(){
 function renderTests(){
   const w={water:5,soil:5,profit:5}, v=VILLAGES.vellode; if(!v.rain)v.rain=v.p.map((x,i)=>x*DAYS[i]);
   const c=climate(v,2026);
-  const tu=scoreCrop("turmeric",4,1,c,5,"paddy",w), bg=scoreCrop("blackgram",2,0,c,9,"paddy",w), pp=scoreCrop("paddy",3,1,c,5,"paddy",w);
+  const R=id=>REGION.vellode.find(r=>r[0]===id);
+  const tu=scoreCrop("turmeric",R("turmeric")[1],1,c,5,"paddy",w), bg=scoreCrop("blackgram",R("blackgram")[1],0,c,9,"paddy",w), pp=scoreCrop("paddy",R("paddy")[1],1,c,5,"paddy",w);
   const L=S.lang==="ta";
   const rows=[
-   [Math.abs(tu.score-58)<=3&&tu.heat===0, L?`ஜூனில் நெல்லுக்குப் பின் மஞ்சள்: நீர் பொருத்தம் ${fmt(tu.wf,2)}, வெப்ப அபாயம் ${pct(tu.heat)}%. எதிர்பார்ப்பு சுமார் 58.`:`Turmeric sown in June after paddy: water fit ${fmt(tu.wf,2)}, heat risk ${pct(tu.heat)}%. Expected about 58.`, tu.score],
+   [Math.abs(tu.score-65)<=3&&Math.abs(tu.wf-0.73)<=0.02&&tu.heat===0, L?`ஜூனில் நெல்லுக்குப் பின் மஞ்சள்: நீர் பொருத்தம் ${fmt(tu.wf,2)}, வெப்ப அபாயம் ${pct(tu.heat)}%. எதிர்பார்ப்பு: நீர் பொருத்தம் 0.73, மதிப்பெண் சுமார் 65 (மதிப்பிட்ட லாப நிலையுடன் ஒத்திகையில் 58; வெளியிடப்பட்ட லாபத் தரவுடன் 65).`:`Turmeric sown in June after paddy: water fit ${fmt(tu.wf,2)}, heat risk ${pct(tu.heat)}%. Expected: water fit 0.73, score about 65 (58 in rehearsal with an estimated profit rank; 65 with published profit figures).`, tu.score],
    [Math.abs(bg.score-74)<=3, L?`அக்டோபரில் (வடகிழக்குப் பருவமழை) நெல்லுக்குப் பின் உளுந்து. எதிர்பார்ப்பு சுமார் 74.`:`Black gram sown in October (north-east monsoon) after paddy. Expected about 74.`, bg.score],
    [pp.score===0, L?`நெல்லுக்குப் பின் நெல்: சுழற்சி அபராதத்தால் 0 ஆக வேண்டும்.`:`Paddy after paddy: the rotation penalty must take it to 0.`, pp.score]
   ];
@@ -726,7 +738,12 @@ function renderData(){
    ["NASA GIBS, MODIS Terra NDVI (8-day)","https://nasa-gibs.github.io/gibs-api-docs/",L?"வரைபடத்தில் பயிர்ப் பசுமை அடுக்கு.":"The crop-greenness layer on the map."],
    ["NASA NEX-GDDP-CMIP6","https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6",NEX?(L?`கால இயந்திரம்: SSP2-4.5, ${NEX.models.length} மாதிரிகளின் சராசரி (${NEX.models.join(", ")}). மாத வெப்ப, மழை மாற்றங்கள் ${NEX.base} உடன் ஒப்பிட்டு, NASA POWER அடிப்படையில் சேர்க்கப்படுகின்றன. 2030 = ${NEX.win[0]}, 2040 = ${NEX.win[1]}, 2050 = ${NEX.win[2]}.`:`The time machine: SSP2-4.5, mean of ${NEX.models.length} models (${NEX.models.join(", ")}). Monthly temperature and rain changes against ${NEX.base} are added to the NASA POWER baseline. 2030 = ${NEX.win[0]}, 2040 = ${NEX.win[1]}, 2050 = ${NEX.win[2]}.`):""],
    ["NASA SMAP, NISAR (NASA + ISRO)","https://worldview.earthdata.nasa.gov",L?"மண் ஈரப்பதம்: அடுத்த கட்டத் திட்டம். இந்தச் செயலியில் இன்னும் பயன்படுத்தப்படவில்லை.":"Soil moisture: on the roadmap. Not used in this app yet."],
-   [L?"பயிர் அட்டவணை":"Crop table","https://agritech.tnau.ac.in/agriculture/agri_irrigationmgt_waterrequirements.html",L?"நீர்த் தேவை, காலம்: TNAU நீர்த்தேவை அட்டவணை, FAO பாசனப் பயிற்சிக் கையேடு 3. வெப்ப வரம்புகள்: FAO EcoCrop. பச்சைப்பயறு, தட்டைப்பயறு, பூண்டு நீர்த் தேவை, மண் விளைவு, லாப நிலை, பாசனக் குறி ஆகியவை குழுவின் மதிப்பீடு; இன்னும் ஆதாரம் இல்லை.":"Water need and duration: TNAU water-requirement table and FAO Irrigation Water Management Manual 3. Temperature ranges: FAO EcoCrop. Water need for green gram, cowpea and garlic, plus soil effect, margin rank and the irrigated flag, are the team's estimates and not yet sourced."]
+   [L?"பயிர் அட்டவணை":"Crop table","https://agritech.tnau.ac.in/agriculture/agri_irrigationmgt_waterrequirements.html",L?"நீர்த் தேவை, காலம்: TNAU நீர்த்தேவை அட்டவணை, FAO பாசனப் பயிற்சிக் கையேடு 3. வெப்ப வரம்புகள்: FAO EcoCrop. பச்சைப்பயறு, தட்டைப்பயறு, பூண்டு நீர்த் தேவை குழுவின் மதிப்பீடு.":"Water need and duration: TNAU water-requirement table and FAO Irrigation Water Management Manual 3. Temperature ranges: FAO EcoCrop. Water need for green gram, cowpea and garlic is the team's estimate."],
+   [L?"லாப நிலை: தமிழ்நாடு":"Profit rank: Tamil Nadu","https://desagri.gov.in/wp-content/uploads/2023/06/CS-Consolidated-Crop-year-wise-2021-22-4.xlsx",L?"இந்திய அரசு DES சாகுபடிச் செலவு மதிப்பீடுகள் 2021-22, தமிழ்நாடு: ஒரு ஹெக்டேருக்கு நிகர வருவாய் (விளைபொருள் மதிப்பு − செலவு A2+FL). கிராமத்தின் சிறந்த பயிரின் பாதிக்கு மேல் = 5, கால் = 4, எட்டில் ஒன்று = 3, பதினாறில் ஒன்று = 2, இல்லையெனில் 1. மஞ்சள்: கோயம்புத்தூர் ஆய்வு (Govindasamy et al. 2021). எள்: தரவு கிடைக்கவில்லை; குழுவின் மதிப்பீடு.":"Government of India DES cost-of-cultivation estimates 2021-22, Tamil Nadu: net return per hectare (value of produce minus cost A2+FL). Rank 5 if a crop earns at least half of the village's best crop, 4 a quarter, 3 an eighth, 2 a sixteenth, else 1. Turmeric is from a separate Coimbatore study (Govindasamy et al. 2021). Sesame has no figure and is the team's estimate."],
+   [L?"பாசனப் பங்கு: தமிழ்நாடு":"Irrigated share: Tamil Nadu","https://des.tn.gov.in/sites/default/files/2025-07/5.%20IRRIGATION.pdf",L?"தமிழ்நாடு புள்ளியியல் கையேடு 2022-23, அட்டவணை 5.4 (நெல், சோளம், கரும்பு, பருத்தி, நிலக்கடலை); வெங்காயம்: TRS அறிக்கை 2021-22. பயிர்ப் பரப்பில் பாதிக்கு மேல் பாசனம் என்றால் பாசனப் பயிர். மஞ்சள், மக்காச்சோளம், பயறு வகைகள், எள்: குழுவின் மதிப்பீடு.":"Statistical Hand Book of Tamil Nadu 2022-23, Table 5.4 (paddy, sorghum, sugarcane, cotton, groundnut); onion from the TRS report 2021-22. A crop counts as irrigated when more than half its area is irrigated. Turmeric, maize, the pulses and sesame are the team's estimate."],
+   [L?"லாபம், பாசனம்: ஃப்ரெஸ்னோ":"Profit and irrigation: Fresno","https://www.fresnocountyca.gov/files/sharedassets/county/v/1/agricultural-commissioner/ag-crop-reports/ag-crop-and-livestock-report-2025.pdf",L?"Fresno County Crop & Livestock Report 2025: அறுவடை ஏக்கருக்கு மொத்த மதிப்பு (நிகர லாபம் அல்ல). தட்டைப்பயறு: UC Davis 2026 செலவு ஆய்வு. பாசனப் பங்கு: USDA Census of Agriculture 2022 (பருத்தி, குதிரைமசால், மக்காச்சோளம், கோதுமை); தக்காளி, பூண்டு, வெங்காயம்: குழுவின் மதிப்பீடு.":"Fresno County Crop & Livestock Report 2025: gross value per harvested acre (not net profit). Cowpea is from the UC Davis 2026 cost study. Irrigated share: USDA Census of Agriculture 2022 (cotton, alfalfa, maize, wheat); tomato, garlic and onion are the team's estimate."],
+   [L?"லாபம், பாசனம்: கானோ":"Profit and irrigation: Kano","https://cgspace.cgiar.org/bitstream/10568/88189/3/U11RepAyanwaleBaselineNothomDev.pdf",L?"IITA KKM அடிப்படை ஆய்வு (Ayanwale et al. 2011), புங்குரே, 2008: கம்பு, சோளம், மக்காச்சோளம், தட்டைப்பயறு, நிலக்கடலை ஆகியவற்றின் மொத்த லாபம்; இவை ஒன்றுக்கொன்று ஒப்பிட்டு வரிசைப்படுத்தப்பட்டன (நிலக்கடலை = 3). நெல், தக்காளி, வெங்காயம், எள், சோயா: குழுவின் மதிப்பீடு. மானாவாரி / வறண்ட காலப் பாசனம்: Sufiyan et al. 2022.":"IITA KKM baseline study (Ayanwale et al. 2011), Bunkure, 2008: gross margin for millet, sorghum, maize, cowpea and groundnut, ranked against each other with groundnut held at 3. Rice, tomato, onion, sesame and soybean are the team's estimate. Rain-fed or dry-season irrigated: Sufiyan et al. 2022."],
+   [L?"மண் விளைவு":"Soil effect","https://www.fao.org/4/a0443e/a0443e03.pdf",L?"பயறு வகைகள் தழைச்சத்தை நிலைநிறுத்துகின்றன (நிலக்கடலை 110–150, சோயா 100+, உளுந்து 60, பச்சைப்பயறு 55, தட்டைப்பயறு 60 கி.கி N/ஹெ.); மற்ற பயிர்கள் சத்தை எடுக்கின்றன: FAO Fertilizer and Plant Nutrition Bulletin 16, அட்டவணை 22, 29, அத்தியாயம் 8. ஒவ்வொரு வகைக்கும் 0–1 மதிப்பு குழுவின் தீர்மானம்.":"Legumes fix nitrogen (groundnut 110–150, soybean 100 or more, black gram 60, green gram 55, cowpea 60 kg N/ha) and other crops draw nutrients down: FAO Fertilizer and Plant Nutrition Bulletin 16, Tables 22 and 29 and chapter 8. The 0–1 value given to each class is the team's judgement."]
   ];
   $("datalist").innerHTML=items.map(i=>`<li><a href="${i[1]}" target="_blank" rel="noopener">${i[0]}</a>: ${i[2]}</li>`).join("");
 }

@@ -288,47 +288,52 @@ const VILLAGES={
   t:[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],
   tx:[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],
   soil:{lat:11.32,lon:77.75,clay:31.2,sand:35.3,silt:33.4,ph:7.1,soc:20.2},
-  scen:{dT:1.3,dR:0.06},prev:"paddy"},
+  prev:"paddy"},
  fresno:{lat:36.60,lon:-119.90,name:{en:"Fresno County",ta:"ஃப்ரெஸ்னோ"},place:{en:"California, USA",ta:"கலிபோர்னியா, அமெரிக்கா"},
   note:{en:"Mediterranean; irrigated",ta:"மத்தியதரைக் காலநிலை; பாசன விவசாயம்"},
   p:[1.8,1.74,1.52,0.91,0.39,0.08,0.03,0.02,0.05,0.47,0.88,1.88],
   t:[9.46,10.65,13.27,16.03,21.06,26.45,30.24,28.82,25.7,19.69,13.48,9.12],
   tx:[26.33,27.44,33.34,38.03,44.65,46.98,48.42,47.0,45.76,40.48,32.35,25.18],
   soil:{lat:36.60,lon:-119.90,clay:18.7,sand:42.4,silt:38.9,ph:7.8,soc:19.0},
-  scen:{dT:1.8,dR:-0.06},prev:"tomato"},
+  prev:"tomato"},
  kano:{lat:12.00,lon:8.52,name:{en:"Kano",ta:"கானோ"},place:{en:"Nigeria",ta:"நைஜீரியா"},
   note:{en:"Sahel; one rainy season",ta:"சஹேல்; ஒரே மழைக்காலம்"},
   p:[0,0,0.26,0.61,1.55,2.37,4.63,6.59,3.5,0.73,0.25,0],
   t:[20.75,24.27,27.87,30.8,31.31,30.17,28.13,26.44,27.04,27.08,24.09,21.24],
   tx:[38.92,40.64,42.6,44.05,43.12,43.02,41.9,39.32,40.0,39.89,38.69,37.46],
   soil:{lat:11.95,lon:8.45,clay:16.0,sand:60.3,silt:23.7,ph:6.1,soc:7.6},
-  scen:{dT:1.6,dR:0.04},prev:"millet"}
+  prev:"millet"}
 };
 const SAVED_PERIOD="2001–2025";
+/* NASA NEX-GDDP-CMIP6 monthly changes (filled by tools/nex_deltas.py). dT in deg C, rR = rain ratio, for 2030 / 2040 / 2050. */
+const NEX=/*NEXDATA*/{"models":["ACCESS-CM2","GFDL-ESM4","IITM-ESM","MIROC6","MPI-ESM1-2-HR"],"scenario":"SSP2-4.5","base":"2001–2025","win":["2026–2035","2036–2045","2046–2055"],"vellode":{"dT":[[0.23,0.27,0.51,0.25,0.19,0.55,0.21,0.44,0.34,0.33,0.43,0.5],[0.56,0.7,0.59,0.87,0.58,0.84,0.3,0.63,0.39,0.5,0.65,0.66],[0.95,0.92,0.74,0.88,0.81,0.99,0.9,0.76,0.76,0.78,0.93,0.93]],"rR":[[0.852,1.0,0.81,1.115,1.103,0.94,1.082,1.141,0.983,1.03,1.048,0.759],[0.906,1.0,0.951,1.017,1.005,0.898,1.347,0.929,1.025,1.009,0.743,1.044],[1.123,1.0,1.059,1.076,1.184,0.968,1.204,1.216,1.133,1.11,0.782,0.739]]},"fresno":{"dT":[[0.57,0.53,0.49,0.3,0.44,0.66,0.91,1.06,1.1,0.92,0.92,0.54],[0.72,0.66,1.03,0.62,0.71,0.25,0.84,1.16,1.09,0.86,0.6,0.29],[1.27,0.92,1.07,0.8,0.82,0.67,1.1,1.32,1.41,1.7,1.32,0.63]],"rR":[[1.115,0.992,0.945,1.222,1.015,1.0,1.0,1.0,0.943,0.754,0.925,1.222],[0.969,0.988,0.897,1.079,0.922,1.0,1.0,1.0,0.945,1.275,1.238,0.974],[1.052,0.944,0.889,1.154,1.07,1.0,1.0,1.0,1.029,0.768,1.092,1.101]]},"kano":{"dT":[[0.43,0.46,0.53,0.36,0.47,0.25,0.49,0.48,0.16,0.31,0.46,0.77],[0.8,0.66,0.6,0.68,0.67,0.75,0.53,0.53,0.41,0.61,0.74,1.03],[1.05,1.17,0.87,1.26,1.03,0.85,0.89,0.88,0.92,0.87,1.12,1.01]],"rR":[[1.0,1.0,1.0,1.729,1.164,1.171,0.965,1.037,1.171,0.955,1.0,1.0],[1.0,1.0,1.0,0.832,1.024,1.094,1.034,1.008,1.049,1.356,1.0,1.0],[1.0,1.0,1.0,1.16,0.975,1.178,1.01,0.961,1.115,1.532,1.0,1.0]]}}/*END*/;
 
-/* CROP TABLE - agronomy placeholders (FAO-56 style typical values).
-   need = seasonal water need (mm); dur = months in the field;
-   hot / cold = mean monthly temperature limits (deg C); soil = effect on soil 0-1.
-   >>> Agronomy role: replace with TNAU / KVK table values and re-check with the farmer. <<< */
+/* CROP TABLE
+   need = seasonal water need (mm). ws = its source: "TNAU" = TNAU Agritech water-requirement table
+          (turmeric: TNAU ARS Bhavanisagar trial); "FAO" = FAO Irrigation Water Management Training
+          Manual 3, Table 5 (midpoint of the range); "" = no sourced figure found yet.
+   dur  = months in the field (TNAU / FAO growing period, rounded up to whole months).
+   oLo..oHi = optimal temperature range, aLo / aHi = absolute limits (deg C), FAO EcoCrop.
+   soil = effect on soil 0-1 (team judgement, not sourced). */
 const CROPS={
- turmeric:{en:"Turmeric",ta:"மஞ்சள்",fam:"ginger",dur:9,need:1400,hot:30,cold:18,soil:0.2,exh:true,al:["turmeric","manjal","மஞ்சள்"]},
- paddy:{en:"Paddy",ta:"நெல்",fam:"cereal",dur:4,need:1200,hot:31,cold:18,soil:0.15,exh:true,al:["paddy","rice","nel","நெல்"]},
- sugarcane:{en:"Sugarcane",ta:"கரும்பு",fam:"cereal",dur:12,need:1800,hot:32,cold:16,soil:0.1,exh:true,al:["sugarcane","karumbu","கரும்பு"]},
- groundnut:{en:"Groundnut",ta:"நிலக்கடலை",fam:"legume",dur:4,need:500,hot:31,cold:18,soil:0.9,leg:true,al:["groundnut","peanut","நிலக்கடலை","கடலை"]},
- blackgram:{en:"Black gram",ta:"உளுந்து",fam:"legume",dur:3,need:290,hot:31,cold:18,soil:0.9,leg:true,al:["black gram","blackgram","urad","ulundu","உளுந்து"]},
- greengram:{en:"Green gram",ta:"பச்சைப்பயறு",fam:"legume",dur:3,need:280,hot:32,cold:18,soil:0.9,leg:true,al:["green gram","greengram","moong","mung","பச்சைப்பயறு","பாசிப்பயறு"]},
- cowpea:{en:"Cowpea",ta:"தட்டைப்பயறு",fam:"legume",dur:3,need:320,hot:33,cold:18,soil:0.9,leg:true,al:["cowpea","blackeye","தட்டைப்பயறு","காராமணி"]},
- soybean:{en:"Soybean",ta:"சோயா",fam:"legume",dur:4,need:500,hot:30,cold:15,soil:0.85,leg:true,al:["soybean","soya","சோயா"]},
- alfalfa:{en:"Alfalfa",ta:"குதிரைமசால்",fam:"legume",dur:8,need:1100,hot:30,cold:5,soil:0.95,leg:true,al:["alfalfa","lucerne","குதிரைமசால்"]},
- maize:{en:"Maize",ta:"மக்காச்சோளம்",fam:"cereal",dur:4,need:550,hot:30,cold:12,soil:0.4,al:["maize","corn","மக்காச்சோளம்"]},
- sorghum:{en:"Sorghum",ta:"சோளம்",fam:"cereal",dur:4,need:450,hot:33,cold:15,soil:0.5,al:["sorghum","cholam","jowar","சோளம்"]},
- millet:{en:"Pearl millet",ta:"கம்பு",fam:"cereal",dur:3,need:350,hot:34,cold:18,soil:0.5,al:["millet","kambu","bajra","கம்பு"]},
- wheat:{en:"Wheat",ta:"கோதுமை",fam:"cereal",dur:5,need:480,hot:24,cold:3,soil:0.4,al:["wheat","கோதுமை"]},
- cotton:{en:"Cotton",ta:"பருத்தி",fam:"mallow",dur:6,need:750,hot:32,cold:16,soil:0.35,al:["cotton","paruthi","பருத்தி"]},
- sesame:{en:"Sesame",ta:"எள்",fam:"sesame",dur:3,need:320,hot:32,cold:18,soil:0.5,al:["sesame","gingelly","ellu","எள்"]},
- tomato:{en:"Tomato",ta:"தக்காளி",fam:"nightshade",dur:4,need:600,hot:30,cold:12,soil:0.35,al:["tomato","தக்காளி"]},
- onion:{en:"Onion",ta:"வெங்காயம்",fam:"allium",dur:4,need:450,hot:29,cold:8,soil:0.4,al:["onion","வெங்காயம்"]},
- garlic:{en:"Garlic",ta:"பூண்டு",fam:"allium",dur:7,need:450,hot:25,cold:3,soil:0.4,al:["garlic","பூண்டு"]}
+ turmeric:{en:"Turmeric",ta:"மஞ்சள்",fam:"ginger",dur:9,need:1390,ws:"TNAU",oLo:20,oHi:28,aLo:18,aHi:32,soil:0.2,exh:true,al:["turmeric","manjal","மஞ்சள்"]},
+ paddy:{en:"Paddy",ta:"நெல்",fam:"cereal",dur:4,need:1250,ws:"TNAU",oLo:20,oHi:30,aLo:10,aHi:36,soil:0.15,exh:true,al:["paddy","rice","nel","நெல்"]},
+ sugarcane:{en:"Sugarcane",ta:"கரும்பு",fam:"cereal",dur:12,need:2200,ws:"TNAU",oLo:24,oHi:37,aLo:15,aHi:41,soil:0.1,exh:true,al:["sugarcane","karumbu","கரும்பு"]},
+ groundnut:{en:"Groundnut",ta:"நிலக்கடலை",fam:"legume",dur:4,need:510,ws:"TNAU",oLo:22,oHi:32,aLo:10,aHi:45,soil:0.9,leg:true,al:["groundnut","peanut","நிலக்கடலை","கடலை"]},
+ blackgram:{en:"Black gram",ta:"உளுந்து",fam:"legume",dur:3,need:280,ws:"TNAU",oLo:22,oHi:35,aLo:8,aHi:40,soil:0.9,leg:true,al:["black gram","blackgram","urad","ulundu","உளுந்து"]},
+ greengram:{en:"Green gram",ta:"பச்சைப்பயறு",fam:"legume",dur:3,need:280,ws:"",oLo:21,oHi:36,aLo:8,aHi:40,soil:0.9,leg:true,al:["green gram","greengram","moong","mung","பச்சைப்பயறு","பாசிப்பயறு"]},
+ cowpea:{en:"Cowpea",ta:"தட்டைப்பயறு",fam:"legume",dur:4,need:320,ws:"",oLo:25,oHi:35,aLo:15,aHi:40,soil:0.9,leg:true,al:["cowpea","blackeye","தட்டைப்பயறு","காராமணி"]},
+ soybean:{en:"Soybean",ta:"சோயா",fam:"legume",dur:5,need:575,ws:"FAO",oLo:20,oHi:33,aLo:10,aHi:38,soil:0.85,leg:true,al:["soybean","soya","சோயா"]},
+ alfalfa:{en:"Alfalfa",ta:"குதிரைமசால்",fam:"legume",dur:12,need:1200,ws:"FAO",oLo:21,oHi:27,aLo:5,aHi:45,soil:0.95,leg:true,al:["alfalfa","lucerne","குதிரைமசால்"]},
+ maize:{en:"Maize",ta:"மக்காச்சோளம்",fam:"cereal",dur:4,need:500,ws:"TNAU",oLo:18,oHi:33,aLo:10,aHi:47,soil:0.4,al:["maize","corn","மக்காச்சோளம்"]},
+ sorghum:{en:"Sorghum",ta:"சோளம்",fam:"cereal",dur:4,need:500,ws:"TNAU",oLo:22,oHi:35,aLo:8,aHi:40,soil:0.5,al:["sorghum","cholam","jowar","சோளம்"]},
+ millet:{en:"Pearl millet",ta:"கம்பு",fam:"cereal",dur:4,need:550,ws:"FAO",oLo:25,oHi:35,aLo:12,aHi:40,soil:0.5,al:["millet","kambu","bajra","கம்பு"]},
+ wheat:{en:"Wheat",ta:"கோதுமை",fam:"cereal",dur:5,need:550,ws:"FAO",oLo:15,oHi:23,aLo:5,aHi:27,soil:0.4,al:["wheat","கோதுமை"]},
+ cotton:{en:"Cotton",ta:"பருத்தி",fam:"mallow",dur:6,need:600,ws:"TNAU",oLo:22,oHi:36,aLo:15,aHi:42,soil:0.35,al:["cotton","paruthi","பருத்தி"]},
+ sesame:{en:"Sesame",ta:"எள்",fam:"sesame",dur:3,need:150,ws:"TNAU",oLo:20,oHi:30,aLo:10,aHi:40,soil:0.5,al:["sesame","gingelly","ellu","எள்"]},
+ tomato:{en:"Tomato",ta:"தக்காளி",fam:"nightshade",dur:5,need:600,ws:"FAO",oLo:20,oHi:27,aLo:7,aHi:35,soil:0.35,al:["tomato","தக்காளி"]},
+ onion:{en:"Onion",ta:"வெங்காயம்",fam:"allium",dur:6,need:450,ws:"FAO",oLo:12,oHi:25,aLo:4,aHi:30,soil:0.4,al:["onion","வெங்காயம்"]},
+ garlic:{en:"Garlic",ta:"பூண்டு",fam:"allium",dur:4,need:450,ws:"",oLo:18,oHi:30,aLo:7,aHi:35,soil:0.4,al:["garlic","பூண்டு"]}
 };
 /* Per-region: [crop, relative gross margin 1-5, irrigated?]  (placeholders - validate locally) */
 const REGION={
@@ -336,7 +341,7 @@ const REGION={
  fresno:[["tomato",4,1],["cotton",3,1],["wheat",2,0],["alfalfa",3,1],["garlic",4,1],["maize",2,1],["onion",3,1],["cowpea",2,1]],
  kano:[["millet",2,0],["sorghum",2,0],["cowpea",3,0],["groundnut",3,0],["maize",3,0],["paddy",4,1],["sesame",3,0],["soybean",3,0],["tomato",4,1],["onion",4,1]]
 };
-const USABLE=0.7, TOPUP=0.45, HEAT_K=0.6, HEAT_SPAN=4, ROT_PEN=50, LEG_BONUS=8;
+const USABLE=0.7, TOPUP=0.45, HEAT_K=0.6, ROT_PEN=50, LEG_BONUS=8;
 
 /* ============================================================
    TEXT
@@ -356,6 +361,7 @@ en:{hero:"What should this field grow next?",
  wWater:"Save water",wSoil:"Soil health",wProfit:"Profit",
  rank:n=>`Choice ${n}`,of100:"out of 100",iWater:"Water fit",iSoil:"Soil effect",iProfit:"Profit",
  cHeat:p=>`Heat risk ${p}%`,cCold:p=>`Cold risk ${p}%`,cRot:"Same family as last crop −50",cLeg:"Legume after hungry crop +8",cIrr:"Needs assured irrigation",cOk:"No temperature stress",
+ vsNow:"vs today",soilNear:km=>`Nearest SoilGrids cell with data, ${km} km from the village`,
  math:"See the math",restTitle:"All crops for this village",crop:"Crop",window:"In the field",
  chatTitle:"Ask your field",chatSrc:"Answers use only this village's data and scores",
  qph:"Can I sow turmeric this month?",askBtn:"Ask",
@@ -367,7 +373,8 @@ en:{hero:"What should this field grow next?",
  dataTitle:"Where every number comes from",
  tmLabel:"Climate time machine",
  deltaNow:"Today's climate. Drag to see 2030, 2040 and 2050.",
- delta:(dt,dr)=>`<b>+${dt} °C</b>, rain <b>${dr>=0?"+":""}${dr}%</b>. Illustrative scenario shift in the direction of IPCC AR6; to be replaced with NASA NEX-GDDP-CMIP6 values.`,
+ delta:(dt,dr)=>`<b>${dt>=0?"+":""}${dt} °C</b>, rain <b>${dr>=0?"+":""}${dr}%</b> over the year. NASA NEX-GDDP-CMIP6, SSP2-4.5, mean of ${NEX.models.length} models, against ${NEX.base}.`,
+ deltaNone:"NASA NEX-GDDP-CMIP6 changes are loaded for the three pilot villages only.",
  custom:"Custom location",loading:"Loading NASA POWER…",failCustom:"Could not reach NASA POWER for that spot. Check the connection and tap again.",
  nearest:v=>`Crop list borrowed from ${v}`,
  live:"Live NASA data",saved:"Saved NASA data (offline-ready)"},
@@ -385,6 +392,7 @@ ta:{hero:"இந்த வயலில் அடுத்து எந்தப�
  wWater:"நீர் சேமிப்பு",wSoil:"மண் வளம்",wProfit:"லாபம்",
  rank:n=>`தேர்வு ${n}`,of100:"100-க்கு",iWater:"நீர் பொருத்தம்",iSoil:"மண் விளைவு",iProfit:"லாபம்",
  cHeat:p=>`வெப்ப அபாயம் ${p}%`,cCold:p=>`குளிர் அபாயம் ${p}%`,cRot:"முந்தைய பயிரின் அதே குடும்பம் −50",cLeg:"சத்து உறிஞ்சும் பயிருக்குப் பின் பயறு +8",cIrr:"உறுதியான பாசனம் தேவை",cOk:"வெப்ப அழுத்தம் இல்லை",
+ vsNow:"இன்றைவிட",soilNear:km=>`தரவுள்ள அருகிலுள்ள SoilGrids கட்டம்; கிராமத்திலிருந்து ${km} கி.மீ`,
  math:"கணக்கைப் பாருங்கள்",restTitle:"இந்தக் கிராமத்துக்கான எல்லாப் பயிர்களும்",crop:"பயிர்",window:"வயலில் இருக்கும் காலம்",
  chatTitle:"உங்கள் வயலிடம் கேளுங்கள்",chatSrc:"இந்தக் கிராமத்தின் தரவு, மதிப்பெண்களை மட்டுமே வைத்துப் பதில்",
  qph:"இந்த மாதம் மஞ்சள் விதைக்கலாமா?",askBtn:"கேள்",
@@ -396,7 +404,8 @@ ta:{hero:"இந்த வயலில் அடுத்து எந்தப�
  dataTitle:"ஒவ்வொரு எண்ணும் எங்கிருந்து வருகிறது",
  tmLabel:"காலநிலை கால இயந்திரம்",
  deltaNow:"இன்றைய காலநிலை. 2030, 2040, 2050-ஐப் பார்க்க இழுங்கள்.",
- delta:(dt,dr)=>`<b>+${dt} °C</b>, மழை <b>${dr>=0?"+":""}${dr}%</b>. IPCC AR6 திசையிலான மாதிரிச் சூழல்; NASA NEX-GDDP-CMIP6 மதிப்புகளால் மாற்றப்படும்.`,
+ delta:(dt,dr)=>`<b>${dt>=0?"+":""}${dt} °C</b>, ஆண்டு மழை <b>${dr>=0?"+":""}${dr}%</b>. NASA NEX-GDDP-CMIP6, SSP2-4.5, ${NEX.models.length} மாதிரிகளின் சராசரி; ஒப்பீடு ${NEX.base}.`,
+ deltaNone:"NASA NEX-GDDP-CMIP6 மாற்றங்கள் மூன்று முன்னோடிக் கிராமங்களுக்கு மட்டுமே உள்ளன.",
  custom:"தேர்ந்த இடம்",loading:"NASA POWER தரவு வருகிறது…",failCustom:"அந்த இடத்துக்கு NASA POWER கிடைக்கவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் தொடுங்கள்.",
  nearest:v=>`பயிர்ப் பட்டியல்: ${v}-இலிருந்து`,
  live:"நேரடி NASA தரவு",saved:"சேமித்த NASA தரவு (இணையமின்றி இயங்கும்)"}
@@ -422,9 +431,16 @@ function regionId(){return S.vid==="custom"?S.custom.region:S.vid}
 /* ============================================================
    CLIMATE + SCORING ENGINE
    ============================================================ */
+function nexFor(v){for(const k in VILLAGES)if(VILLAGES[k]===v)return NEX&&NEX[k]||null;return null}
 function climate(v,year){
-  const f=(year-2026)/24, dT=v.scen.dT*f, dR=v.scen.dR*f;
-  return {rain:v.rain.map(r=>r*(1+dR)),t:v.t.map(x=>x+dT),dT,dR};
+  const a=nexFor(v), Y=[2026,2030,2040,2050];
+  if(!a||year<=2026)return {rain:v.rain.slice(),t:v.t.slice(),dT:0,dR:0,has:!!a};
+  let i=1; while(i<3&&year>Y[i])i++;
+  const f=(year-Y[i-1])/(Y[i]-Y[i-1]);
+  const mix=(k,m)=>{const p=i===1?(k==="dT"?0:1):a[k][i-2][m], q=a[k][i-1][m];return p+(q-p)*f};
+  const rain=v.rain.map((r,m)=>r*mix("rR",m)), t=v.t.map((x,m)=>x+mix("dT",m));
+  const sum=x=>x.reduce((p,q)=>p+q,0);
+  return {rain,t,dT:sum(t)/12-sum(v.t)/12,dR:sum(rain)/sum(v.rain)-1,has:true};
 }
 function windowMonths(sow,dur){const a=[];for(let i=0;i<dur;i++)a.push((sow+i)%12);return a}
 function scoreCrop(id,margin,irr,clim,sow,prev,w){
@@ -436,9 +452,9 @@ function scoreCrop(id,margin,irr,clim,sow,prev,w){
   let ws=w.water+w.soil+w.profit, ww=w;
   if(ws<=0){ww={water:1,soil:1,profit:1};ws=3}
   const base=(ww.water*wf+ww.soil*soil+ww.profit*profit)/ws;
-  const hotT=Math.max(...ms.map(m=>clim.t[m])), coldT=Math.min(...ms.map(m=>clim.t[m]));
-  const heat=Math.max(0,Math.min(1,(hotT-c.hot)/HEAT_SPAN));
-  const cold=Math.max(0,Math.min(1,(c.cold-coldT)/HEAT_SPAN));
+  const seasonT=ms.reduce((a,m)=>a+clim.t[m],0)/ms.length, hotT=seasonT, coldT=seasonT; // mean temperature over the months in the field
+  const heat=Math.max(0,Math.min(1,(hotT-c.oHi)/(c.aHi-c.oHi)));
+  const cold=Math.max(0,Math.min(1,(c.oLo-coldT)/(c.oLo-c.aLo)));
   const stress=Math.max(heat,cold);
   const pc=prev?CROPS[prev]:null;
   const rot=pc&&pc.fam===c.fam?ROT_PEN:0;
@@ -501,7 +517,7 @@ async function loadCustom(lat,lon){
   try{
     const d=await fetchPower(lat,lon), region=nearestPilot(lat,lon);
     S.custom={lat,lon,region,name:{en:`${lat}, ${lon}`,ta:`${lat}, ${lon}`},place:{en:TX.en.custom,ta:TX.ta.custom},
-      p:d.p,t:d.t,tx:d.tx,rain:d.rain,soil:null,scen:{dT:1.5,dR:0}};
+      p:d.p,t:d.t,tx:d.tx,rain:d.rain,soil:null};
     S.vid="custom";S.live=true;S.soilLive=false;S.period=d.period;
     S.prev=VILLAGES[region].prev;
     renderAll();
@@ -597,7 +613,7 @@ function renderSoil(){
    <span class="muted">${t("sand")} ${fmt(s.sand)}%, ${t("silt")} ${fmt(s.silt)}%, ${t("clay")} ${fmt(s.clay)}%</span></div>
    <div class="soilrow"><span>${t("ph")}</span><span><b>${fmt(s.ph,1)}</b> <span class="muted">${w.ph}</span></span></div>
    <div class="soilrow"><span>${t("soc")}</span><span><b>${fmt(s.soc,1)} g/kg</b> <span class="muted">${w.soc}</span></span></div>
-   <p class="muted" style="margin-top:8px">${fmt(s.lat,2)}°, ${fmt(s.lon,2)}°</p>`;
+   <p class="muted" style="margin-top:8px">${(()=>{const v=village(),km=Math.round(111*Math.hypot(v.lat-s.lat,(v.lon-s.lon)*Math.cos(v.lat*Math.PI/180)));return km>=1?t("soilNear")(km)+". ":""})()}${fmt(s.lat,2)}°, ${fmt(s.lon,2)}°</p>`;
   $("soil").innerHTML=h;
 }
 function winText(r){const a=r.ms[0],b=r.ms[r.ms.length-1];return `${MON[S.lang][a]} – ${MON[S.lang][b]}`}
@@ -605,9 +621,10 @@ function mathText(r){
   const c=CROPS[r.id], L=S.lang==="ta";
   const lines=[
    `${t("iWater")}: (0.7 × ${Math.round(r.rain)} mm ${L?"மழை":"rain"}${r.irr?` + ${Math.round(r.topup)} mm ${L?"பாசனம்":"irrigation"}`:""}) ÷ ${c.need} mm = ${fmt(r.wf,2)}`,
+   `   (${L?"நீர்த் தேவை ஆதாரம்":"water need source"}: ${c.ws||(L?"ஆதாரம் இன்னும் இல்லை":"not yet sourced")}; ${L?"வெப்ப வரம்புகள்":"temperature ranges"}: FAO EcoCrop)`,
    `${t("iSoil")}: ${fmt(r.soil,2)}    ${t("iProfit")}: ${fmt(r.profit,2)}`,
    `${L?"முன்னுரிமை எடை":"Priority weights"}: ${pct(r.share.water)}% / ${pct(r.share.soil)}% / ${pct(r.share.profit)}%  →  ${fmt(r.base*100,1)}`,
-   `${L?"வெப்பநிலை":"Temperature"}: ${L?"காலத்தின் அதிக மாத சராசரி":"hottest month in window"} ${fmt(r.hotT,1)} °C (${L?"வரம்பு":"limit"} ${c.hot} °C), ${L?"குறைந்த":"coldest"} ${fmt(r.coldT,1)} °C (${L?"வரம்பு":"limit"} ${c.cold} °C) → × ${fmt(1-HEAT_K*r.stress,2)}`,
+   `${L?"வெப்பநிலை":"Temperature"}: ${L?"பயிர்க் கால சராசரி":"season mean"} ${fmt(r.hotT,1)} °C; ${L?"உகந்த வரம்பு":"optimal"} ${c.oLo}–${c.oHi} °C, ${L?"எல்லை":"limits"} ${c.aLo} / ${c.aHi} °C (FAO EcoCrop) → × ${fmt(1-HEAT_K*r.stress,2)}`,
    `${L?"சுழற்சி":"Rotation"}: −${r.rot}    ${L?"பயறு ஊக்கம்":"Legume bonus"}: +${r.bonus}`,
    `= ${r.score} / 100`];
   return lines.join("\n");
@@ -621,6 +638,7 @@ function cardHTML(r,i){
   if(!r.heat&&!r.cold)chips.push(`<span class="chip good">${t("cOk")}</span>`);
   if(r.bonus)chips.push(`<span class="chip good">${t("cLeg")}</span>`);
   if(r.irr)chips.push(`<span class="chip warn">${t("cIrr")}</span>`);
+  if(S.year>2026&&r.d!==0)chips.unshift(`<span class="chip ${r.d<0?"bad":"good"}">${r.d<0?"▼":"▲"} ${Math.abs(r.d)} ${t("vsNow")}</span>`);
   const bar=(lab,val,col)=>`<div class="r"><span>${lab}</span><div class="track"><i style="width:${pct(val)}%;background:${col}"></i></div><b>${fmt(val,2)}</b></div>`;
   return `<article class="card ${i===0?"first":""}" data-id="${r.id}">
     <div class="rank">${t("rank")(i+1)}, ${winText(r)}</div>
@@ -634,7 +652,9 @@ function cardHTML(r,i){
 function renderAdvisor(animate){
   const ws=S.w.water+S.w.soil+S.w.profit||1;
   ["water","soil","profit"].forEach(k=>$("p-"+k).textContent=(S.w.water+S.w.soil+S.w.profit?pct(S.w[k]/ws):33)+"%");
-  const ranked=rankAll(), box=$("cards");
+  const ranked=rankAll(), box=$("cards"), now={};
+  rankAll(2026).forEach(r=>now[r.id]=r.score); ranked.forEach(r=>r.d=r.score-now[r.id]);
+  const fut=S.year>2026;
   const open=new Set([...box.querySelectorAll("details[open]")].map(d=>d.closest(".card").dataset.id));
   const before={}; if(animate)box.querySelectorAll(".card").forEach(el=>before[el.dataset.id]=el.getBoundingClientRect());
   box.innerHTML=ranked.slice(0,3).map(cardHTML).join("");
@@ -645,13 +665,13 @@ function renderAdvisor(animate){
     if(b){const dx=b.left-a.left,dy=b.top-a.top; if(dx||dy)el.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],{duration:420,easing:"cubic-bezier(.2,.8,.2,1)"})}
     else el.animate([{opacity:0,transform:"scale(.94)"},{opacity:1,transform:"none"}],{duration:420});
   });
-  $("rest").innerHTML=`<h3>${t("restTitle")}</h3><table><tr><th>${t("crop")}</th><th>${t("window")}</th><th class="n">${t("iWater")}</th><th class="n">${t("of100")}</th></tr>`+
-    ranked.map(r=>`<tr><td>${cn(r.id)}</td><td>${winText(r)}</td><td class="n">${fmt(r.wf,2)}</td><td class="n"><b>${r.score}</b></td></tr>`).join("")+`</table>`;
+  $("rest").innerHTML=`<h3>${t("restTitle")}</h3><table><tr><th>${t("crop")}</th><th>${t("window")}</th><th class="n">${t("iWater")}</th><th class="n">${t("of100")}</th>${fut?`<th class="n">${t("vsNow")}</th>`:""}</tr>`+
+    ranked.map(r=>`<tr><td>${cn(r.id)}</td><td>${winText(r)}</td><td class="n">${fmt(r.wf,2)}</td><td class="n"><b>${r.score}</b></td>${fut?`<td class="n" style="color:${r.d<0?"var(--kumkum)":r.d>0?"var(--leaf)":"inherit"}">${r.d>0?"+":""}${r.d}</td>`:""}</tr>`).join("")+`</table>`;
 }
 function renderTM(){
   $("yr").textContent=S.year; $("year").value=S.year;
-  const v=village(), f=(S.year-2026)/24;
-  $("delta").innerHTML=S.year===2026?t("deltaNow"):t("delta")(fmt(v.scen.dT*f,1),Math.round(v.scen.dR*f*100));
+  const c=climate(village(),S.year);
+  $("delta").innerHTML=S.year===2026?t("deltaNow"):!c.has?t("deltaNone"):t("delta")(fmt(c.dT,1),Math.round(c.dR*100));
 }
 function renderTests(){
   const w={water:5,soil:5,profit:5}, v=VILLAGES.vellode; if(!v.rain)v.rain=v.p.map((x,i)=>x*DAYS[i]);
@@ -671,9 +691,9 @@ function renderData(){
    ["NASA POWER","https://power.larc.nasa.gov/docs/services/api/",L?`மாத மழை (PRECTOTCORR), வெப்பநிலை (T2M, T2M_MAX). ${SAVED_PERIOD} சராசரி, MERRA-2. நேரடியாக அழைக்கப்படும்; தோல்வியானால் சேமித்த நகல்.`:`Monthly rain (PRECTOTCORR) and temperature (T2M, T2M_MAX). ${SAVED_PERIOD} climatology, MERRA-2. Called live; saved copy if the call fails.`],
    ["ISRIC SoilGrids v2.0","https://rest.isric.org",L?"மண் வகை, pH, கரிமக் கரி; 250 மீ, மேல் 5 செ.மீ.":"Soil texture, pH and organic carbon at 250 m, top 5 cm."],
    ["NASA GIBS, MODIS Terra NDVI (8-day)","https://nasa-gibs.github.io/gibs-api-docs/",L?"வரைபடத்தில் பயிர்ப் பசுமை அடுக்கு.":"The crop-greenness layer on the map."],
-   ["NASA NEX-GDDP-CMIP6","https://www.nasa.gov/nex",L?"கால இயந்திரத்துக்கான சரியான தரவு. தற்போதைய மாற்றங்கள் IPCC AR6 திசையிலான மாதிரி மதிப்புகள்; இன்னும் NEX-GDDP எண்கள் அல்ல.":"The right dataset for the time machine. The shifts shown today are illustrative values in the direction of IPCC AR6, not yet NEX-GDDP numbers."],
+   ["NASA NEX-GDDP-CMIP6","https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6",NEX?(L?`கால இயந்திரம்: SSP2-4.5, ${NEX.models.length} மாதிரிகளின் சராசரி (${NEX.models.join(", ")}). மாத வெப்ப, மழை மாற்றங்கள் ${NEX.base} உடன் ஒப்பிட்டு, NASA POWER அடிப்படையில் சேர்க்கப்படுகின்றன. 2030 = ${NEX.win[0]}, 2040 = ${NEX.win[1]}, 2050 = ${NEX.win[2]}.`:`The time machine: SSP2-4.5, mean of ${NEX.models.length} models (${NEX.models.join(", ")}). Monthly temperature and rain changes against ${NEX.base} are added to the NASA POWER baseline. 2030 = ${NEX.win[0]}, 2040 = ${NEX.win[1]}, 2050 = ${NEX.win[2]}.`):""],
    ["NASA SMAP, NISAR (NASA + ISRO)","https://worldview.earthdata.nasa.gov",L?"மண் ஈரப்பதம்: அடுத்த கட்டத் திட்டம். இந்தச் செயலியில் இன்னும் பயன்படுத்தப்படவில்லை.":"Soil moisture: on the roadmap. Not used in this app yet."],
-   [L?"பயிர் அட்டவணை":"Crop table","https://agritech.tnau.ac.in",L?"நீர்த் தேவை, காலம், வெப்ப வரம்பு, லாப நிலை: பொதுவான வேளாண் மதிப்புகள்; TNAU / KVK அட்டவணையுடன் சரிபார்க்கப்பட வேண்டும்.":"Water need, duration, temperature limits and margin rank are typical agronomy values, to be checked against TNAU / KVK tables."]
+   [L?"பயிர் அட்டவணை":"Crop table","https://agritech.tnau.ac.in/agriculture/agri_irrigationmgt_waterrequirements.html",L?"நீர்த் தேவை, காலம்: TNAU நீர்த்தேவை அட்டவணை, FAO பாசனப் பயிற்சிக் கையேடு 3. வெப்ப வரம்புகள்: FAO EcoCrop. பச்சைப்பயறு, தட்டைப்பயறு, பூண்டு நீர்த் தேவை, மண் விளைவு, லாப நிலை, பாசனக் குறி ஆகியவை குழுவின் மதிப்பீடு; இன்னும் ஆதாரம் இல்லை.":"Water need and duration: TNAU water-requirement table and FAO Irrigation Water Management Manual 3. Temperature ranges: FAO EcoCrop. Water need for green gram, cowpea and garlic, plus soil effect, margin rank and the irrigated flag, are the team's estimates and not yet sourced."]
   ];
   $("datalist").innerHTML=items.map(i=>`<li><a href="${i[1]}" target="_blank" rel="noopener">${i[0]}</a>: ${i[2]}</li>`).join("");
 }
@@ -743,8 +763,8 @@ function ruleAnswer(q){
       a=(r.score>=65?`ஆம். ${nm}-இல் ${M[m]} மாதம் ${N(crop)} விதைக்கலாம்`:r.score>=45?`கவனத்துடன் விதைக்கலாம். ${nm}-இல் ${M[m]} மாதம் ${N(crop)}`:`பரிந்துரைக்கவில்லை. ${nm}-இல் ${M[m]} மாதம் ${N(crop)}`)+`: மதிப்பெண் ${r.score}/100${yrNote}.`;
       a+=`\nபயிர்க் காலத்தில் (${MON.ta[r.ms[0]]}–${MON.ta[r.ms[r.ms.length-1]]}) பயன்படும் மழை ${Math.round(r.eff)} மி.மீ; தேவை ${c.need} மி.மீ. நீர் பொருத்தம் ${fmt(r.wf,2)}.`;
       if(r.irr)a+=` மீதிக்குக் கால்வாய் அல்லது கிணற்றுப் பாசனம் உறுதியாக இருக்க வேண்டும்.`;
-      if(r.heat>0)a+=`\nவெப்ப அபாயம் ${pct(r.heat)}%: காலத்தின் அதிக மாத சராசரி ${fmt(r.hotT,1)} °C, வரம்பு ${c.hot} °C.`;
-      if(r.cold>0)a+=`\nகுளிர் அபாயம் ${pct(r.cold)}%: குறைந்த மாத சராசரி ${fmt(r.coldT,1)} °C, வரம்பு ${c.cold} °C.`;
+      if(r.heat>0)a+=`\nவெப்ப அபாயம் ${pct(r.heat)}%: பயிர்க் கால சராசரி வெப்பநிலை ${fmt(r.hotT,1)} °C, உகந்த வரம்பு ${c.oHi} °C வரை.`;
+      if(r.cold>0)a+=`\nகுளிர் அபாயம் ${pct(r.cold)}%: பயிர்க் கால சராசரி வெப்பநிலை ${fmt(r.coldT,1)} °C, உகந்த வரம்பு ${c.oLo} °C முதல்.`;
       if(r.rot)a+=`\n${N(S.prev)}-க்குப் பிறகு அதே குடும்பப் பயிர்; சுழற்சி அபராதம் −50.`;
       if(r.bonus)a+=`\n${N(S.prev)}-க்குப் பிறகு பயறு வகை மண்ணுக்கு நல்லது: +8.`;
       if(best.id!==crop)a+=`\nஇந்த மாதத்துக்கு முதல் தேர்வு: ${N(best.id)} (${best.score}/100).`;
@@ -752,8 +772,8 @@ function ruleAnswer(q){
       a=(r.score>=65?`Yes. ${N(crop)} sown in ${M[m]} at ${nm} is a good fit`:r.score>=45?`Possible, with care. ${N(crop)} sown in ${M[m]} at ${nm}`:`Not advised. ${N(crop)} sown in ${M[m]} at ${nm}`)+`: score ${r.score}/100${yrNote}.`;
       a+=`\nUsable rain over its season (${MON.en[r.ms[0]]}–${MON.en[r.ms[r.ms.length-1]]}) is ${Math.round(r.eff)} mm against a need of ${c.need} mm. Water fit ${fmt(r.wf,2)}.`;
       if(r.irr)a+=` The rest must come from assured canal or well irrigation.`;
-      if(r.heat>0)a+=`\nHeat risk ${pct(r.heat)}%: hottest month in the season averages ${fmt(r.hotT,1)} °C, limit ${c.hot} °C.`;
-      if(r.cold>0)a+=`\nCold risk ${pct(r.cold)}%: coldest month averages ${fmt(r.coldT,1)} °C, limit ${c.cold} °C.`;
+      if(r.heat>0)a+=`\nHeat risk ${pct(r.heat)}%: the season averages ${fmt(r.hotT,1)} °C, optimal range ends at ${c.oHi} °C.`;
+      if(r.cold>0)a+=`\nCold risk ${pct(r.cold)}%: the season averages ${fmt(r.coldT,1)} °C, optimal range starts at ${c.oLo} °C.`;
       if(r.rot)a+=`\nIt is the same plant family as ${N(S.prev)}, which you just harvested: rotation penalty −50.`;
       if(r.bonus)a+=`\nA legume after ${N(S.prev)} rebuilds the soil: +8.`;
       if(best.id!==crop)a+=`\nTop choice for that month: ${N(best.id)} (${best.score}/100).`;
@@ -762,10 +782,11 @@ function ruleAnswer(q){
   }
   // future
   if(/2030|2040|2050|future|climate|எதிர்கால|காலநிலை/.test(s)){
-    const y=+(/20[345]0/.exec(s)||[2050])[0], m=mon==null?S.sow:mon, now=rankAll(2026,m), fut=rankAll(y,m), f=(y-2026)/24;
+    const y=+(/20[345]0/.exec(s)||[2050])[0], m=mon==null?S.sow:mon, now=rankAll(2026,m), fut=rankAll(y,m), cc=climate(v,y);
+    if(!cc.has)return t('deltaNone');
     const line=a=>a.slice(0,3).map(r=>`${N(r.id)} ${r.score}`).join(", ");
-    return (ta?`${nm}, ${y}: மாதிரிச் சூழலில் வெப்பம் +${fmt(v.scen.dT*f,1)} °C, மழை ${Math.round(v.scen.dR*f*100)}%.\nஇன்று முதல் மூன்று: ${line(now)}.\n${y}-இல் முதல் மூன்று: ${line(fut)}.\nஇது IPCC AR6 திசையிலான மாதிரி மாற்றம்; கணிப்பு அல்ல.`
-      :`${nm} in ${y}: the scenario adds ${fmt(v.scen.dT*f,1)} °C and changes rain by ${Math.round(v.scen.dR*f*100)}%.\nTop three today: ${line(now)}.\nTop three in ${y}: ${line(fut)}.\nThis is an illustrative shift in the direction of IPCC AR6, not a forecast.`)+src;
+    return (ta?`${nm}, ${y}: NASA NEX-GDDP-CMIP6 (SSP2-4.5) சூழலில் வெப்பம் +${fmt(cc.dT,1)} °C, மழை ${Math.round(cc.dR*100)}%.\nஇன்று முதல் மூன்று: ${line(now)}.\n${y}-இல் முதல் மூன்று: ${line(fut)}.\nஇது ஒரு காலநிலைச் சூழல்; வானிலை முன்னறிவிப்பு அல்ல.`
+      :`${nm} in ${y}: NASA NEX-GDDP-CMIP6 (SSP2-4.5) adds ${fmt(cc.dT,1)} °C and changes rain by ${Math.round(cc.dR*100)}%.\nTop three today: ${line(now)}.\nTop three in ${y}: ${line(fut)}.\nThis is a climate scenario, not a weather forecast.`)+src;
   }
   // soil
   if(/soil|மண்/.test(s)){
@@ -795,7 +816,7 @@ function groundingFacts(){
   const v=village(), c=climate(v,S.year);
   return {village:v.name.en,place:v.place.en,lat:v.lat,lon:v.lon,
     climate_source:`NASA POWER climatology ${S.period}`,scenario_year:S.year,
-    scenario_note:S.year>2026?"illustrative shift in the direction of IPCC AR6, not a forecast":"baseline climate",
+    scenario_note:S.year>2026?"NASA NEX-GDDP-CMIP6 SSP2-4.5 multi-model mean change applied to the NASA POWER baseline; a scenario, not a forecast":"baseline climate",
     monthly_rain_mm:c.rain.map(x=>Math.round(x)),monthly_mean_temp_c:c.t.map(x=>+x.toFixed(1)),
     soil:v.soil?{source:"ISRIC SoilGrids 0-5cm",texture:texture(v.soil.sand,v.soil.silt,v.soil.clay),sand_pct:v.soil.sand,silt_pct:v.soil.silt,clay_pct:v.soil.clay,ph:v.soil.ph,organic_carbon_g_per_kg:v.soil.soc}:null,
     today_month:MONL.en[new Date().getMonth()],crop_just_harvested:S.prev?CROPS[S.prev].en:"none",
@@ -806,9 +827,10 @@ async function aiAnswer(q){
   const sys=`You are UZHAVAN, a crop-rotation helper for one farmer. Answer ONLY from the JSON below. Never use outside knowledge for numbers, prices, varieties, pesticides or forecasts. If the answer is not in the JSON, say you cannot answer from this village's data. Reply in the language of the question (Tamil or English), in at most 90 words, plain text, and quote the score and the numbers behind it.\n\nVILLAGE DATA:\n`+JSON.stringify(groundingFacts());
   const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
     headers:{"content-type":"application/json","x-api-key":aiKey(),"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-    body:JSON.stringify({model:"claude-haiku-5-5",max_tokens:500,system:sys,messages:[{role:"user",content:q}]})});
+    body:JSON.stringify({model:"claude-opus-5-5",max_tokens:4000,output_config:{effort:"low"},system:sys,messages:[{role:"user",content:q}]})});
   if(!r.ok)throw new Error("AI "+r.status);
-  const d=await r.json(); const txt=(d.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("").trim();
+  const d=await r.json(); if(d.stop_reason==="refusal")throw new Error("refusal");
+  const txt=(d.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("").trim();
   if(!txt)throw new Error("empty"); return txt;
 }
 function addMsg(cls,text,tag){

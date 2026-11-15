@@ -103,10 +103,29 @@ input[type=range]{width:100%;accent-color:var(--leaf)}
 .card .name{font-size:1.5rem;font-weight:760;font-stretch:110%;line-height:1.15}
 .card .name small{font-size:.85rem;font-weight:500;color:var(--ink2);display:block}
 .score{position:absolute;right:14px;top:12px;text-align:right}
+.card .name{padding-right:84px}
 .score b{font-size:2.3rem;font-weight:800;font-stretch:118%;line-height:1}
 .score span{font-size:.8rem;color:var(--ink2)}
+.steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px;counter-reset:st}
+@media(min-width:700px){.steps{grid-template-columns:repeat(3,1fr)}}
+.steps li{counter-increment:st}
+.steps a{display:flex;gap:10px;align-items:center;height:100%;padding:9px 12px;border-radius:12px;background:#FFF8DC12;border:1px solid #FFF8DC33;color:#FFF8DC;text-decoration:none;font-size:.92rem;line-height:1.3}
+.steps a::before{content:counter(st);flex:none;width:26px;height:26px;border-radius:50%;background:var(--manjal);color:var(--ink);font-weight:800;display:grid;place-items:center}
+.steps a:hover,.steps a:focus-visible{background:#FFF8DC26}
+.hint{margin:-2px 0 6px;font-size:.8rem}
+.verdict{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.verdict b{font-size:.95rem;padding:3px 11px;border-radius:999px}
+.verdict b.v2{background:#D3EBD9;color:#12491f}.verdict b.v1{background:#FCE3A6;color:#6a4a00}.verdict b.v0{background:#F6D5D3;color:#7d1218}
+.verdict button{font:inherit;font-size:.8rem;display:inline-flex;gap:5px;align-items:center;padding:3px 10px;border-radius:999px;border:1.5px solid var(--leaf);background:transparent;color:var(--leaf);cursor:pointer}
+.why{margin-top:6px;font-size:.92rem;line-height:1.4}
+.lvl{font-size:.74rem;color:var(--ink2);display:block;line-height:1.1;font-style:normal}
+.help{margin-top:14px;font-size:.92rem}
+.help summary{font-weight:700;cursor:pointer}
+.help ul{margin:8px 0 0;padding-left:18px}
+.help li{margin:5px 0}
 .ing{margin-top:12px;display:grid;gap:7px}
 .ing .r{display:grid;grid-template-columns:104px 1fr 38px;gap:8px;align-items:center;font-size:.85rem}
+.ing .r b{text-align:right}
 .track{height:10px;background:#EFE3B4;border-radius:5px;overflow:hidden}
 .track i{display:block;height:100%;border-radius:5px;transition:width .35s}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
@@ -167,8 +186,10 @@ ul.data a{color:var(--leaf)}
 .tm .yr{font-size:2.4rem;font-weight:800;font-stretch:122%;line-height:1;color:var(--manjal);font-variant-numeric:tabular-nums;min-width:4.6ch}
 .tm .lab{font-size:.8rem;opacity:.85}
 .tm input[type=range]{accent-color:var(--manjal);height:28px}
-.ticks{display:flex;justify-content:space-between;font-size:.74rem;opacity:.8;position:relative;height:1.1em}
-.ticks span{position:absolute;transform:translateX(-50%)}
+.ticks{position:relative;height:30px;margin-top:2px}
+.ticks button{position:absolute;transform:translateX(-50%);font:inherit;font-size:.8rem;font-weight:650;color:#FFF8DC;background:#FFF8DC1f;border:1px solid #FFF8DC55;border-radius:999px;padding:3px 10px;cursor:pointer;min-height:26px}
+.ticks button[aria-pressed=true]{background:var(--manjal);border-color:var(--manjal);color:var(--ink)}
+@media(max-width:700px){.ticks{display:flex;justify-content:space-between;gap:4px;height:auto;margin-top:6px}.ticks button{position:static;transform:none!important;flex:1;padding:4px 2px}}
 .tm .delta{grid-column:1/-1;font-size:.82rem;opacity:.92}
 .tm .delta b{color:var(--manjal)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto}}
@@ -191,6 +212,7 @@ ul.data a{color:var(--leaf)}
       <div>
         <h1 data-t="hero"></h1>
         <p class="lead" data-t="lead"></p>
+        <ol class="steps" id="steps"></ol>
         <div class="villages" id="villages"></div>
   <div class="more"><label for="erodeSel" id="erodeLab"></label><select id="erodeSel"></select></div>
       </div>
@@ -224,6 +246,7 @@ ul.data a{color:var(--leaf)}
     <div class="field"><label for="prev" data-t="prevLabel"></label><select id="prev"></select></div>
     <div class="field">
       <label data-t="prioLabel"></label>
+      <p class="muted hint" data-t="prioHint"></p>
       <div class="prio">
         <div class="row"><span data-t="wWater"></span><input type="range" id="w-water" min="0" max="10" value="5" aria-label="Save water"><b id="p-water"></b></div>
         <div class="row"><span data-t="wSoil"></span><input type="range" id="w-soil" min="0" max="10" value="5" aria-label="Soil health"><b id="p-soil"></b></div>
@@ -232,6 +255,7 @@ ul.data a{color:var(--leaf)}
     </div>
   </div>
   <div class="cards" id="cards"></div>
+  <details class="panel help" id="help"></details>
   <div class="panel outlook" id="outlook" hidden></div>
   <div class="panel rest" id="rest"></div>
 </section>
@@ -277,7 +301,7 @@ ul.data a{color:var(--leaf)}
     <div><div class="lab" data-t="tmLabel"></div><div class="yr" id="yr">2026</div></div>
     <div>
       <input type="range" id="year" min="2026" max="2050" step="1" value="2026" aria-label="Year">
-      <div class="ticks"><span style="left:16.67%">2030</span><span style="left:58.33%">2040</span><span style="left:100%;transform:translateX(-100%)">2050</span></div>
+      <div class="ticks" id="ticks"><button type="button" data-y="2026" style="left:0;transform:none" data-t="today"></button><button type="button" data-y="2030" style="left:16.67%">2030</button><button type="button" data-y="2040" style="left:58.33%">2040</button><button type="button" data-y="2050" style="left:100%;transform:translateX(-100%)">2050</button></div>
     </div>
     <div class="delta" id="delta"></div>
   </div>
@@ -500,9 +524,19 @@ en:{hero:"What should this field grow next?",
  soilTitle:"Soil card",soilSrc:(live)=>`ISRIC SoilGrids, top 5 cm${live?" (live)":" (saved copy)"}`,texture:"Texture",ph:"pH",soc:"Organic carbon",
  sand:"Sand",silt:"Silt",clay:"Clay",soilNone:"No soil data for this spot (SoilGrids has no value here).",
  phAcid:"acidic",phNeutral:"near neutral",phAlk:"alkaline",socLow:"low",socMed:"medium",socHigh:"good",
- advTitle:"Crop rotation advisor",advSrc:"Score = your priorities × (water fit, soil effect, profit), then temperature and rotation rules",
+ advTitle:"Crop rotation advisor",advSrc:"Tell us about your field. Your three best crops appear below.",
  sowLabel:"Sowing month",prevLabel:"Crop just harvested",none:"None / fallow",prioLabel:"What matters most to you",
  wWater:"Save water",wSoil:"Soil health",wProfit:"Profit",
+ step1:"Pick your place",step2:"Say what you harvested and when you will sow",step3:"Read your three crops",
+ prioHint:"Slide right for what matters more to you.",today:"Today",listen:"Listen",
+ vGood:"Good choice",vOk:"Worth trying, with care",vBad:"Not a good fit now",why:"Why",
+ lvl:["low","medium","high"],
+ helpTitle:"What do these numbers mean?",
+ help:["The big number (0 to 100) says how well a crop suits this place, this sowing month and what matters to you. Higher is better.",
+  "Water fit: how much of the crop's water need is covered by rain, plus canal or well water for irrigated crops. 1.00 means fully covered.",
+  "Soil effect: whether the crop builds the soil (pulses, groundnut) or takes a lot out of it (paddy, turmeric, sugarcane).",
+  "Profit: how much the crop usually earns here, in five steps.",
+  "Open \"See the math\" on a card for the full sum, \"Fertilizer plan\" for what to feed it, and \"Weeds, pests and diseases\" for what to watch."],
  rank:n=>`Choice ${n}`,of100:"out of 100",iWater:"Water fit",iSoil:"Soil effect",iProfit:"Profit",
  cHeat:p=>`Heat risk ${p}%`,cCold:p=>`Cold risk ${p}%`,cRot:"Same family as last crop −50",cLeg:"Legume after hungry crop +8",cIrr:"Needs assured irrigation",cOk:"No temperature stress",
  vsNow:"vs today",soilNear:km=>`Nearest SoilGrids cell with data, ${km} km from the village`,
@@ -516,7 +550,7 @@ en:{hero:"What should this field grow next?",
  proofTitle:"Check our work",testsTitle:"Engine self-test",testsNote:"These run in your browser right now, on the Vellode data, with equal priorities.",
  dataTitle:"Where every number comes from",
  tmLabel:"Climate time machine",
- deltaNow:"Today's climate. Drag to see 2030, 2040 and 2050.",
+ deltaNow:"Today's climate. Tap 2030, 2040 or 2050 to see the future.",
  delta:(dt,dr)=>`<b>${dt>=0?"+":""}${dt} °C</b>, rain <b>${dr>=0?"+":""}${dr}%</b> over the year. NASA NEX-GDDP-CMIP6, SSP2-4.5, mean of ${NEX.models.length} models, against ${NEX.base}.`,
  deltaNone:"NASA NEX-GDDP-CMIP6 changes are loaded only for the pilot villages and the Erode places, not for a tapped map point.",
  custom:"Custom location",loading:"Loading NASA POWER…",failCustom:"Could not reach NASA POWER for that spot. Check the connection and tap again.",
@@ -531,9 +565,19 @@ ta:{hero:"இந்த வயலில் அடுத்து எந்தப�
  soilTitle:"மண் அட்டை",soilSrc:(live)=>`ISRIC SoilGrids, மேல் 5 செ.மீ${live?" (நேரடி)":" (சேமித்த நகல்)"}`,texture:"மண் வகை",ph:"கார அமில நிலை (pH)",soc:"கரிமக் கரி",
  sand:"மணல்",silt:"வண்டல்",clay:"களி",soilNone:"இந்த இடத்துக்கு மண் தரவு இல்லை.",
  phAcid:"அமிலத்தன்மை",phNeutral:"நடுநிலை",phAlk:"காரத்தன்மை",socLow:"குறைவு",socMed:"நடுத்தரம்",socHigh:"நல்லது",
- advTitle:"பயிர் சுழற்சி ஆலோசகர்",advSrc:"மதிப்பெண் = உங்கள் முன்னுரிமை × (நீர் பொருத்தம், மண் விளைவு, லாபம்); பிறகு வெப்பம், சுழற்சி விதிகள்",
+ advTitle:"பயிர் சுழற்சி ஆலோசகர்",advSrc:"உங்கள் வயலைப் பற்றிச் சொல்லுங்கள். ஏற்ற மூன்று பயிர்கள் கீழே தெரியும்.",
  sowLabel:"விதைக்கும் மாதம்",prevLabel:"இப்போது அறுவடை செய்த பயிர்",none:"இல்லை / தரிசு",prioLabel:"உங்களுக்கு எது முக்கியம்",
  wWater:"நீர் சேமிப்பு",wSoil:"மண் வளம்",wProfit:"லாபம்",
+ step1:"உங்கள் ஊரைத் தேர்ந்தெடுங்கள்",step2:"அறுவடை செய்த பயிரையும் விதைக்கும் மாதத்தையும் சொல்லுங்கள்",step3:"உங்களுக்கான மூன்று பயிர்களைப் பாருங்கள்",
+ prioHint:"உங்களுக்கு அதிக முக்கியமானதை வலப்பக்கம் நகர்த்துங்கள்.",today:"இன்று",listen:"கேளுங்கள்",
+ vGood:"நல்ல தேர்வு",vOk:"கவனத்துடன் முயற்சிக்கலாம்",vBad:"இப்போது ஏற்றதல்ல",why:"ஏன்",
+ lvl:["குறைவு","நடுத்தரம்","அதிகம்"],
+ helpTitle:"இந்த எண்களின் பொருள் என்ன?",
+ help:["பெரிய எண் (0 முதல் 100): இந்த ஊருக்கும், விதைக்கும் மாதத்துக்கும், உங்கள் முன்னுரிமைக்கும் அந்தப் பயிர் எவ்வளவு பொருந்தும் என்பதைக் காட்டும். அதிகமானால் நல்லது.",
+  "நீர் பொருத்தம்: பயிரின் நீர்த் தேவையில் எவ்வளவு மழையால் (பாசனப் பயிர்களுக்குக் கால்வாய், கிணற்று நீரும் சேர்த்து) கிடைக்கும். 1.00 என்றால் முழுத் தேவையும் கிடைக்கும்.",
+  "மண் விளைவு: பயிர் மண் வளத்தைக் கூட்டுமா (பயறு வகைகள், நிலக்கடலை) அல்லது சத்தை அதிகம் எடுக்குமா (நெல், மஞ்சள், கரும்பு).",
+  "லாபம்: இந்தப் பகுதியில் அந்தப் பயிர் பொதுவாக எவ்வளவு வருமானம் தரும் என்பது, ஐந்து படிகளில்.",
+  "முழுக் கணக்குக்கு அட்டையில் \"கணக்கைப் பாருங்கள்\"; உரத்துக்கு \"உரத் திட்டம்\"; களை, பூச்சிக்கு \"களை, பூச்சி, நோய் அட்டவணை\"."],
  rank:n=>`தேர்வு ${n}`,of100:"100-க்கு",iWater:"நீர் பொருத்தம்",iSoil:"மண் விளைவு",iProfit:"லாபம்",
  cHeat:p=>`வெப்ப அபாயம் ${p}%`,cCold:p=>`குளிர் அபாயம் ${p}%`,cRot:"முந்தைய பயிரின் அதே குடும்பம் −50",cLeg:"சத்து உறிஞ்சும் பயிருக்குப் பின் பயறு +8",cIrr:"உறுதியான பாசனம் தேவை",cOk:"வெப்ப அழுத்தம் இல்லை",
  vsNow:"இன்றைவிட",soilNear:km=>`தரவுள்ள அருகிலுள்ள SoilGrids கட்டம்; கிராமத்திலிருந்து ${km} கி.மீ`,
@@ -547,7 +591,7 @@ ta:{hero:"இந்த வயலில் அடுத்து எந்தப�
  proofTitle:"எங்கள் கணக்கைச் சரிபாருங்கள்",testsTitle:"இயந்திர சுய சோதனை",testsNote:"இவை இப்போதே உங்கள் உலாவியில், வெள்ளோடு தரவில், சம முன்னுரிமையுடன் ஓடுகின்றன.",
  dataTitle:"ஒவ்வொரு எண்ணும் எங்கிருந்து வருகிறது",
  tmLabel:"காலநிலை கால இயந்திரம்",
- deltaNow:"இன்றைய காலநிலை. 2030, 2040, 2050-ஐப் பார்க்க இழுங்கள்.",
+ deltaNow:"இன்றைய காலநிலை. எதிர்காலத்தைப் பார்க்க 2030, 2040 அல்லது 2050-ஐத் தொடுங்கள்.",
  delta:(dt,dr)=>`<b>${dt>=0?"+":""}${dt} °C</b>, ஆண்டு மழை <b>${dr>=0?"+":""}${dr}%</b>. NASA NEX-GDDP-CMIP6, SSP2-4.5, ${NEX.models.length} மாதிரிகளின் சராசரி; ஒப்பீடு ${NEX.base}.`,
  deltaNone:"NASA NEX-GDDP-CMIP6 மாற்றங்கள் முன்னோடிக் கிராமங்களுக்கும் ஈரோடு ஊர்களுக்கும் மட்டுமே உள்ளன; வரைபடத்தில் தொட்ட இடத்துக்கு இல்லை.",
  custom:"தேர்ந்த இடம்",loading:"NASA POWER தரவு வருகிறது…",failCustom:"அந்த இடத்துக்கு NASA POWER கிடைக்கவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் தொடுங்கள்.",
@@ -692,6 +736,8 @@ function renderStatic(){
   $("sow").value=S.sow;
   $("sugg").innerHTML=["s1","s2","s3","s4","s5","s6"].map(k=>`<button type="button">${esc(t(k))}</button>`).join("");
   $("aistate").textContent=aiKey()?t("aiOn"):t("aiOff");
+  $("steps").innerHTML=[["#villages","step1"],["#advisor","step2"],["#cards","step3"]].map(([h,k])=>`<li><a href="${h}">${esc(t(k))}</a></li>`).join("");
+  const ho=$("help").open; $("help").innerHTML=`<summary>${esc(t("helpTitle"))}</summary><ul>${t("help").map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`; $("help").open=ho;
   renderData();
 }
 function renderVillages(){
@@ -811,6 +857,31 @@ function mathText(r){
    `= ${r.score} / 100`];
   return lines.join("\n");
 }
+/* plain-language reading of a score, for people who do not want the arithmetic */
+function verdict(r){ return r.score>=65?2:r.score>=45?1:0 }
+function whyText(r,L){
+  const good=[], care=[];
+  if(r.rot)care.push(L?"கடைசிப் பயிரின் அதே குடும்பம், தவிர்க்கவும்":"it is in the same family as your last crop (avoid it)");
+  if(r.irr)care.push(L?"கால்வாய் அல்லது கிணற்று நீர் தேவை":"it needs canal or well water");
+  else if(r.wf>=0.8)good.push(L?"மழையே இதன் நீர்த் தேவைக்குப் போதும்":"rain covers its water need");
+  else if(r.wf>=0.5)good.push(L?"மழை இதன் நீர்த் தேவையில் பெரும்பகுதியைத் தரும்":"rain covers most of its water need");
+  else care.push(L?`மழை இதன் நீர்த் தேவையில் சுமார் ${pct(r.wf)}% மட்டுமே தரும்`:`rain covers only about ${pct(r.wf)}% of its water need`);
+  if(r.soil>=0.8)good.push(L?"மண் வளத்தைக் கூட்டும்":"builds the soil"); else if(r.soil<=0.25)care.push(L?"மண் சத்தை அதிகம் எடுக்கும்":"it takes a lot out of the soil");
+  if(r.profit>=0.8)good.push(L?"நல்ல வருமானம் தரும்":"earns well"); else if(r.profit<=0.3)care.push(L?"வருமானம் குறைவு":"it earns little");
+  if(r.heat>0)care.push(L?"வெப்ப அபாயம் உண்டு":"there is some heat risk"); if(r.cold>0)care.push(L?"குளிர் அபாயம் உண்டு":"there is some cold risk");
+  const cap=x=>x.charAt(0).toUpperCase()+x.slice(1), and=L?"; ":(a=>a.length>1?a.slice(0,-1).join(", ")+" and "+a[a.length-1]:a[0]||"");
+  const J=a=>L?a.join("; "):and(a);
+  if(good.length&&care.length)return cap(J(good))+(L?". ஆனால் ":". But ")+J(care)+".";
+  return cap(J(good.length?good:care))+".";
+}
+const VKEY=["vBad","vOk","vGood"];
+function canSpeak(){ try{ if(!("speechSynthesis" in window))return false; const pre=S.lang==="ta"?"ta":"en"; return speechSynthesis.getVoices().some(v=>v.lang&&v.lang.toLowerCase().startsWith(pre)) }catch(e){return false} }
+function speakCard(id){
+  const r=rankAll().find(x=>x.id===id); if(!r||!canSpeak())return; const L=S.lang==="ta", c=CROPS[id];
+  const txt=L?`${c.ta}. ${t(VKEY[verdict(r)])}. மதிப்பெண் நூற்றுக்கு ${r.score}. ${whyText(r,true)}`:`${c.en}. ${t(VKEY[verdict(r)])}. Score ${r.score} out of 100. ${whyText(r,false)}`;
+  const u=new SpeechSynthesisUtterance(txt); const pre=L?"ta":"en"; const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.toLowerCase().startsWith(pre)); if(v){u.voice=v;u.lang=v.lang} u.rate=.95;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
 function cardHTML(r,i){
   const c=CROPS[r.id];
   const chips=[];
@@ -821,11 +892,15 @@ function cardHTML(r,i){
   if(r.bonus)chips.push(`<span class="chip good">${t("cLeg")}</span>`);
   if(r.irr)chips.push(`<span class="chip warn">${t("cIrr")}</span>`);
   if(S.year>2026&&r.d!==0)chips.unshift(`<span class="chip ${r.d<0?"bad":"good"}">${r.d<0?"▼":"▲"} ${Math.abs(r.d)} ${t("vsNow")}</span>`);
-  const bar=(lab,val,col)=>`<div class="r"><span>${lab}</span><div class="track"><i style="width:${pct(val)}%;background:${col}"></i></div><b>${fmt(val,2)}</b></div>`;
+  const lv=v=>t("lvl")[v<0.34?0:v<0.67?1:2];
+  const bar=(lab,val,col)=>`<div class="r"><span>${lab}<em class="lvl">${lv(val)}</em></span><div class="track"><i style="width:${pct(val)}%;background:${col}"></i></div><b>${fmt(val,2)}</b></div>`;
+  const vd=verdict(r), L=S.lang==="ta";
   return `<article class="card ${i===0?"first":""}" data-id="${r.id}">
     <div class="rank">${t("rank")(i+1)}, ${winText(r)}</div>
     <div class="name">${S.lang==="ta"?c.ta:c.en}<small>${S.lang==="ta"?c.en:c.ta}</small></div>
     <div class="score"><b>${r.score}</b><br><span>${t("of100")}</span></div>
+    <div class="verdict"><b class="v${vd}">${t(VKEY[vd])}</b>${canSpeak()?`<button type="button" data-say="${r.id}" aria-label="${t("listen")}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>${t("listen")}</button>`:""}</div>
+    <p class="why"><b>${t("why")}:</b> ${esc(whyText(r,L))}</p>
     <div class="ing">${bar(t("iWater"),r.wf,"#2C6FA8")}${bar(t("iSoil"),r.soil,"#6B4423")}${bar(t("iProfit"),r.profit,"#E2A300")}</div>
     <div class="chips">${chips.join("")}</div>
     <details class="math"><summary>${t("math")}</summary><pre>${esc(mathText(r))}</pre></details>
@@ -881,6 +956,7 @@ function renderOutlook(){
 }
 function renderTM(){
   $("yr").textContent=S.year; $("year").value=S.year;
+  document.querySelectorAll("#ticks button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.y===S.year)));
   const c=climate(village(),S.year);
   const bk=nexBorrowKm(village());
   $("delta").innerHTML=S.year===2026?t("deltaNow"):!c.has?t("deltaNone"):t("delta")(fmt(c.dT,1),Math.round(c.dR*100))+(bk?(S.lang==="ta"?` வெள்ளோட்டின் NASA கட்டத்திலிருந்து (${bk} கி.மீ தொலைவு).`:` Taken from Vellode's NASA grid cell, ${bk} km away.`):"");
@@ -1115,6 +1191,10 @@ $("soil").addEventListener("click",e=>{
   else return;
   stSave(); renderSoil(); renderAdvisor(false);
 });
+$("ticks").onclick=e=>{const b=e.target.closest("button[data-y]"); if(!b)return; S.year=+b.dataset.y; renderChart(); renderAdvisor(true); renderTM()};
+$("cards").addEventListener("click",e=>{const b=e.target.closest("button[data-say]"); if(b)speakCard(b.dataset.say)});
+$("steps").onclick=e=>{const a=e.target.closest("a"); if(!a)return; e.preventDefault(); const el=document.querySelector(a.getAttribute("href")); if(el)el.scrollIntoView({behavior:"smooth",block:"start"})};
+try{ if("speechSynthesis" in window)speechSynthesis.addEventListener("voiceschanged",()=>renderAdvisor(false)) }catch(e){}
 $("askform").onsubmit=e=>{e.preventDefault();ask($("q").value)};
 $("sugg").onclick=e=>{const b=e.target.closest("button"); if(b)ask(b.textContent)};
 $("aisave").onclick=()=>{try{const k=$("aikey").value.trim(); k?localStorage.setItem("uzhavan_ai_key",k):localStorage.removeItem("uzhavan_ai_key")}catch(e){}
@@ -1129,7 +1209,7 @@ async function aiCheck(){
   catch(e){st.textContent=(L?"AI மாதிரி பதிலளிக்கவில்லை (":"AI model did not answer (")+String(e.message).slice(0,140)+(L?"). இணையமில்லாப் பதில் இயந்திரம் பயன்படும்.":"). The offline answer engine will be used.")}
 }
 
-window.UZ={S,rankAll,scoreCrop,climate,VILLAGES,CROPS,ruleAnswer,FERT,fertFor,fertProducts,PROT,protLines};
+window.UZ={S,rankAll,scoreCrop,climate,VILLAGES,CROPS,ruleAnswer,FERT,fertFor,fertProducts,PROT,protLines,whyText,verdict};
 initMap(); renderStatic(); renderAll(); refreshLive();
 </script>
 </body>

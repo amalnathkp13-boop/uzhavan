@@ -84,7 +84,7 @@ pre{font-family:Consolas,monospace;font-size:8.3pt;background:#f6ecc6;border-rad
 <p>A farmer has to choose the next crop months before knowing how the season will go. The rain is changing, and the data that could help is free but hard to reach: it sits behind technical websites, in English, in units nobody farms in.</p>
 
 <h3>What UZHAVAN does about it</h3>
-<p>The farmer picks a village. The page pulls that village's rain and temperature from NASA and its soil from a world soil map, then does five things:</p>
+<p>The farmer picks a village. The page pulls that village's rain and temperature from NASA and its soil from a world soil map, then does six things:</p>
 <table>
 <thead><tr><th style="width:8mm"></th><th style="width:42mm">Feature</th><th>What the farmer sees</th></tr></thead>
 <tbody>
@@ -92,6 +92,7 @@ pre{font-family:Consolas,monospace;font-size:8.3pt;background:#f6ecc6;border-rad
 <tr><td><span class="num">2</span></td><td><b>Crop rotation advisor</b></td><td>The three best crops to sow next, each with a score out of 100. The score is split into water, soil and profit so the farmer can see why.</td></tr>
 <tr><td><span class="num">3</span></td><td><b>Climate time machine</b></td><td>A slider from 2026 to 2050. As it moves, the climate shifts using NASA's projections and the crops are re-ranked.</td></tr>
 <tr><td><span class="num">4</span></td><td><b>Ask your field</b></td><td>A chat box. The farmer asks in Tamil or English and gets an answer built only from that village's numbers.</td></tr>
+<tr><td><span class="num">6</span></td><td><b>Weeds, pests and diseases</b></td><td>For the Erode crops: seed treatment, weed killers and pest controls from the university guide, dated from the sowing month. Chemicals India has since banned are taken out.</td></tr>
 <tr><td><span class="num">5</span></td><td><b>Fertilizer plan</b></td><td>For each crop: how much chemical fertilizer (as bags of urea, super phosphate and potash per acre), how much farmyard manure, and which biofertilizer, from the published recommendation.</td></tr>
 </tbody></table>
 
@@ -273,13 +274,13 @@ score     = 100 x base x (1 - 0.6 x temperature stress)
 <tr><td>Why does turmeric appear when Erode gets so little rain?</td><td>Because it is irrigated. The score counts canal and well water for irrigated crops and flags "needs assured irrigation".</td></tr>
 <tr><td>Why is paddy after paddy zero?</td><td>Growing the same plant family twice builds up pests and drains the same nutrients. The rule takes 50 points off, which brings it to zero.</td></tr>
 <tr><td>Where does the profit number come from?</td><td>Published figures: Government of India cost-of-cultivation data for Tamil Nadu, the county crop report for Fresno, a field study for Kano. Open "See the math" to show the figure.</td></tr>
-<tr><td>Where do the fertilizer amounts come from?</td><td>The official recommendation for each place: Tamil Nadu Agricultural University's Crop Production Guide 2020 for Vellode, California's CDFA guidelines for Fresno, Nigeria's federal recommendation for Kano. The bag amounts are simple arithmetic: urea is 46% nitrogen, super phosphate 16% phosphate, potash 60%. At Vellode, typing Soil Health Card values into the soil card moves each nutrient up 25% where the soil is low and down 25% where it is high, which is ICAR's published rule.</td></tr>
+<tr><td>Where do the fertilizer amounts come from?</td><td>The official recommendation for each place: Tamil Nadu Agricultural University's Crop Production Guide 2020 for Vellode, California's CDFA guidelines for Fresno, Nigeria's federal recommendation for Kano. At Vellode, typing Soil Health Card values into the soil card moves each nutrient up 25% where the soil is low and down 25% where it is high, which is ICAR's published rule.</td></tr>
+<tr><td>Are the pesticide recommendations safe to follow?</td><td>They are copied from Tamil Nadu Agricultural University's 2020 guide and filtered against India's banned and restricted list of 31 October 2026; removed chemicals are named on the card. The page tells the farmer to check the label, spray only when the pest is seen, and ask the agricultural officer. It covers the Erode crops only.</td></tr>
 <tr><td>Does the chat use AI? Can it make things up?</td><td>The answers you saw come from the scoring engine itself, so every number in them is one the page computed. There is an optional setting to connect an AI model, which is told to answer only from the village's data.</td></tr>
 <tr><td>Did you use AI to build this?</td><td>Yes, and it is disclosed on the project page. The code and the Tamil text were drafted with an AI assistant and reviewed by the team.</td></tr>
 <tr><td>What happens with no internet?</td><td>The page keeps a saved copy of the NASA data for the three villages. Scores and chat answers still work. The badge changes to "Saved NASA data".</td></tr>
 <tr><td>Why do several Erode places show the same rain chart?</td><td>NASA's weather grid is about 50 km wide, so ten of the sixteen Erode places sit in one grid cell and get the same rain and temperature. The page says this under the chart. Their soil and map position differ; Thalavadi, Bhavanisagar, Kodumudi and Chennimalai are in other cells and do differ.</td></tr>
 <tr><td>Why only three villages?</td><td>Three pilots on three continents, plus 15 more places in Erode district on the Vellode crop table. Tapping the map loads live NASA climate for any other place; it borrows the nearest pilot's crop list and has no 2050 data.</td></tr>
-<tr><td>How is this different from other crop apps?</td><td>The arithmetic is visible, the farmer's priorities are the weights, it speaks Tamil first, and it shows what 2050 does to today's choice.</td></tr>
 <tr><td>What would you do next?</td><td>Add soil-moisture data from NASA's SMAP satellite and from NISAR, the radar satellite built by NASA and ISRO. Check the crop table with farmers and the local agricultural office. Add more villages and languages.</td></tr>
 <tr><td>Has a farmer used it?</td><td><i>Answer only with what your team actually did. Write it here:</i><br><span class="blank" style="min-width:100mm"></span></td></tr>
 </tbody></table>

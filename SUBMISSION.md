@@ -35,6 +35,7 @@ Farmers in Erode plan around the north-east monsoon, and they tell us it no long
 2. **Crop rotation advisor.** The top three crops for the chosen sowing month, after the crop just harvested. The farmer's three sliders (save water, soil health, profit) are the weights in the score.
 3. **Climate time machine.** Drag from 2026 to 2050. Rain and temperature shift by the month-by-month change projected by five NEX-GDDP-CMIP6 models under SSP2-4.5, and every crop is re-scored. Each card shows how many points it gained or lost against today.
 4. **Ask your field.** Questions in Tamil or English, answered from the village's data and scores only. It works with no internet connection.
+6. **Weeds, pests and diseases.** For the Erode crops, each card lists seed treatment, herbicides and pest controls from Tamil Nadu Agricultural University's 2020 guide, dated from the sowing month, with chemicals India has since banned or restricted taken out.
 5. **Fertilizer plan.** Each crop card opens to the published fertilizer recommendation for that crop and place: nitrogen, phosphorus and potash per hectare, the same as bags of urea, super phosphate and potash per acre, plus farmyard manure and biofertilizer where the source gives them.
 
 It runs for three pilot places with the same engine: Vellode (Erode, India), Fresno County (California, USA) and Kano (Nigeria). A drop-down adds 15 more places across Erode district. Tapping the map loads the climate for any other point on Earth.
@@ -83,6 +84,7 @@ Roadmap, not used yet: NASA SMAP soil moisture, and NISAR, the radar satellite b
 
 - The 2050 view is a scenario, not a forecast. The projected change is modest: about +0.9 °C and +6% annual rain at Vellode, +1.1 °C at Fresno, +1.0 °C at Kano.
 - Some values are still the team's estimate because no published figure was found: the profit rank for sesame at Vellode and for rice, vegetables, sesame and soybean at Kano; whether turmeric, maize, the pulses and sesame count as irrigated at Vellode; water need for green gram, cowpea and garlic. The page marks each one under "See the math".
+- The weed and pest schedules come from a 2020 guide, filtered against India's banned and restricted list of 31 October 2026. They are a starting point: the page tells the farmer to check the product label and ask the agricultural officer. They cover the Erode crops only.
 - Fertilizer plans are the general published recommendation. At Vellode a farmer can enter Soil Health Card values and the plan adjusts by ICAR's rule (+25% where the soil is low, -25% where it is high). Compost rates for Fresno are a statewide rate, not crop-specific, and no manure quantity was found for five of the Kano crops.
 - The profit figures are net return in Tamil Nadu, gross value in Fresno and gross margin in Kano, so ranks are compared only inside one village.
 - The 0 to 1 soil effect given to each class of crop is the team's judgement; the classes come from FAO Bulletin 16.

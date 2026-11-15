@@ -19,6 +19,7 @@ It is one file, `index.html`. No build step, no key, no login.
 2. **Crop rotation advisor**: top three crops with a 0-100 score split into water fit, soil effect and profit. The farmer's three sliders are the weights.
 3. **Climate time machine**: the bar at the bottom moves the climate from 2026 to 2050 using NASA NEX-GDDP-CMIP6. Crop cards re-order and each shows its gain or loss against today.
 4. **Ask your field**: Tamil or English questions answered only from the village's data and scores.
+6. **Weeds, pests and diseases**: for the Erode-district crops, each card lists seed treatment, herbicides and pest and disease controls from the TNAU Crop Production Guide 2020, dated from the sowing month. Chemicals India has since banned or restricted are removed and named.
 5. **Fertilizer plan**: each crop card opens to the published recommendation for that crop and place: N, P2O5 and K2O per hectare, the same as urea, super phosphate and potash per hectare and per acre, plus farmyard manure, biofertilizer and timing where the source gives them.
 
 Pilot villages: Vellode (Erode, India), Fresno County (California, USA), Kano (Nigeria). A drop-down adds 15 more places in Erode district (Erode, Bhavani, Gobichettipalayam, Sathyamangalam, Perundurai, Kodumudi, Chennimalai, Anthiyur, Modakkurichi, Nambiyur, Thalavadi, Bhavanisagar, Sivagiri, Kavindapadi, Ammapettai), all on the Vellode crop table. Tapping the map loads any other point live from NASA POWER (without projections).
@@ -62,6 +63,7 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | Nigeria FMARD 2015 recommendation via the IFDC AfricaFertilizer review 2018; NAERLS bulletins 239 and 242; STDF/NEPC sesame farmers' guide 2014; ICRISAT handbooks 2020 | Fertilizer plan, Kano: all 10 crops | N, P2O5, K2O; manure for millet, sorghum, groundnut and sesame |
 | CDFA Healthy Soils Program compost white paper; CDFA FREP tomato brochure | Fresno compost rate; processing-tomato season nitrogen | 3 to 5 tons/acre of compost a year for annual crops; about 175 lb N/acre |
 | ICAR, Indian Farming 70(3):18-21, 2020 | Soil-test adjustment at Vellode | Low fertility +25%, high -25%, with the class limits |
+| TNAU Crop Production Guide 2020; PPQS / CIB&RC list of banned and restricted pesticides (31.10.2026) | Weeds, pests and diseases, Erode-district crops | Herbicides, pest and disease controls and seed treatment as printed; banned and restricted chemicals removed |
 | NASA SMAP, NISAR | Soil moisture | Roadmap only, not used |
 
 ## Known gaps
@@ -73,6 +75,7 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 - Fresno wheat was 16% irrigated in the 2022 census (a drought year) and 63% in 2017; the app treats it as not irrigated.
 - TNAU water figures are irrigation applied in Tamil Nadu; FAO figures are crop water need. They are different quantities and are used as published.
 - EcoCrop does not say whether its temperatures are daily means or daytime highs; the app compares them with mean temperature.
+- The weed and pest schedules are copied from a 2020 guide. Each product and dose was matched against the guide's text by script, and the PPQS / CIB&RC banned and restricted list (updated 31.10.2026) was applied, but a product not being on that list does not prove it is currently registered for that crop. The page tells the farmer to check the label and ask the agricultural officer. Guide entries whose pest-to-product pairing could not be read with certainty were left out, so the lists are not complete. Fresno and Kano have no schedule.
 - Fertilizer plans are general (blanket) recommendations. At Vellode the farmer can enter Soil Health Card values (organic carbon, available P and K) and each nutrient moves +25% where the soil is low and -25% where it is high (ICAR, Indian Farming 70(3), 2020). The SoilGrids organic carbon can be used instead, but it is a map estimate for the top 5 cm, not a lab test, and the page says so.
 - Fresno compost rates are the CDFA Healthy Soils Program's statewide rate for annual crops, not crop-specific. Kano manure rates for millet, sorghum and groundnut come from ICRISAT handbooks written for north-east Nigeria; none was found for maize, soybean, cowpea, tomato or onion. The Kano sesame rate comes from a 2014 farmers' guide that names no zone.
 - NASA POWER's grid is about 0.5 x 0.625 degrees, so ten of the sixteen Erode places fall in one cell and show identical rain and temperature; the page says so. Only Kodumudi, Chennimalai / Modakkurichi / Sivagiri, Thalavadi and Bhavanisagar differ. Sathyamangalam and Modakkurichi are taluk centre points, because OpenStreetMap had no town point.

@@ -115,6 +115,11 @@ input[type=range]{width:100%;accent-color:var(--leaf)}
 details.math{margin-top:10px;font-size:.84rem}
 details.math summary{cursor:pointer;color:var(--leaf);font-weight:650}
 details.math pre{white-space:pre-wrap;font-family:inherit;background:#F6ECC6;border-radius:10px;padding:10px;margin:8px 0 0;line-height:1.55}
+.outlook{margin-top:14px}
+.outlook p{margin:6px 0 0}
+.outlook .months{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.outlook .months button{font:inherit;font-size:.88rem;padding:6px 12px;border-radius:999px;border:1.5px solid var(--leaf);background:transparent;color:var(--leaf);cursor:pointer}
+.outlook .months button:hover,.outlook .months button:focus-visible{background:var(--leaf);color:#fff}
 .rest{margin-top:14px}
 .rest table{width:100%;border-collapse:collapse;font-size:.9rem}
 .rest td,.rest th{padding:7px 6px;border-bottom:1px solid var(--line);text-align:left}
@@ -216,6 +221,7 @@ ul.data a{color:var(--leaf)}
     </div>
   </div>
   <div class="cards" id="cards"></div>
+  <div class="panel outlook" id="outlook" hidden></div>
   <div class="panel rest" id="rest"></div>
 </section>
 
@@ -668,6 +674,32 @@ function renderAdvisor(animate){
   });
   $("rest").innerHTML=`<h3>${t("restTitle")}</h3><table><tr><th>${t("crop")}</th><th>${t("window")}</th><th class="n">${t("iWater")}</th><th class="n">${t("of100")}</th>${fut?`<th class="n">${t("vsNow")}</th>`:""}</tr>`+
     ranked.map(r=>`<tr><td>${cn(r.id)}</td><td>${winText(r)}</td><td class="n">${fmt(r.wf,2)}</td><td class="n"><b>${r.score}</b></td>${fut?`<td class="n" style="color:${r.d<0?"var(--kumkum)":r.d>0?"var(--leaf)":"inherit"}">${r.d>0?"+":""}${r.d}</td>`:""}</tr>`).join("")+`</table>`;
+  renderOutlook();
+}
+/* 2050 outlook: for which sowing months does the top three change, and which crop moves most */
+function outlook(){
+  const months=[], top=(y,m)=>rankAll(y,m).slice(0,3).map(r=>r.id).join(",");
+  for(let m=0;m<12;m++)if(top(2026,m)!==top(2050,m))months.push(m);
+  const a=rankAll(2026,S.sow), b=rankAll(2050,S.sow), now={}; a.forEach(r=>now[r.id]=r.score);
+  const moves=b.map(r=>({id:r.id,d:r.score-now[r.id]})).sort((x,y)=>x.d-y.d);
+  return {months,same:!months.includes(S.sow),lose:moves[0],gain:moves[moves.length-1],t3:b.slice(0,3).map(r=>r.score-now[r.id])};
+}
+function renderOutlook(){
+  const el=$("outlook"); if(!climate(village(),2050).has){el.hidden=true;return}
+  const o=outlook(), L=S.lang==="ta", M=MONL[S.lang], sg=d=>(d>0?"+":d<0?"−":"")+Math.abs(d);
+  let h=`<h3>${L?"2050 கண்ணோட்டம்":"2050 outlook"}</h3><p>`;
+  if(o.same)h+=L?`${M[S.sow]} விதைப்புக்கு முதல் மூன்று பயிர்களின் வரிசை 2050 வரை மாறாது; மதிப்பெண் மாற்றம் ${o.t3.map(sg).join(", ")}.`
+                 :`For sowing in ${M[S.sow]} the top three keep their order to 2050; their scores change by ${o.t3.map(sg).join(", ")}.`;
+  else h+=L?`${M[S.sow]} விதைப்புக்கு முதல் மூன்று பயிர்கள் 2050-இல் மாறுகின்றன.`:`For sowing in ${M[S.sow]} the top three change by 2050.`;
+  if(o.lose.d<0)h+=L?` அதிகம் இழப்பது: ${cn(o.lose.id)} (${sg(o.lose.d)}).`:` Biggest loss: ${cn(o.lose.id)} (${sg(o.lose.d)}).`;
+  if(o.gain.d>0)h+=L?` அதிகம் பெறுவது: ${cn(o.gain.id)} (${sg(o.gain.d)}).`:` Biggest gain: ${cn(o.gain.id)} (${sg(o.gain.d)}).`;
+  h+=`</p>`;
+  const others=o.months.filter(m=>m!==S.sow||S.year!==2050);
+  if(o.months.length){
+    h+=`<p class="muted">${L?"2050-இல் முதல் மூன்று மாறும் விதைப்பு மாதங்கள் (தொட்டுப் பாருங்கள்):":"Sowing months where the top three change by 2050 (tap to see):"}</p><div class="months">`+
+      others.map(m=>`<button type="button" data-m="${m}">${M[m]}</button>`).join("")+`</div>`;
+  }else h+=`<p class="muted">${L?"எந்த விதைப்பு மாதத்திலும் முதல் மூன்று மாறவில்லை.":"The top three do not change for any sowing month."}</p>`;
+  el.innerHTML=h; el.hidden=false;
 }
 function renderTM(){
   $("yr").textContent=S.year; $("year").value=S.year;
@@ -829,7 +861,7 @@ async function aiAnswer(q){
   const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
     headers:{"content-type":"application/json","x-api-key":aiKey(),"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
     body:JSON.stringify({model:"claude-opus-5-5",max_tokens:4000,output_config:{effort:"low"},system:sys,messages:[{role:"user",content:q}]})});
-  if(!r.ok)throw new Error("AI "+r.status);
+  if(!r.ok){let m=""; try{m=(await r.json()).error.message}catch(e){} throw new Error(r.status+(m?" "+m:""))}
   const d=await r.json(); if(d.stop_reason==="refusal")throw new Error("refusal");
   const txt=(d.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("").trim();
   if(!txt)throw new Error("empty"); return txt;
@@ -861,10 +893,22 @@ $("sow").onchange=e=>{S.sow=+e.target.value;renderAdvisor(true)};
 $("prev").onchange=e=>{S.prev=e.target.value;renderAdvisor(true)};
 ["water","soil","profit"].forEach(k=>$("w-"+k).oninput=e=>{S.w[k]=+e.target.value;renderAdvisor(true)});
 $("year").oninput=e=>{S.year=+e.target.value;renderChart();renderAdvisor(true);renderTM()};
+$("outlook").onclick=e=>{const b=e.target.closest("button[data-m]"); if(!b)return;
+  S.sow=+b.dataset.m; $("sow").value=S.sow; S.year=2050; renderChart(); renderAdvisor(true); renderTM();
+  $("cards").scrollIntoView({behavior:"smooth",block:"center"})};
 $("askform").onsubmit=e=>{e.preventDefault();ask($("q").value)};
 $("sugg").onclick=e=>{const b=e.target.closest("button"); if(b)ask(b.textContent)};
 $("aisave").onclick=()=>{try{const k=$("aikey").value.trim(); k?localStorage.setItem("uzhavan_ai_key",k):localStorage.removeItem("uzhavan_ai_key")}catch(e){}
-  $("aikey").value="";$("aistate").textContent=aiKey()?t("aiOn"):t("aiOff")};
+  $("aikey").value=""; aiCheck()};
+/* after a key is saved, ask one real question so the user sees at once whether the model answers */
+async function aiCheck(){
+  const st=$("aistate"), L=S.lang==="ta";
+  if(!aiKey()){st.textContent=t("aiOff");return}
+  st.textContent=L?"AI மாதிரியைச் சோதிக்கிறது…":"Testing the AI model…";
+  try{const a=await aiAnswer(L?"இந்த மாதம் முதல் தேர்வு எது?":"What is the top choice this month?");
+    st.textContent=(L?"AI மாதிரி வேலை செய்கிறது. சோதனைப் பதில்: ":"AI model works. Test answer: ")+a.slice(0,160)}
+  catch(e){st.textContent=(L?"AI மாதிரி பதிலளிக்கவில்லை (":"AI model did not answer (")+String(e.message).slice(0,140)+(L?"). இணையமில்லாப் பதில் இயந்திரம் பயன்படும்.":"). The offline answer engine will be used.")}
+}
 
 window.UZ={S,rankAll,scoreCrop,climate,VILLAGES,CROPS,ruleAnswer};
 initMap(); renderStatic(); renderAll(); refreshLive();

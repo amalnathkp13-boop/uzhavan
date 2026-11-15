@@ -518,7 +518,7 @@ en:{hero:"What should this field grow next?",
  tmLabel:"Climate time machine",
  deltaNow:"Today's climate. Drag to see 2030, 2040 and 2050.",
  delta:(dt,dr)=>`<b>${dt>=0?"+":""}${dt} °C</b>, rain <b>${dr>=0?"+":""}${dr}%</b> over the year. NASA NEX-GDDP-CMIP6, SSP2-4.5, mean of ${NEX.models.length} models, against ${NEX.base}.`,
- deltaNone:"NASA NEX-GDDP-CMIP6 changes are loaded for the three pilot villages only.",
+ deltaNone:"NASA NEX-GDDP-CMIP6 changes are loaded only for the pilot villages and the Erode places, not for a tapped map point.",
  custom:"Custom location",loading:"Loading NASA POWER…",failCustom:"Could not reach NASA POWER for that spot. Check the connection and tap again.",
  nearest:v=>`Crop list borrowed from ${v}`,
  live:"Live NASA data",saved:"Saved NASA data (offline-ready)"},
@@ -549,7 +549,7 @@ ta:{hero:"இந்த வயலில் அடுத்து எந்தப�
  tmLabel:"காலநிலை கால இயந்திரம்",
  deltaNow:"இன்றைய காலநிலை. 2030, 2040, 2050-ஐப் பார்க்க இழுங்கள்.",
  delta:(dt,dr)=>`<b>${dt>=0?"+":""}${dt} °C</b>, ஆண்டு மழை <b>${dr>=0?"+":""}${dr}%</b>. NASA NEX-GDDP-CMIP6, SSP2-4.5, ${NEX.models.length} மாதிரிகளின் சராசரி; ஒப்பீடு ${NEX.base}.`,
- deltaNone:"NASA NEX-GDDP-CMIP6 மாற்றங்கள் மூன்று முன்னோடிக் கிராமங்களுக்கு மட்டுமே உள்ளன.",
+ deltaNone:"NASA NEX-GDDP-CMIP6 மாற்றங்கள் முன்னோடிக் கிராமங்களுக்கும் ஈரோடு ஊர்களுக்கும் மட்டுமே உள்ளன; வரைபடத்தில் தொட்ட இடத்துக்கு இல்லை.",
  custom:"தேர்ந்த இடம்",loading:"NASA POWER தரவு வருகிறது…",failCustom:"அந்த இடத்துக்கு NASA POWER கிடைக்கவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் தொடுங்கள்.",
  nearest:v=>`பயிர்ப் பட்டியல்: ${v}-இலிருந்து`,
  live:"நேரடி NASA தரவு",saved:"சேமித்த NASA தரவு (இணையமின்றி இயங்கும்)"}
@@ -902,7 +902,7 @@ function renderData(){
   const L=S.lang==="ta";
   const items=[
    ["NASA POWER","https://power.larc.nasa.gov/docs/services/api/",L?`மாத மழை (PRECTOTCORR), வெப்பநிலை (T2M, T2M_MAX). ${SAVED_PERIOD} சராசரி, MERRA-2. நேரடியாக அழைக்கப்படும்; தோல்வியானால் சேமித்த நகல்.`:`Monthly rain (PRECTOTCORR) and temperature (T2M, T2M_MAX). ${SAVED_PERIOD} climatology, MERRA-2. Called live; saved copy if the call fails.`],
-   ["ISRIC SoilGrids v2.0","https://rest.isric.org",L?"மண் வகை, pH, கரிமக் கரி; 250 மீ, மேல் 5 செ.மீ.":"Soil texture, pH and organic carbon at 250 m, top 5 cm."],
+   ["ISRIC SoilGrids v2.0","https://soilgrids.org",L?"மண் வகை, pH, கரிமக் கரி; 250 மீ, மேல் 5 செ.மீ.":"Soil texture, pH and organic carbon at 250 m, top 5 cm."],
    ["NASA GIBS, MODIS Terra NDVI (8-day)","https://nasa-gibs.github.io/gibs-api-docs/",L?"வரைபடத்தில் பயிர்ப் பசுமை அடுக்கு.":"The crop-greenness layer on the map."],
    ["NASA NEX-GDDP-CMIP6","https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6",NEX?(L?`கால இயந்திரம்: SSP2-4.5, ${NEX.models.length} மாதிரிகளின் சராசரி (${NEX.models.join(", ")}). மாத வெப்ப, மழை மாற்றங்கள் ${NEX.base} உடன் ஒப்பிட்டு, NASA POWER அடிப்படையில் சேர்க்கப்படுகின்றன. 2030 = ${NEX.win[0]}, 2040 = ${NEX.win[1]}, 2050 = ${NEX.win[2]}.`:`The time machine: SSP2-4.5, mean of ${NEX.models.length} models (${NEX.models.join(", ")}). Monthly temperature and rain changes against ${NEX.base} are added to the NASA POWER baseline. 2030 = ${NEX.win[0]}, 2040 = ${NEX.win[1]}, 2050 = ${NEX.win[2]}.`):""],
    ["NASA SMAP, NISAR (NASA + ISRO)","https://worldview.earthdata.nasa.gov",L?"மண் ஈரப்பதம்: அடுத்த கட்டத் திட்டம். இந்தச் செயலியில் இன்னும் பயன்படுத்தப்படவில்லை.":"Soil moisture: on the roadmap. Not used in this app yet."],

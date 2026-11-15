@@ -1,40 +1,80 @@
-# UZHAVAN (உழவன், "The Farmer")
+<h1 align="center">UZHAVAN &nbsp;உழவன்</h1>
 
-NASA Space Apps Challenge 2026, "Field Shift: Adapting Farms with NASA Data".
+<p align="center"><b>Which crop next, why, and will it still work in 2050?</b><br>
+A free Tamil and English web page for farmers, built on open NASA data.</p>
 
-A free Tamil + English web page that tells a farmer which crop to sow next, why, and whether it still works in 2050.
+<p align="center">
+  <a href="https://amalnathkp13-boop.github.io/uzhavan/"><img alt="Live site" src="https://img.shields.io/badge/live%20site-open-1f6b3a?style=for-the-badge"></a>
+  <img alt="NASA Space Apps Challenge 2026" src="https://img.shields.io/badge/NASA%20Space%20Apps-2026-0b3d91?style=for-the-badge">
+  <img alt="Challenge: Field Shift" src="https://img.shields.io/badge/challenge-Field%20Shift-e2a300?style=for-the-badge">
+  <img alt="Languages: Tamil and English" src="https://img.shields.io/badge/languages-Tamil%20%2B%20English-16251c?style=for-the-badge">
+</p>
 
-Live site: https://amalnathkp13-boop.github.io/uzhavan/
+<p align="center">
+  <a href="https://amalnathkp13-boop.github.io/uzhavan/"><b>Open the live site</b></a> &nbsp;·&nbsp;
+  <a href="UZHAVAN_Judge_Day_Guide.pdf">Judge-day guide (PDF)</a> &nbsp;·&nbsp;
+  <a href="SUBMISSION.md">Submission pack</a>
+</p>
 
-## Team
+<p align="center">
+  <a href="https://amalnathkp13-boop.github.io/uzhavan/"><img src="screenshots/0-hero.png" alt="UZHAVAN home screen: pick a place, say what you harvested, read your three crops" width="900"></a>
+</p>
 
-- [amalnathkp13-boop](https://github.com/amalnathkp13-boop)
-- [deexithamde](https://github.com/deexithamde)
-- [Bairavi Alagesan](https://github.com/bairavialagesan123-lgtm)
-- [hariprasanna4047-jpg](https://github.com/hariprasanna4047-jpg)
-- [jeevanandham2428-bit](https://github.com/jeevanandham2428-bit)
-- [hariharish472008-debug](https://github.com/hariharish472008-debug)
-- [sudharsanrajhan291-bit](https://github.com/sudharsanrajhan291-bit)
+## Why
 
-## Run it
+A farmer has to choose the next crop months before knowing how the season will go, and the rain is changing. NASA has free data on the rain, heat and soil of every field on Earth, but it sits behind technical websites, in English, in units nobody farms in.
 
-It is one file, `index.html`. No build step, no key, no login.
+UZHAVAN ("The Farmer") puts it on one screen, in Tamil. It was built for the NASA Space Apps Challenge 2026, challenge "Field Shift: Adapting Farms with NASA Data".
 
-- Local: `python -m http.server 8765`, then open http://localhost:8765
-- GitHub Pages: served from the `main` branch root.
+## At a glance
 
-## What it does
+| | |
+|---|---|
+| **Places** | 16 in Erode district (India), plus Fresno County (USA) and Kano (Nigeria). Tap the map for anywhere else |
+| **Crops** | 18, each with water need, temperature range, soil effect and profit rank |
+| **Languages** | Tamil first, English with one tap |
+| **Climate** | Today, 2030, 2040 and 2050, from five NASA NEX-GDDP-CMIP6 models |
+| **Runs on** | Any phone or laptop browser. One file, no login, no key, works offline |
 
-1. **Village health**: monthly rain and temperature from NASA POWER, plus a soil card from ISRIC SoilGrids.
-2. **Crop rotation advisor**: top three crops with a 0-100 score split into water fit, soil effect and profit. The farmer's three sliders are the weights.
-3. **Climate time machine**: the bar at the bottom moves the climate from 2026 to 2050 using NASA NEX-GDDP-CMIP6. Crop cards re-order and each shows its gain or loss against today.
-4. **Ask your field**: Tamil or English questions answered only from the village's data and scores.
-6. **Weeds, pests and diseases**: for the Erode-district crops, each card lists seed treatment, herbicides and pest and disease controls from the TNAU Crop Production Guide 2020, dated from the sowing month. Chemicals India has since banned or restricted are removed and named.
-5. **Fertilizer plan**: each crop card opens to the published recommendation for that crop and place: N, P2O5 and K2O per hectare, the same as urea, super phosphate and potash per hectare and per acre, plus farmyard manure, biofertilizer and timing where the source gives them.
+## What a farmer gets
 
-Pilot villages: Vellode (Erode, India), Fresno County (California, USA), Kano (Nigeria). A drop-down adds 15 more places in Erode district (Erode, Bhavani, Gobichettipalayam, Sathyamangalam, Perundurai, Kodumudi, Chennimalai, Anthiyur, Modakkurichi, Nambiyur, Thalavadi, Bhavanisagar, Sivagiri, Kavindapadi, Ammapettai), all on the Vellode crop table. Tapping the map loads any other point live from NASA POWER (without projections).
+<table>
+<tr>
+<td width="50%"><img src="screenshots/1-dashboard.png" alt="Village health dashboard"><br><b>1. Village health.</b> Monthly rain and temperature from NASA POWER, and a soil card from ISRIC SoilGrids.</td>
+<td width="50%"><img src="screenshots/2-crop-cards.png" alt="Crop rotation advisor"><br><b>2. Crop rotation advisor.</b> The three best crops, each with a score out of 100, a plain verdict and a one-line reason.</td>
+</tr>
+<tr>
+<td><img src="screenshots/3-time-machine-2050.png" alt="Climate time machine at 2050"><br><b>3. Climate time machine.</b> Tap 2050: the climate shifts and the crops are re-ranked, with points gained or lost against today.</td>
+<td><img src="screenshots/4-tamil-chat.png" alt="Ask your field, in Tamil"><br><b>4. Ask your field.</b> Questions in Tamil or English, answered only from that village's numbers.</td>
+</tr>
+<tr>
+<td><img src="screenshots/5-fertilizer-plan.png" alt="Fertilizer plan"><br><b>5. Fertilizer plan.</b> The published dose for each crop, as kilos of urea, super phosphate and potash per acre, plus manure and biofertilizer.</td>
+<td><img src="screenshots/6-weeds-pests.png" alt="Weeds, pests and diseases"><br><b>6. Weeds, pests and diseases.</b> Seed treatment, weed killers by day after sowing, and pest controls, with chemicals India has banned taken out.</td>
+</tr>
+</table>
 
-## Score formula
+## How to use it
+
+1. **Pick your place.** One of the three pilot villages, one of 15 more places in Erode district, or any point on the map.
+2. **Say what you harvested and when you will sow.** Then slide the three priorities: save water, soil health, profit.
+3. **Read your three crops.** Each card says "Good choice", "Worth trying, with care" or "Not a good fit now", and why.
+
+Every card opens to show its arithmetic, its fertilizer plan and its weed and pest calendar.
+
+## What makes it different
+
+- **Plain words first.** A verdict and a reason on every card, low / medium / high beside every number, and a Listen button where the device has a voice.
+- **Nothing is hidden.** Every score opens to show the sum behind it and where each figure came from.
+- **The farmer's priorities are the formula.** The three sliders are the weights in the score.
+- **It does not break.** If the connection drops, it carries on with saved NASA data and still answers questions.
+- **It checks itself.** Three tests of the scoring engine run in the browser every time the page loads.
+
+## How the score works
+
+Three ingredients, each from 0 to 1: **water fit** (does rain, plus irrigation for irrigated crops, cover the crop's water need), **soil effect** (pulses build the soil, paddy and sugarcane drain it) and **profit** (a five-step rank from published figures). The farmer's sliders weight them. Heat or cold outside the crop's comfortable range lowers the score, and repeating the same plant family costs 50 points.
+
+<details>
+<summary><b>The formula and the built-in tests</b></summary>
 
 ```
 water fit = min(1, (0.7 x season rain + irrigation top-up) / crop water need)
@@ -51,14 +91,30 @@ Profit is a rank from 1 to 5: 5 if the crop earns at least half of the village's
 
 The "Check our work" panel runs three tests in the browser on the Vellode data: turmeric in June after paddy (water fit 0.73, about 65), black gram in October after paddy (about 74), paddy after paddy (0). The playbook's rehearsal figure for turmeric was 58, with an estimated profit rank of 4; the published figures put turmeric at 5, which gives 65.
 
+</details>
+
 ## Data
+
+| | Source | Used for |
+|---|---|---|
+| NASA | **POWER** climatology (MERRA-2, 2001-2025) | Monthly rain and temperature, called live |
+| NASA | **GPM IMERG** V07, through SERVIR ClimateSERV | Telling the rain of nearby Erode places apart (about 10 km) |
+| NASA | **NEX-GDDP-CMIP6**, SSP2-4.5, five models | The 2030, 2040 and 2050 climate |
+| NASA | **GIBS** MODIS Terra NDVI | Greenness layer on the map |
+| ISRIC | **SoilGrids** v2.0 | Soil texture, pH and organic carbon |
+| TNAU, FAO | Crop water tables, **EcoCrop**, Crop Production Guide 2020 | Water need, temperature ranges, fertilizer, weeds and pests |
+| Govt of India, Fresno County, IITA | Cost of cultivation, crop report, field study | Profit rank |
+
+<details>
+<summary><b>Every source, with how it is used</b></summary>
 
 | Source | Used for | How |
 |---|---|---|
 | NASA POWER climatology API (MERRA-2, 2001-2025) | Rain (PRECTOTCORR), temperature (T2M) | Live call, saved copy as fallback |
 | ISRIC SoilGrids v2.0 | Texture, pH, organic carbon, 0-5 cm | Live call, saved copy as fallback. Vellode and Kano use the nearest cell that has data |
 | NASA GIBS, MODIS Terra NDVI 8-day | Greenness layer on the map | Live tiles |
-| NASA NEX-GDDP-CMIP6 (NCCS THREDDS) | Time machine | Daily `tas` and `pr` at each village, SSP2-4.5, 2001-2055. Per model, monthly change of 2026-2035, 2036-2045 and 2046-2055 against that model's 2001-2025; then the mean across models, added to the POWER baseline. Years in between are interpolated. Rain is left unchanged in months where a model's own baseline is under 5 mm. The model list is shown on the page |
+| NASA NEX-GDDP-CMIP6 (NCCS THREDDS) | Time machine | Daily `tas` and `pr` at each place's grid cell, SSP2-4.5, 2001-2055. Per model, monthly change of 2026-2035, 2036-2045 and 2046-2055 against that model's 2001-2025; then the mean across models, added to the POWER baseline. Years in between are interpolated. Rain is left unchanged in months where a model's own baseline is under 5 mm. The model list is shown on the page |
+| NASA GPM IMERG V07 Late, via NASA SERVIR ClimateSERV | Rain for the Erode places | Daily 0.1-degree rainfall, 2001-2025. Each month's POWER rain is multiplied by the place's IMERG rain over a reference (Vellode's IMERG rain inside Vellode's POWER cell, the cell average elsewhere) |
 | TNAU Agritech water-requirement table; TNAU ARS Bhavanisagar (turmeric) | Water need and duration for Tamil Nadu crops | Typed into the crop table |
 | FAO Irrigation Water Management Training Manual 3, Tables 4-5 | Water need and duration for the other crops | Midpoint of the published range |
 | FAO EcoCrop | Optimal and absolute temperature ranges | Typed into the crop table |
@@ -76,7 +132,17 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | TNAU Crop Production Guide 2020; PPQS / CIB&RC list of banned and restricted pesticides (31.10.2026) | Weeds, pests and diseases, Erode-district crops | Herbicides, pest and disease controls and seed treatment as printed; banned and restricted chemicals removed |
 | NASA SMAP, NISAR | Soil moisture | Roadmap only, not used |
 
-## Known gaps
+</details>
+
+## Honest limits
+
+- The 2050 view is a **scenario, not a forecast**: climate-model changes applied to today's average climate. The projected change is modest, about +0.9 °C at Vellode.
+- Some values are still the **team's estimates** because no published figure was found. The "See the math" panel on each card marks every one.
+- Fertilizer plans are the **general published dose**. At the Erode places a farmer can enter Soil Health Card values to adjust them.
+- The weed and pest schedules come from a **2020 guide**, filtered against India's banned and restricted list of October 2026. The page tells the farmer to check the label and ask the agricultural officer. They cover the Erode crops only.
+
+<details>
+<summary><b>The full list of known gaps</b></summary>
 
 - No sourced seasonal water figure was found for green gram, cowpea or garlic; those three use the team's estimates.
 - Still team estimates, because no published figure was found: profit rank for sesame (Vellode) and for rice, tomato, onion, sesame and soybean (Kano); the irrigated flag for turmeric, maize, the pulses and sesame (Vellode), tomato, garlic and onion (Fresno), sesame and soybean (Kano). The "See the math" panel marks each one.
@@ -85,17 +151,37 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 - Fresno wheat was 16% irrigated in the 2022 census (a drought year) and 63% in 2017; the app treats it as not irrigated.
 - TNAU water figures are irrigation applied in Tamil Nadu; FAO figures are crop water need. They are different quantities and are used as published.
 - EcoCrop does not say whether its temperatures are daily means or daytime highs; the app compares them with mean temperature.
-- The weed and pest schedules are copied from a 2020 guide. Each product and dose was matched against the guide's text by script, and the PPQS / CIB&RC banned and restricted list (updated 31.10.2026) was applied, but a product not being on that list does not prove it is currently registered for that crop. The page tells the farmer to check the label and ask the agricultural officer. Guide entries whose pest-to-product pairing could not be read with certainty were left out, so the lists are not complete. Fresno and Kano have no schedule.
+- The weed and pest schedules are copied from a 2020 guide. Each product and dose was matched against the guide's text by script, and the PPQS / CIB&RC banned and restricted list (updated 31.10.2026) was applied, but a product not being on that list does not prove it is currently registered for that crop. Guide entries whose pest-to-product pairing could not be read with certainty were left out, so the lists are not complete. Fresno and Kano have no schedule.
 - Fertilizer plans are general (blanket) recommendations. At Vellode the farmer can enter Soil Health Card values (organic carbon, available P and K) and each nutrient moves +25% where the soil is low and -25% where it is high (ICAR, Indian Farming 70(3), 2020). The SoilGrids organic carbon can be used instead, but it is a map estimate for the top 5 cm, not a lab test, and the page says so.
 - Fresno compost rates are the CDFA Healthy Soils Program's statewide rate for annual crops, not crop-specific. Kano manure rates for millet, sorghum and groundnut come from ICRISAT handbooks written for north-east Nigeria; none was found for maize, soybean, cowpea, tomato or onion. The Kano sesame rate comes from a 2014 farmers' guide that names no zone.
-- NASA POWER's grid is about 0.5 x 0.625 degrees, so ten of the sixteen Erode places fall in one cell. Their rain is told apart with NASA GPM IMERG V07 satellite rainfall (0.1 degrees, 2001-2025, fetched through NASA SERVIR ClimateSERV): each month's POWER rain is multiplied by the place's IMERG rain over a reference (Vellode's IMERG rain inside Vellode's POWER cell, the cell average elsewhere). Annual rain then runs from 661 mm (Chennimalai) to 996 mm (Thalavadi). Temperature stays on the POWER grid and is shared within a cell; the page says so. Erode town falls in the same IMERG pixel as Vellode, so the two match. Sathyamangalam and Modakurichi use town coordinates from Wikipedia.
-- The 2050 view for each Erode place uses its own NEX-GDDP-CMIP6 grid cell (0.25 degrees). The sixteen places fall in eight cells, all downloaded with `tools/fetch_nex.py`; projected 2050 changes are +0.8 to +0.9 °C and +2% to +9% annual rain across them.
-- The time machine applies climate-model changes to a climatology. It is a scenario, not a forecast.
+- NASA POWER's grid is about 0.5 x 0.625 degrees, so ten of the sixteen Erode places fall in one cell. Their rain is told apart with NASA GPM IMERG; annual rain then runs from 661 mm (Chennimalai) to 996 mm (Thalavadi). Temperature stays on the POWER grid and is shared within a cell; the page says so. Erode town falls in the same IMERG pixel as Vellode, so the two match. Sathyamangalam and Modakurichi use town coordinates from Wikipedia.
+- The 2050 view for each Erode place uses its own NEX-GDDP-CMIP6 grid cell (0.25 degrees). The sixteen places fall in eight cells; projected 2050 changes are +0.8 to +0.9 °C and +2% to +9% annual rain across them.
+
+</details>
+
+## Run it yourself
+
+It is one file, `index.html`. No build step, no key, no login.
+
+```bash
+python -m http.server 8765
+```
+
+Then open http://localhost:8765. The live site is served by GitHub Pages from the `main` branch root.
+
+<details>
+<summary><b>Reproduce the climate projections</b></summary>
+
+`python tools/fetch_nex.py` pulls the daily NEX-GDDP-CMIP6 series for the ten grid cells (5,500 point requests; it can be stopped and resumed) into `tools/nex_cache.json`. `python tools/nex_deltas.py index.html` turns that cache into the monthly changes and writes them into the `NEX` constant in `index.html`.
+
+</details>
+
+## Team
+
+[amalnathkp13-boop](https://github.com/amalnathkp13-boop) · [deexithamde](https://github.com/deexithamde) · [Bairavi Alagesan](https://github.com/bairavialagesan123-lgtm) · [hariprasanna4047-jpg](https://github.com/hariprasanna4047-jpg) · [jeevanandham2428-bit](https://github.com/jeevanandham2428-bit) · [hariharish472008-debug](https://github.com/hariharish472008-debug) · [sudharsanrajhan291-bit](https://github.com/sudharsanrajhan291-bit)
+
+Erode, Tamil Nadu, India.
 
 ## Use of AI
 
 This prototype's code and Tamil text were drafted with an AI assistant (Claude) and must be reviewed by the team. The optional chat model (Anthropic API, key entered by the user) is given only the village's data and scores and told to refuse anything beyond them. Without a key, answers come from the scoring engine and work offline.
-
-## Reproduce the projections
-
-`python tools/fetch_nex.py` pulls the daily NEX-GDDP-CMIP6 series (1,650 point requests, about 1.5 hours) into `tools/nex_cache.json`. `python tools/nex_deltas.py index.html` turns that cache into the monthly changes and writes them into the `NEX` constant in `index.html`.

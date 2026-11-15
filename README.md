@@ -140,23 +140,6 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 - Fertilizer plans are the **general published dose**. At the Erode places a farmer can enter Soil Health Card values to adjust them.
 - The weed and pest schedules come from a **2020 guide**, filtered against India's banned and restricted list of October 2026. The page tells the farmer to check the label and ask the agricultural officer. They cover the Erode crops only.
 
-<details>
-<summary><b>The full list of known gaps</b></summary>
-
-- No sourced seasonal water figure was found for green gram, cowpea or garlic; those three use the team's estimates.
-- Still team estimates, because no published figure was found: profit rank for sesame (Vellode) and for rice, tomato, onion, sesame and soybean (Kano); the irrigated flag for turmeric, maize, the pulses and sesame (Vellode), tomato, garlic and onion (Fresno), sesame and soybean (Kano). The "See the math" panel marks each one.
-- The profit figures are not the same measure in the three places: net return in Tamil Nadu, gross value in Fresno, gross margin in Kano. Ranks are only compared inside one village.
-- The soil effect value given to each class of crop is team judgement; only the classes are sourced.
-- Fresno wheat was 16% irrigated in the 2022 census (a drought year) and 63% in 2017; the app treats it as not irrigated.
-- TNAU water figures are irrigation applied in Tamil Nadu; FAO figures are crop water need. They are different quantities and are used as published.
-- EcoCrop does not say whether its temperatures are daily means or daytime highs; the app compares them with mean temperature.
-- The weed and pest schedules are copied from a 2020 guide. Each product and dose was matched against the guide's text by script, and the PPQS / CIB&RC banned and restricted list (updated 31.10.2026) was applied, but a product not being on that list does not prove it is currently registered for that crop. Guide entries whose pest-to-product pairing could not be read with certainty were left out, so the lists are not complete. Fresno and Kano have no schedule.
-- Fertilizer plans are general (blanket) recommendations. At Vellode the farmer can enter Soil Health Card values (organic carbon, available P and K) and each nutrient moves +25% where the soil is low and -25% where it is high (ICAR, Indian Farming 70(3), 2020). The SoilGrids organic carbon can be used instead, but it is a map estimate for the top 5 cm, not a lab test, and the page says so.
-- Fresno compost rates are the CDFA Healthy Soils Program's statewide rate for annual crops, not crop-specific. Kano manure rates for millet, sorghum and groundnut come from ICRISAT handbooks written for north-east Nigeria; none was found for maize, soybean, cowpea, tomato or onion. The Kano sesame rate comes from a 2014 farmers' guide that names no zone.
-- NASA POWER's grid is about 0.5 x 0.625 degrees, so ten of the sixteen Erode places fall in one cell. Their rain is told apart with NASA GPM IMERG; annual rain then runs from 661 mm (Chennimalai) to 996 mm (Thalavadi). Temperature stays on the POWER grid and is shared within a cell; the page says so. Erode town falls in the same IMERG pixel as Vellode, so the two match. Sathyamangalam and Modakurichi use town coordinates from Wikipedia.
-- The 2050 view for each Erode place uses its own NEX-GDDP-CMIP6 grid cell (0.25 degrees). The sixteen places fall in eight cells; projected 2050 changes are +0.8 to +0.9 °C and +2% to +9% annual rain across them.
-
-</details>
 
 ## Run it yourself
 
@@ -180,7 +163,3 @@ Then open http://localhost:8765. The live site is served by GitHub Pages from th
 [amalnathkp13-boop](https://github.com/amalnathkp13-boop) · [deexithamde](https://github.com/deexithamde) · [Bairavi Alagesan](https://github.com/bairavialagesan123-lgtm) · [hariprasanna4047-jpg](https://github.com/hariprasanna4047-jpg) · [jeevanandham2428-bit](https://github.com/jeevanandham2428-bit) · [hariharish472008-debug](https://github.com/hariharish472008-debug) · [sudharsanrajhan291-bit](https://github.com/sudharsanrajhan291-bit)
 
 Erode, Tamil Nadu, India.
-
-## Use of AI
-
-This prototype's code and Tamil text were drafted with an AI assistant (Claude) and must be reviewed by the team. The optional chat model (Anthropic API, key entered by the user) is given only the village's data and scores and told to refuse anything beyond them. Without a key, answers come from the scoring engine and work offline.

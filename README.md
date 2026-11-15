@@ -21,7 +21,7 @@ It is one file, `index.html`. No build step, no key, no login.
 4. **Ask your field**: Tamil or English questions answered only from the village's data and scores.
 5. **Fertilizer plan**: each crop card opens to the published recommendation for that crop and place: N, P2O5 and K2O per hectare, the same as urea, super phosphate and potash per hectare and per acre, plus farmyard manure, biofertilizer and timing where the source gives them.
 
-Pilot villages: Vellode (Erode, India), Fresno County (California, USA), Kano (Nigeria). Tapping the map loads any other point live from NASA POWER (without projections).
+Pilot villages: Vellode (Erode, India), Fresno County (California, USA), Kano (Nigeria). A drop-down adds 15 more places in Erode district (Erode, Bhavani, Gobichettipalayam, Sathyamangalam, Perundurai, Kodumudi, Chennimalai, Anthiyur, Modakkurichi, Nambiyur, Thalavadi, Bhavanisagar, Sivagiri, Kavindapadi, Ammapettai), all on the Vellode crop table. Tapping the map loads any other point live from NASA POWER (without projections).
 
 ## Score formula
 
@@ -75,6 +75,8 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 - EcoCrop does not say whether its temperatures are daily means or daytime highs; the app compares them with mean temperature.
 - Fertilizer plans are general (blanket) recommendations. At Vellode the farmer can enter Soil Health Card values (organic carbon, available P and K) and each nutrient moves +25% where the soil is low and -25% where it is high (ICAR, Indian Farming 70(3), 2020). The SoilGrids organic carbon can be used instead, but it is a map estimate for the top 5 cm, not a lab test, and the page says so.
 - Fresno compost rates are the CDFA Healthy Soils Program's statewide rate for annual crops, not crop-specific. Kano manure rates for millet, sorghum and groundnut come from ICRISAT handbooks written for north-east Nigeria; none was found for maize, soybean, cowpea, tomato or onion. The Kano sesame rate comes from a 2014 farmers' guide that names no zone.
+- NASA POWER's grid is about 0.5 x 0.625 degrees, so ten of the sixteen Erode places fall in one cell and show identical rain and temperature; the page says so. Only Kodumudi, Chennimalai / Modakkurichi / Sivagiri, Thalavadi and Bhavanisagar differ. Sathyamangalam and Modakkurichi are taluk centre points, because OpenStreetMap had no town point.
+- The 2050 view for an Erode place uses its own NEX-GDDP grid cell when that has been downloaded (`tools/fetch_nex.py`), otherwise Vellode's cell, and the caption says which.
 - The time machine applies climate-model changes to a climatology. It is a scenario, not a forecast.
 
 ## Use of AI

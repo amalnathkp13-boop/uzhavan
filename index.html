@@ -57,6 +57,8 @@ p{margin:0}
 .villages button small{opacity:.8}
 .villages button[aria-pressed=true]{background:var(--manjal);border-color:var(--manjal);color:var(--ink)}
 #map{height:270px;border-radius:14px;overflow:hidden;background:#0d1a13;border:1.5px solid #FFF8DC33}
+.more{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px;font-size:.92rem;color:#FFF8DCd9}
+.more select{font:inherit;padding:8px 12px;border-radius:10px;border:1.5px solid #FFF8DC55;background:#22352a;color:#FFF8DC;min-width:210px;max-width:100%}
 .mapnote{font-size:.82rem;color:#FFF8DCb0;margin-top:6px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .mapnote label{display:flex;gap:6px;align-items:center;cursor:pointer}
 @media(min-width:900px){.hero{grid-template-columns:1.1fr .9fr;align-items:end}#map{height:310px}}
@@ -190,6 +192,7 @@ ul.data a{color:var(--leaf)}
         <h1 data-t="hero"></h1>
         <p class="lead" data-t="lead"></p>
         <div class="villages" id="villages"></div>
+  <div class="more"><label for="erodeSel" id="erodeLab"></label><select id="erodeSel"></select></div>
       </div>
       <div>
         <div id="map"></div>
@@ -319,6 +322,10 @@ const VILLAGES={
   soil:{lat:11.95,lon:8.45,clay:16.0,sand:60.3,silt:23.7,ph:6.1,soc:7.6},
   prev:"millet"}
 };
+/* More places in Erode district. Coordinates: OpenStreetMap; climate and soil fetched like the pilots.
+   They use the Vellode crop table (region). cell = NASA NEX-GDDP 0.25-degree grid cell, floor(lat*4)_floor(lon*4). */
+VILLAGES.vellode.cell="c45_310";
+/*ERODE*/Object.assign(VILLAGES,{"erode":{"lat":11.33,"lon":77.73,"name":{"en":"Erode","ta":"ஈரோடு"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],"t":[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],"tx":[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],"soil":{"lat":11.35,"lon":77.75,"clay":30.3,"sand":36.2,"silt":33.5,"ph":6.6,"soc":26.5},"prev":"paddy","region":"vellode","cell":"c45_310"},"bhavani":{"lat":11.44,"lon":77.68,"name":{"en":"Bhavani","ta":"பவானி"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],"t":[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],"tx":[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],"soil":null,"prev":"paddy","region":"vellode","cell":"c45_310"},"gobi":{"lat":11.46,"lon":77.44,"name":{"en":"Gobichettipalayam","ta":"கோபிசெட்டிபாளையம்"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],"t":[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],"tx":[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],"soil":{"lat":11.44,"lon":77.46,"clay":27.5,"sand":39.5,"silt":33.0,"ph":6.9,"soc":31.1},"prev":"paddy","region":"vellode","cell":"c45_309"},"sathy":{"lat":11.55,"lon":77.27,"name":{"en":"Sathyamangalam taluk","ta":"சத்தியமங்கலம் வட்டம்"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"taluk centre point","ta":"வட்ட மையப் புள்ளி"},"p":[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],"t":[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],"tx":[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],"soil":null,"prev":"paddy","region":"vellode","cell":"c46_309"},"perundurai":{"lat":11.28,"lon":77.58,"name":{"en":"Perundurai","ta":"பெருந்துறை"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],"t":[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],"tx":[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],"soil":null,"prev":"paddy","region":"vellode","cell":"c45_310"},"kodumudi":{"lat":11.08,"lon":77.89,"name":{"en":"Kodumudi","ta":"கொடுமுடி"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.21,0.31,0.58,1.2,2.52,1.3,1.76,2.48,3.35,4.98,4.73,1.58],"t":[24.16,26.4,29.68,31.5,30.29,28.76,28.3,28.03,27.67,26.67,24.7,23.62],"tx":[36.29,39.38,42.4,43.6,42.59,40.61,39.38,39.0,39.23,39.15,36.94,36.04],"soil":null,"prev":"paddy","region":"vellode","cell":"c44_311"},"chennimalai":{"lat":11.16,"lon":77.6,"name":{"en":"Chennimalai","ta":"சென்னிமலை"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.16,0.29,0.68,1.39,2.44,1.55,1.8,2.2,2.91,4.86,3.86,1.07],"t":[24.29,26.59,29.74,31.32,29.63,27.78,27.22,27.16,27.15,26.38,24.65,23.67],"tx":[36.22,39.64,42.37,43.2,42.66,39.51,37.4,37.63,38.97,38.02,36.41,35.71],"soil":null,"prev":"paddy","region":"vellode","cell":"c44_310"},"anthiyur":{"lat":11.58,"lon":77.59,"name":{"en":"Anthiyur","ta":"அந்தியூர்"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],"t":[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],"tx":[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],"soil":null,"prev":"paddy","region":"vellode","cell":"c46_310"},"modakurichi":{"lat":11.21,"lon":77.75,"name":{"en":"Modakkurichi taluk","ta":"மொடக்குறிச்சி வட்டம்"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"taluk centre point","ta":"வட்ட மையப் புள்ளி"},"p":[0.16,0.29,0.68,1.39,2.44,1.55,1.8,2.2,2.91,4.86,3.86,1.07],"t":[24.29,26.59,29.74,31.32,29.63,27.78,27.22,27.16,27.15,26.38,24.65,23.67],"tx":[36.22,39.64,42.37,43.2,42.66,39.51,37.4,37.63,38.97,38.02,36.41,35.71],"soil":null,"prev":"paddy","region":"vellode","cell":"c44_311"},"nambiyur":{"lat":11.36,"lon":77.32,"name":{"en":"Nambiyur","ta":"நம்பியூர்"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],"t":[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],"tx":[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],"soil":null,"prev":"paddy","region":"vellode","cell":"c45_309"},"thalavadi":{"lat":11.78,"lon":77.01,"name":{"en":"Thalavadi","ta":"தாளவாடி"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.09,0.17,0.73,2.0,3.54,3.48,3.86,3.46,3.97,4.58,2.5,0.61],"t":[22.07,24.33,27.03,28.11,26.22,23.78,23.04,22.98,23.14,22.87,21.76,21.08],"tx":[34.39,37.42,39.2,40.67,39.66,38.65,32.25,33.16,34.72,34.54,34.42,32.66],"soil":null,"prev":"paddy","region":"vellode","cell":"c47_308"},"bhavanisagar":{"lat":11.48,"lon":77.13,"name":{"en":"Bhavanisagar","ta":"பவானிசாகர்"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.13,0.22,0.85,1.87,3.39,4.04,4.04,3.52,3.7,5.17,3.28,0.78],"t":[21.48,23.66,26.33,27.44,25.79,23.56,22.84,22.82,23.02,22.77,21.57,20.76],"tx":[33.86,36.96,38.65,40.27,39.26,36.88,32.06,33.16,34.19,33.68,33.54,32.27],"soil":null,"prev":"paddy","region":"vellode","cell":"c45_308"},"sivagiri":{"lat":11.12,"lon":77.79,"name":{"en":"Sivagiri","ta":"சிவகிரி"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.16,0.29,0.68,1.39,2.44,1.55,1.8,2.2,2.91,4.86,3.86,1.07],"t":[24.29,26.59,29.74,31.32,29.63,27.78,27.22,27.16,27.15,26.38,24.65,23.67],"tx":[36.22,39.64,42.37,43.2,42.66,39.51,37.4,37.63,38.97,38.02,36.41,35.71],"soil":null,"prev":"paddy","region":"vellode","cell":"c44_311"},"kavindapadi":{"lat":11.43,"lon":77.56,"name":{"en":"Kavindapadi","ta":"கவுந்தப்பாடி"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],"t":[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],"tx":[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],"soil":null,"prev":"paddy","region":"vellode","cell":"c45_310"},"ammapettai":{"lat":11.62,"lon":77.74,"name":{"en":"Ammapettai","ta":"அம்மாபேட்டை"},"place":{"en":"Erode district, Tamil Nadu","ta":"ஈரோடு மாவட்டம், தமிழ்நாடு"},"note":{"en":"","ta":""},"p":[0.13,0.22,0.64,1.56,2.63,1.6,1.99,2.41,3.32,4.85,3.5,0.95],"t":[23.53,25.91,29.0,30.63,29.22,27.35,26.84,26.71,26.48,25.5,23.73,22.85],"tx":[35.68,39.38,41.62,43.36,42.5,40.71,38.21,37.55,38.37,37.21,36.35,35.24],"soil":null,"prev":"paddy","region":"vellode","cell":"c46_310"}});/*ERODEEND*/
 const SAVED_PERIOD="2001–2025";
 /* NASA NEX-GDDP-CMIP6 monthly changes (filled by tools/nex_deltas.py). dT in deg C, rR = rain ratio, for 2030 / 2040 / 2050. */
 const NEX=/*NEXDATA*/{"models":["ACCESS-CM2","GFDL-ESM4","IITM-ESM","MIROC6","MPI-ESM1-2-HR"],"scenario":"SSP2-4.5","base":"2001–2025","win":["2026–2035","2036–2045","2046–2055"],"vellode":{"dT":[[0.23,0.27,0.51,0.25,0.19,0.55,0.21,0.44,0.34,0.33,0.43,0.5],[0.56,0.7,0.59,0.87,0.58,0.84,0.3,0.63,0.39,0.5,0.65,0.66],[0.95,0.92,0.74,0.88,0.81,0.99,0.9,0.76,0.76,0.78,0.93,0.93]],"rR":[[0.852,1.0,0.81,1.115,1.103,0.94,1.082,1.141,0.983,1.03,1.048,0.759],[0.906,1.0,0.951,1.017,1.005,0.898,1.347,0.929,1.025,1.009,0.743,1.044],[1.123,1.0,1.059,1.076,1.184,0.968,1.204,1.216,1.133,1.11,0.782,0.739]]},"fresno":{"dT":[[0.57,0.53,0.49,0.3,0.44,0.66,0.91,1.06,1.1,0.92,0.92,0.54],[0.72,0.66,1.03,0.62,0.71,0.25,0.84,1.16,1.09,0.86,0.6,0.29],[1.27,0.92,1.07,0.8,0.82,0.67,1.1,1.32,1.41,1.7,1.32,0.63]],"rR":[[1.115,0.992,0.945,1.222,1.015,1.0,1.0,1.0,0.943,0.754,0.925,1.222],[0.969,0.988,0.897,1.079,0.922,1.0,1.0,1.0,0.945,1.275,1.238,0.974],[1.052,0.944,0.889,1.154,1.07,1.0,1.0,1.0,1.029,0.768,1.092,1.101]]},"kano":{"dT":[[0.43,0.46,0.53,0.36,0.47,0.25,0.49,0.48,0.16,0.31,0.46,0.77],[0.8,0.66,0.6,0.68,0.67,0.75,0.53,0.53,0.41,0.61,0.74,1.03],[1.05,1.17,0.87,1.26,1.03,0.85,0.89,0.88,0.92,0.87,1.12,1.01]],"rR":[[1.0,1.0,1.0,1.729,1.164,1.171,0.965,1.037,1.171,0.955,1.0,1.0],[1.0,1.0,1.0,0.832,1.024,1.094,1.034,1.008,1.049,1.356,1.0,1.0],[1.0,1.0,1.0,1.16,0.975,1.178,1.01,0.961,1.115,1.532,1.0,1.0]]}}/*END*/;
@@ -525,12 +532,18 @@ function village(){
   if(!v.rain)v.rain=v.p.map((x,i)=>x*DAYS[i]);
   return v;
 }
-function regionId(){return S.vid==="custom"?S.custom.region:S.vid}
+function regionId(){return S.vid==="custom"?S.custom.region:(VILLAGES[S.vid].region||S.vid)}
 
 /* ============================================================
    CLIMATE + SCORING ENGINE
    ============================================================ */
-function nexFor(v){for(const k in VILLAGES)if(VILLAGES[k]===v)return NEX&&NEX[k]||null;return null}
+if(NEX&&NEX.vellode&&!NEX.c45_310)NEX.c45_310=NEX.vellode;
+/* a village uses its own NEX series, else its grid cell's, else (flagged as borrowed) its region pilot's */
+function nexKey(v){ if(!NEX)return null; for(const k in VILLAGES)if(VILLAGES[k]===v){ if(NEX[k])return k; if(v.cell&&NEX[v.cell])return v.cell; if(v.region&&NEX[v.region])return v.region; return null } return null }
+function nexFor(v){const k=nexKey(v);return k?NEX[k]:null}
+function nexBorrowKm(v){ const k=nexKey(v); if(!k||!v.region||k!==v.region)return 0; const r=VILLAGES[v.region]; return Math.round(111*Math.hypot(v.lat-r.lat,(v.lon-r.lon)*Math.cos(v.lat*Math.PI/180))) }
+/* NASA POWER is on a grid of about 0.5 x 0.625 degrees: places in one cell share the same rain and temperature */
+function powerMates(v){ if(!v||!v.p)return []; const key=x=>x.p.map(y=>(+y).toFixed(2)).join(","), me=key(v); return Object.keys(VILLAGES).filter(k=>VILLAGES[k]!==v&&key(VILLAGES[k])===me) }
 function climate(v,year){
   const a=nexFor(v), Y=[2026,2030,2040,2050];
   if(!a||year<=2026)return {rain:v.rain.slice(),t:v.t.slice(),dT:0,dR:0,has:!!a};
@@ -566,7 +579,7 @@ function scoreCrop(id,margin,irr,clim,sow,prev,w){
 function rankAll(year=S.year,sow=S.sow,prev=S.prev,w=S.w,vid){
   const v=vid?VILLAGES[vid]:village(); if(vid&&!v.rain)v.rain=v.p.map((x,i)=>x*DAYS[i]);
   const clim=climate(v,year);
-  return REGION[vid||regionId()].map(([id,m,irr,ps,is])=>Object.assign(scoreCrop(id,m,irr,clim,sow,prev,w),{margin:m,ps:ps||"",is:is||""}))
+  return REGION[vid?(VILLAGES[vid].region||vid):regionId()].map(([id,m,irr,ps,is])=>Object.assign(scoreCrop(id,m,irr,clim,sow,prev,w),{margin:m,ps:ps||"",is:is||""}))
     .sort((a,b)=>b.score-a.score||b.raw-a.raw);
 }
 
@@ -601,14 +614,14 @@ async function refreshLive(){
       if(S.vid===id){S.live=true;S.period=d.period;renderAll()}}).catch(()=>{});
   }
   if(!v._soilLive){
-    fetchSoil(v.soil.lat,v.soil.lon).then(s=>{if(!s)return;v.soil=s;v._soilLive=true;
+    fetchSoil((v.soil||v).lat,(v.soil||v).lon).then(s=>{if(!s)return;v.soil=s;v._soilLive=true;
       if(S.vid===id){S.soilLive=true;renderSoil()}}).catch(()=>{});
   }
 }
 function nearestPilot(lat,lon){
   let best="vellode",bd=1e9;
   for(const k in VILLAGES){const v=VILLAGES[k];const d=Math.hypot(v.lat-lat,(v.lon-lon)*Math.cos(lat*Math.PI/180));if(d<bd){bd=d;best=k}}
-  return best;
+  return VILLAGES[best].region||best;
 }
 async function loadCustom(lat,lon){
   lat=+lat.toFixed(2);lon=+lon.toFixed(2);
@@ -645,8 +658,11 @@ function renderStatic(){
 }
 function renderVillages(){
   let h="";
-  for(const k in VILLAGES){const v=VILLAGES[k];
+  for(const k in VILLAGES){const v=VILLAGES[k]; if(v.region)continue;
     h+=`<button data-v="${k}" aria-pressed="${S.vid===k}"><b>${v.name[S.lang]}</b><small>${v.place[S.lang]}<br>${v.note[S.lang]}</small></button>`}
+  const L=S.lang==="ta", more=Object.keys(VILLAGES).filter(k=>VILLAGES[k].region).sort((a,b)=>VILLAGES[a].name.en.localeCompare(VILLAGES[b].name.en));
+  $("erodeLab").textContent=L?`ஈரோடு மாவட்டத்தின் மேலும் ${more.length} ஊர்கள்`:`${more.length} more places in Erode district`;
+  $("erodeSel").innerHTML=`<option value="">${L?"ஊரைத் தேர்ந்தெடுங்கள்":"Choose a place"}</option>`+more.map(k=>`<option value="${k}"${S.vid===k?" selected":""}>${VILLAGES[k].name[S.lang]}</option>`).join("");
   if(S.custom)h+=`<button data-v="custom" aria-pressed="${S.vid==="custom"}"><b>${S.custom.name[S.lang]}</b><small>${t("custom")}<br>${t("nearest")(VILLAGES[S.custom.region].name[S.lang])}</small></button>`;
   $("villages").innerHTML=h;
 }
@@ -685,7 +701,8 @@ function renderChart(){
   $("facts").innerHTML=`<div><b>${Math.round(ann)} mm</b><span>${t("fAnn")}</span></div><div><b>${MONL[S.lang][wet]}</b><span>${t("fWet")}, ${Math.round(c.rain[wet])} mm</span></div><div><b>${fmt(c.t[hot],1)} °C</b><span>${t("fHot")}, ${MONL[S.lang][hot]}</span></div>`;
   const nm=village().name[S.lang];
   $("dashTitle").textContent=t("dashTitle")(nm);
-  $("dashSrc").textContent=t("dashSrc")(S.period,S.live);
+  const pm=powerMates(village()).length;
+  $("dashSrc").textContent=t("dashSrc")(S.period,S.live)+(pm?(S.lang==="ta"?`. NASA வானிலைக் கட்டம் சுமார் 50 கி.மீ அகலம்; இங்குள்ள மேலும் ${pm} ஊர்கள் இதே கட்டத்தில் உள்ளதால் அவற்றின் மழை, வெப்பநிலை ஒன்றே`:`. The NASA weather grid is about 50 km wide; ${pm} other places here are in the same cell, so their rain and temperature are identical`):"");
   const st=$("status"); st.className="status "+(S.live?"live":"saved"); st.textContent=S.live?t("live"):t("saved");
 }
 function texture(sa,si,cl){
@@ -702,10 +719,24 @@ function soilWords(s){
     ph:s.ph<6.5?t("phAcid"):s.ph<=7.5?t("phNeutral"):t("phAlk"),
     soc:s.soc<6?t("socLow"):s.soc<12?t("socMed"):t("socHigh")};
 }
+function stBoxHTML(){
+  if(regionId()!=="vellode")return "";
+  const L=S.lang==="ta", st=S.st||{}, val=x=>x==null?"":x;
+  return `<div class="stbox"><b>${L?"உங்கள் மண் பரிசோதனை (விருப்பம்)":"Your soil test (optional)"}</b>
+   <p class="muted">${L?"மண் வள அட்டையில் உள்ள மதிப்புகளை இடுங்கள்; உரத் திட்டம் அதற்கேற்ப மாறும்.":"Enter the values from your Soil Health Card and the fertilizer plan adjusts to them."}</p>
+   <div class="stgrid">
+    <label>${L?"கரிமக் கரி %":"Organic carbon %"}<input id="st-oc" type="number" inputmode="decimal" step="0.01" min="0" max="10" value="${val(st.oc)}"></label>
+    <label>${L?"மணிச்சத்து கி.கி/ஹெ.":"Phosphorus kg/ha"}<input id="st-p" type="number" inputmode="decimal" step="1" min="0" max="500" value="${val(st.p)}"></label>
+    <label>${L?"சாம்பல்சத்து கி.கி/ஹெ.":"Potassium kg/ha"}<input id="st-k" type="number" inputmode="decimal" step="1" min="0" max="2000" value="${val(st.k)}"></label>
+   </div>
+   <div class="stbtn"><button type="button" id="st-map">${L?"வரைபட மதிப்பைப் பயன்படுத்து":"Use the map's organic carbon"}</button><button type="button" id="st-clear">${L?"அழி":"Clear"}</button></div>
+   <p class="muted" id="st-msg">${stMsg()}</p></div>`;
+}
 function renderSoil(){
   const s=village().soil;
   let h=`<h3>${t("soilTitle")}</h3><p class="muted">${t("soilSrc")(S.soilLive)}</p>`;
-  if(!s){$("soil").innerHTML=h+`<p style="margin-top:12px">${t("soilNone")}</p>`;return}
+  if(!s){const wait=S.vid!=="custom"&&!village()._soilLive;
+    $("soil").innerHTML=h+`<p style="margin-top:12px">${wait?(S.lang==="ta"?"மண் தரவு இன்னும் வரவில்லை; SoilGrids சேவை பதிலளித்ததும் இங்கே தெரியும்.":"Soil data has not arrived yet. It will appear here when the SoilGrids service answers."):t("soilNone")}</p>`+stBoxHTML();return}
   const w=soilWords(s);
   h+=`<div class="soilrow" style="display:block"><div style="display:flex;justify-content:space-between"><span>${t("texture")}</span><b>${w.tx}</b></div>
    <div class="tex" aria-hidden="true"><i style="width:${s.sand}%;background:#D9B36A"></i><i style="width:${s.silt}%;background:#A9814B"></i><i style="width:${s.clay}%;background:#6B4423"></i></div>
@@ -713,18 +744,7 @@ function renderSoil(){
    <div class="soilrow"><span>${t("ph")}</span><span><b>${fmt(s.ph,1)}</b> <span class="muted">${w.ph}</span></span></div>
    <div class="soilrow"><span>${t("soc")}</span><span><b>${fmt(s.soc,1)} g/kg</b> <span class="muted">${w.soc}</span></span></div>
    <p class="muted" style="margin-top:8px">${(()=>{const v=village(),km=Math.round(111*Math.hypot(v.lat-s.lat,(v.lon-s.lon)*Math.cos(v.lat*Math.PI/180)));return km>=1?t("soilNear")(km)+". ":""})()}${fmt(s.lat,2)}°, ${fmt(s.lon,2)}°</p>`;
-  if(regionId()==="vellode"){
-    const L=S.lang==="ta", st=S.st||{}, val=x=>x==null?"":x;
-    h+=`<div class="stbox"><b>${L?"உங்கள் மண் பரிசோதனை (விருப்பம்)":"Your soil test (optional)"}</b>
-     <p class="muted">${L?"மண் வள அட்டையில் உள்ள மதிப்புகளை இடுங்கள்; உரத் திட்டம் அதற்கேற்ப மாறும்.":"Enter the values from your Soil Health Card and the fertilizer plan adjusts to them."}</p>
-     <div class="stgrid">
-      <label>${L?"கரிமக் கரி %":"Organic carbon %"}<input id="st-oc" type="number" inputmode="decimal" step="0.01" min="0" max="10" value="${val(st.oc)}"></label>
-      <label>${L?"மணிச்சத்து கி.கி/ஹெ.":"Phosphorus kg/ha"}<input id="st-p" type="number" inputmode="decimal" step="1" min="0" max="500" value="${val(st.p)}"></label>
-      <label>${L?"சாம்பல்சத்து கி.கி/ஹெ.":"Potassium kg/ha"}<input id="st-k" type="number" inputmode="decimal" step="1" min="0" max="2000" value="${val(st.k)}"></label>
-     </div>
-     <div class="stbtn"><button type="button" id="st-map">${L?"வரைபட மதிப்பைப் பயன்படுத்து":"Use the map's organic carbon"}</button><button type="button" id="st-clear">${L?"அழி":"Clear"}</button></div>
-     <p class="muted" id="st-msg">${stMsg()}</p></div>`;
-  }
+  h+=stBoxHTML();
   $("soil").innerHTML=h;
 }
 function stMsg(){
@@ -818,7 +838,8 @@ function renderOutlook(){
 function renderTM(){
   $("yr").textContent=S.year; $("year").value=S.year;
   const c=climate(village(),S.year);
-  $("delta").innerHTML=S.year===2026?t("deltaNow"):!c.has?t("deltaNone"):t("delta")(fmt(c.dT,1),Math.round(c.dR*100));
+  const bk=nexBorrowKm(village());
+  $("delta").innerHTML=S.year===2026?t("deltaNow"):!c.has?t("deltaNone"):t("delta")(fmt(c.dT,1),Math.round(c.dR*100))+(bk?(S.lang==="ta"?` வெள்ளோட்டின் NASA கட்டத்திலிருந்து (${bk} கி.மீ தொலைவு).`:` Taken from Vellode's NASA grid cell, ${bk} km away.`):"");
 }
 function renderTests(){
   const w={water:5,soil:5,profit:5}, v=VILLAGES.vellode; if(!v.rain)v.rain=v.p.map((x,i)=>x*DAYS[i]);
@@ -866,7 +887,7 @@ function initMap(){
   ndviLayer=L.tileLayer("https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",
     {maxNativeZoom:9,maxZoom:12,opacity:.72,attribution:"NASA GIBS MODIS NDVI"}).addTo(map);
   for(const k in VILLAGES){const v=VILLAGES[k];
-    marks[k]=L.circleMarker([v.lat,v.lon],{radius:9,color:"#16261D",weight:2,fillColor:"#E2A300",fillOpacity:1}).addTo(map)
+    marks[k]=L.circleMarker([v.lat,v.lon],{radius:v.region?6:9,color:"#16261D",weight:2,fillColor:"#E2A300",fillOpacity:1}).addTo(map)
       .on("click",e=>{L.DomEvent.stopPropagation(e);pick(k)});}
   map.on("click",e=>loadCustom(e.latlng.lat,e.latlng.lng));
   $("ndvi").onchange=e=>{e.target.checked?ndviLayer.addTo(map):map.removeLayer(ndviLayer)};
@@ -877,7 +898,7 @@ function syncMap(){
   for(const k in marks)marks[k].setStyle({fillColor:k===S.vid?"#B4232A":"#E2A300"}).bindTooltip(VILLAGES[k].name[S.lang]);
   if(customMark){map.removeLayer(customMark);customMark=null}
   if(S.vid==="custom")customMark=L.circleMarker([v.lat,v.lon],{radius:9,color:"#16261D",weight:2,fillColor:"#B4232A",fillOpacity:1}).addTo(map);
-  if(syncMap.last!==S.vid+v.lat){syncMap.last=S.vid+v.lat;map.flyTo([v.lat,v.lon],S.vid==="custom"?map.getZoom():8,{duration:.8})}
+  if(syncMap.last!==S.vid+v.lat){syncMap.last=S.vid+v.lat;map.flyTo([v.lat,v.lon],S.vid==="custom"?map.getZoom():(v.region?9:8),{duration:.8})}
 }
 function pick(k){
   S.vid=k; if(k!=="custom")S.prev=VILLAGES[k].prev; else {S.live=true;S.soilLive=!!S.custom.soil}
@@ -1023,6 +1044,7 @@ function setLang(l){S.lang=l;renderStatic();renderAll()}
 $("lang-ta").onclick=()=>setLang("ta");
 $("lang-en").onclick=()=>setLang("en");
 $("villages").onclick=e=>{const b=e.target.closest("button[data-v]"); if(b)pick(b.dataset.v)};
+$("erodeSel").onchange=e=>{if(e.target.value)pick(e.target.value)};
 $("sow").onchange=e=>{S.sow=+e.target.value;renderAdvisor(true)};
 $("prev").onchange=e=>{S.prev=e.target.value;renderAdvisor(true)};
 ["water","soil","profit"].forEach(k=>$("w-"+k).oninput=e=>{S.w[k]=+e.target.value;renderAdvisor(true)});

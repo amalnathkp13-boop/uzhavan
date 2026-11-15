@@ -37,7 +37,7 @@ Farmers in Erode plan around the north-east monsoon, and they tell us it no long
 4. **Ask your field.** Questions in Tamil or English, answered from the village's data and scores only. It works with no internet connection.
 5. **Fertilizer plan.** Each crop card opens to the published fertilizer recommendation for that crop and place: nitrogen, phosphorus and potash per hectare, the same as bags of urea, super phosphate and potash per acre, plus farmyard manure and biofertilizer where the source gives them.
 
-It runs for three pilot places with the same engine: Vellode (Erode, India), Fresno County (California, USA) and Kano (Nigeria). Tapping the map loads the climate for any other point on Earth.
+It runs for three pilot places with the same engine: Vellode (Erode, India), Fresno County (California, USA) and Kano (Nigeria). A drop-down adds 15 more places across Erode district. Tapping the map loads the climate for any other point on Earth.
 
 ### How the score works
 

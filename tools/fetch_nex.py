@@ -6,7 +6,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 ROOT = "https://ds.nccs.nasa.gov/thredds"
 BASE = "AMES/NEX/GDDP-CMIP6"
 MODELS = ["ACCESS-CM2", "MPI-ESM1-2-HR", "GFDL-ESM4", "MIROC6", "IITM-ESM"]
-POINTS = {"vellode": (11.34, 77.72), "fresno": (36.60, -119.90), "kano": (12.00, 8.52)}
+POINTS = {"vellode": (11.34, 77.72), "fresno": (36.60, -119.90), "kano": (12.00, 8.52),
+          # centres of the other 0.25-degree NEX cells that hold Erode-district villages (cNN_MMM = floor(lat*4)_floor(lon*4))
+          "c45_309": (11.375, 77.375), "c46_309": (11.625, 77.375), "c44_311": (11.125, 77.875), "c44_310": (11.125, 77.625),
+          "c46_310": (11.625, 77.625), "c47_308": (11.875, 77.125), "c45_308": (11.375, 77.125)}
 YEARS = list(range(2001, 2056))
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nex_cache.json")
 lock = threading.Lock()

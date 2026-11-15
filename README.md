@@ -130,8 +130,8 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | CDFA Healthy Soils Program compost white paper; CDFA FREP tomato brochure | Fresno compost rate; processing-tomato season nitrogen | 3 to 5 tons/acre of compost a year for annual crops; about 175 lb N/acre |
 | ICAR, Indian Farming 70(3):18-21, 2020 | Soil-test adjustment at Vellode | Low fertility +25%, high -25%, with the class limits |
 | TNAU Crop Production Guide 2020; PPQS / CIB&RC list of banned and restricted pesticides (31.10.2026) | Weeds, pests and diseases, Erode-district crops | Herbicides, pest and disease controls and seed treatment as printed; banned and restricted chemicals removed |
-| NASA SMAP L4 root-zone soil moisture; NISAR radar backscatter (NASA + ISRO), both through NASA GIBS | Selectable map layers | Shown as imagery: SMAP for the latest day, NISAR for 10 November 2026. They do not yet enter the crop score |
-| NASA SMAP soil moisture (NSIDC SMAP/Sentinel-1 1 km), via NASA SERVIR ClimateSERV | Soil moisture on the soil card | Monthly average 2015-2025 at each place, shown for the sowing month with a 12-month strip. No coverage at Kano. Shown for information; not in the score |
+| NASA SMAP L4 root-zone soil moisture; NISAR radar backscatter (NASA + ISRO), both through NASA GIBS | Selectable map layers | Shown as imagery: SMAP for the latest day, NISAR for a pass over each region (Erode 10 November, Fresno 14 October, Kano 22 September 2026). They do not yet enter the crop score |
+| NASA SMAP soil moisture (NSIDC SMAP/Sentinel-1 1 km), via NASA SERVIR ClimateSERV | Soil moisture on the soil card | Monthly average 2015-2025 at each place, shown for the sowing month with a 12-month strip. Kano is outside that product and uses the NASA-USDA Enhanced SMAP surface soil moisture (10 km, mm, 2015 to August 2022) from the same service. Shown for information; not in the score |
 
 </details>
 

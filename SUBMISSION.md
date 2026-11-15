@@ -78,7 +78,7 @@ The irrigation top-up matters. Vellode gets about 727 mm of rain a year and turm
 | Nigeria FMARD recommendation, in the IFDC AfricaFertilizer review 2018; NAERLS bulletins 239 and 242 | Fertilizer plan for Kano | https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content |
 | FAO Fertilizer and Plant Nutrition Bulletin 16 | Soil effect classes: nitrogen fixed by legumes, nutrients taken up by other crops | https://www.fao.org/4/a0443e/a0443e03.pdf |
 
-The map also shows two more NASA layers through GIBS: SMAP root-zone soil moisture, and a radar image from NISAR, the satellite built by NASA and ISRO. The soil card also gives SMAP soil moisture for the sowing month (2015–2025 average) at 17 of the 18 places. Soil moisture is shown for information and does not yet enter the crop score.
+The map also shows two more NASA layers through GIBS: SMAP root-zone soil moisture, and a radar image from NISAR, the satellite built by NASA and ISRO, from a pass over each region. The soil card also gives SMAP soil moisture for the sowing month at all 18 places: the 2015–2025 average of the 1 km product at 17 of them, and the NASA-USDA 10 km product (2015–2022) at Kano. Soil moisture is shown for information and does not yet enter the crop score.
 
 ### Honest limits
 

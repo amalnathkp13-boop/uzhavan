@@ -99,7 +99,7 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | NASA | **POWER** climatology (MERRA-2, 2001-2025) | Monthly rain and temperature, called live |
 | NASA | **GPM IMERG** V07, through SERVIR ClimateSERV | Telling the rain of nearby Erode places apart (about 10 km) |
 | NASA | **NEX-GDDP-CMIP6**, SSP2-4.5, five models | The 2030, 2040 and 2050 climate |
-| NASA | **GIBS** MODIS Terra NDVI | Greenness layer on the map |
+| NASA | **GIBS**: MODIS NDVI, **SMAP** soil moisture, **NISAR** radar (NASA + ISRO) | Three selectable satellite layers on the map |
 | ISRIC | **SoilGrids** v2.0 | Soil texture, pH and organic carbon |
 | TNAU, FAO | Crop water tables, **EcoCrop**, Crop Production Guide 2020 | Water need, temperature ranges, fertilizer, weeds and pests |
 | Govt of India, Fresno County, IITA | Cost of cultivation, crop report, field study | Profit rank |
@@ -129,7 +129,7 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | CDFA Healthy Soils Program compost white paper; CDFA FREP tomato brochure | Fresno compost rate; processing-tomato season nitrogen | 3 to 5 tons/acre of compost a year for annual crops; about 175 lb N/acre |
 | ICAR, Indian Farming 70(3):18-21, 2020 | Soil-test adjustment at Vellode | Low fertility +25%, high -25%, with the class limits |
 | TNAU Crop Production Guide 2020; PPQS / CIB&RC list of banned and restricted pesticides (31.10.2026) | Weeds, pests and diseases, Erode-district crops | Herbicides, pest and disease controls and seed treatment as printed; banned and restricted chemicals removed |
-| NASA SMAP, NISAR | Soil moisture | Roadmap only, not used |
+| NASA SMAP L4 root-zone soil moisture; NISAR radar backscatter (NASA + ISRO), both through NASA GIBS | Selectable map layers | Shown as imagery: SMAP for the latest day, NISAR for 10 November 2026. They do not yet enter the crop score |
 
 </details>
 

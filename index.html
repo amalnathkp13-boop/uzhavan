@@ -59,6 +59,7 @@ p{margin:0}
 #map{height:270px;border-radius:14px;overflow:hidden;background:#0d1a13;border:1.5px solid #FFF8DC33}
 .more{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px;font-size:.92rem;color:#FFF8DCd9}
 .more select{font:inherit;padding:8px 12px;border-radius:10px;border:1.5px solid #FFF8DC55;background:#22352a;color:#FFF8DC;min-width:210px;max-width:100%}
+.mapnote select{font:inherit;font-size:.82rem;padding:5px 8px;border-radius:8px;border:1.5px solid #FFF8DC55;background:#22352a;color:#FFF8DC;max-width:100%}
 .mapnote{font-size:.82rem;color:#FFF8DCb0;margin-top:6px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .mapnote label{display:flex;gap:6px;align-items:center;cursor:pointer}
 @media(min-width:900px){.hero{grid-template-columns:1.1fr .9fr;align-items:end}#map{height:310px}}
@@ -221,7 +222,7 @@ ul.data a{color:var(--leaf)}
       <div>
         <div id="map"></div>
         <div class="mapnote">
-          <label><input type="checkbox" id="ndvi" checked> <span data-t="ndvi"></span></label>
+          <label for="layerSel" data-t="layerLab"></label><select id="layerSel"></select>
           <span data-t="mapnote"></span>
         </div>
       </div>
@@ -521,7 +522,7 @@ function fertHTML(r){
 const TX={
 en:{hero:"What should this field grow next?",
  lead:"Free NASA satellites have watched every field on Earth for decades. Pick a village to see its rain, heat and soil, and the three crops that fit next season.",
- ndvi:"Show crop greenness (NASA MODIS NDVI)",mapnote:"Tap anywhere on the map to load that place live.",
+ layerLab:"Satellite layer:",layers:{ndvi:"Crop greenness (NASA MODIS NDVI)",smap:"Soil moisture in the root zone (NASA SMAP)",nisar:"Radar image, 10 Nov 2026 (NISAR, NASA + ISRO)",none:"No satellite layer"},mapnote:"Tap anywhere on the map to load that place live.",
  dashTitle:v=>`${v} village health`,dashSrc:(p,live)=>`Rain and temperature: NASA POWER climatology ${p}${live?" (live)":" (saved copy)"}`,
  rain:"Monthly rain (mm)",temp:"Mean temperature (°C)",base:"Today's climate",
  fAnn:"rain per year",fWet:"wettest month",fHot:"hottest month (mean)",
@@ -562,7 +563,7 @@ en:{hero:"What should this field grow next?",
  live:"Live NASA data",saved:"Saved NASA data (offline-ready)"},
 ta:{hero:"இந்த வயலில் அடுத்து எந்தப் பயிர்?",
  lead:"நாசா செயற்கைக்கோள்கள் பல ஆண்டுகளாக ஒவ்வொரு வயலையும் கவனித்து வருகின்றன. உங்கள் கிராமத்தைத் தேர்ந்தெடுங்கள்; மழை, வெப்பம், மண், அடுத்த பருவத்துக்கு ஏற்ற மூன்று பயிர்கள் தெரியும்.",
- ndvi:"பயிர்ப் பசுமையைக் காட்டு (NASA MODIS NDVI)",mapnote:"வரைபடத்தில் எந்த இடத்தையும் தொட்டால் அந்த இடத்தின் தரவு வரும்.",
+ layerLab:"செயற்கைக்கோள் அடுக்கு:",layers:{ndvi:"பயிர்ப் பசுமை (NASA MODIS NDVI)",smap:"வேர் மண்டல மண் ஈரப்பதம் (NASA SMAP)",nisar:"ரேடார் படம், 10 நவ 2026 (NISAR, NASA + ISRO)",none:"செயற்கைக்கோள் அடுக்கு இல்லை"},mapnote:"வரைபடத்தில் எந்த இடத்தையும் தொட்டால் அந்த இடத்தின் தரவு வரும்.",
  dashTitle:v=>`${v} கிராம நலம்`,dashSrc:(p,live)=>`மழை, வெப்பநிலை: NASA POWER ${p} சராசரி${live?" (நேரடி)":" (சேமித்த நகல்)"}`,
  rain:"மாத மழை (மி.மீ)",temp:"சராசரி வெப்பநிலை (°C)",base:"இன்றைய காலநிலை",
  fAnn:"ஆண்டு மழை",fWet:"அதிக மழை மாதம்",fHot:"அதிக வெப்ப மாதம் (சராசரி)",
@@ -740,6 +741,7 @@ function renderStatic(){
   $("sow").value=S.sow;
   $("sugg").innerHTML=["s1","s2","s3","s4","s5","s6"].map(k=>`<button type="button">${esc(t(k))}</button>`).join("");
   $("aistate").textContent=aiKey()?t("aiOn"):t("aiOff");
+  $("layerSel").innerHTML=["ndvi","smap","nisar","none"].map(k=>`<option value="${k}"${k===curLayer?" selected":""}>${esc(t("layers")[k])}</option>`).join("");
   $("steps").innerHTML=[["#villages","step1"],["#advisor","step2"],["#cards","step3"]].map(([h,k])=>`<li><a href="${h}">${esc(t(k))}</a></li>`).join("");
   const ho=$("help").open; $("help").innerHTML=`<summary>${esc(t("helpTitle"))}</summary><ul>${t("help").map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`; $("help").open=ho;
   renderData();
@@ -985,7 +987,7 @@ function renderData(){
    ["ISRIC SoilGrids v2.0","https://soilgrids.org",L?"மண் வகை, pH, கரிமக் கரி; 250 மீ, மேல் 5 செ.மீ.":"Soil texture, pH and organic carbon at 250 m, top 5 cm."],
    ["NASA GIBS, MODIS Terra NDVI (8-day)","https://nasa-gibs.github.io/gibs-api-docs/",L?"வரைபடத்தில் பயிர்ப் பசுமை அடுக்கு.":"The crop-greenness layer on the map."],
    ["NASA NEX-GDDP-CMIP6","https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6",NEX?(L?`கால இயந்திரம்: SSP2-4.5, ${NEX.models.length} மாதிரிகளின் சராசரி (${NEX.models.join(", ")}). மாத வெப்ப, மழை மாற்றங்கள் ${NEX.base} உடன் ஒப்பிட்டு, NASA POWER அடிப்படையில் சேர்க்கப்படுகின்றன. 2030 = ${NEX.win[0]}, 2040 = ${NEX.win[1]}, 2050 = ${NEX.win[2]}.`:`The time machine: SSP2-4.5, mean of ${NEX.models.length} models (${NEX.models.join(", ")}). Monthly temperature and rain changes against ${NEX.base} are added to the NASA POWER baseline. 2030 = ${NEX.win[0]}, 2040 = ${NEX.win[1]}, 2050 = ${NEX.win[2]}.`):""],
-   ["NASA SMAP, NISAR (NASA + ISRO)","https://worldview.earthdata.nasa.gov",L?"மண் ஈரப்பதம்: அடுத்த கட்டத் திட்டம். இந்தச் செயலியில் இன்னும் பயன்படுத்தப்படவில்லை.":"Soil moisture: on the roadmap. Not used in this app yet."],
+   ["NASA SMAP and NISAR (NASA + ISRO), through NASA GIBS","https://nasa-gibs.github.io/gibs-api-docs/",L?"வரைபட அடுக்குகள்: SMAP L4 வேர் மண்டல மண் ஈரப்பதம் (சமீபத்திய நாள்), NISAR ரேடார் பின்சிதறல் படம் (10 நவம்பர் 2026). இவை படங்களாகக் காட்டப்படுகின்றன; பயிர் மதிப்பெண்ணில் இன்னும் சேர்க்கப்படவில்லை.":"Map layers: SMAP Level-4 root-zone soil moisture (latest day) and the NISAR radar backscatter image of 10 November 2026. They are shown as imagery; they do not yet enter the crop score."],
    ["NASA GPM IMERG V07 (NASA SERVIR ClimateSERV)","https://climateserv.servirglobal.net/",L?"ஈரோடு மாவட்ட ஊர்களுக்கு: 2001–2025 தினசரி செயற்கைக்கோள் மழை (0.1°, சுமார் 10 கி.மீ). ஒவ்வொரு மாதமும் NASA POWER மழை ஒரு விகிதத்தால் பெருக்கப்படுகிறது: ஊரின் IMERG மழை ÷ ஒப்பீட்டு மதிப்பு. வெள்ளோட்டின் NASA POWER கட்டத்தில் உள்ள ஊர்களுக்கு ஒப்பீடு வெள்ளோட்டின் IMERG மழை (வெள்ளோடு NASA POWER மதிப்பிலேயே உள்ளது); மற்ற கட்டங்களுக்குக் கட்டத்தின் IMERG சராசரி. விகிதம் 0.5 முதல் 2 வரை; ஒப்பீடு 5 மி.மீ-க்குக் குறைவான மாதங்களில் 1.":"For the Erode-district places: daily satellite rainfall 2001–2025 at 0.1° (about 10 km). Each month's NASA POWER rain is multiplied by the place's IMERG rain divided by a reference: Vellode's IMERG rain for places in Vellode's NASA POWER cell (Vellode itself keeps the plain NASA POWER value), and the IMERG average over the cell for the other cells. The ratio is kept between 0.5 and 2, and is 1 in months where the reference is under 5 mm."],
    [L?"களை, பூச்சி, நோய் அட்டவணை":"Weeds, pests and diseases","https://tnau.ac.in/site/research/wp-content/uploads/sites/60/2020/02/Agriculture-CPG-2020.pdf",L?"ஈரோடு மாவட்டப் பயிர்களுக்கு: TNAU பயிர் உற்பத்தி வழிகாட்டி 2020 (வேளாண்மை, தோட்டக்கலை). மருந்துப் பெயர், அளவு வழிகாட்டியில் உள்ளபடி; ஒவ்வொன்றும் வழிகாட்டி உரையுடன் ஒப்பிட்டுச் சரிபார்க்கப்பட்டது. இந்தியாவில் தடை அல்லது கட்டுப்பாடு உள்ள மருந்துகள் (PPQS / CIB&RC பட்டியல், 31.10.2026) நீக்கப்பட்டு, அட்டையில் பெயருடன் குறிப்பிடப்படுகின்றன. நாட்கள் விதைப்பு மாதத்திலிருந்து கணக்கிடப்படுகின்றன. ஃப்ரெஸ்னோ, கானோவுக்கு அட்டவணை இன்னும் இல்லை.":"For the Erode-district crops: TNAU Crop Production Guide 2020 (Agriculture and Horticulture). Product names and doses are as printed there, and each was matched against the guide's text. Chemicals that India has banned or restricted (PPQS / CIB&RC list updated 31.10.2026) are removed and named on the card. Dates are counted from the sowing month. There is no schedule yet for Fresno or Kano."],
    [L?"பயிர் அட்டவணை":"Crop table","https://web.archive.org/web/20261006032604/https://agritech.tnau.ac.in/agriculture/agri_irrigationmgt_waterrequirements.html",L?"நீர்த் தேவை, காலம்: TNAU நீர்த்தேவை அட்டவணை, FAO பாசனப் பயிற்சிக் கையேடு 3. வெப்ப வரம்புகள்: FAO EcoCrop. பச்சைப்பயறு, தட்டைப்பயறு, பூண்டு நீர்த் தேவை குழுவின் மதிப்பீடு.":"Water need and duration: TNAU water-requirement table and FAO Irrigation Water Management Manual 3. Temperature ranges: FAO EcoCrop. Water need for green gram, cowpea and garlic is the team's estimate."],
@@ -1005,18 +1007,23 @@ function renderAll(animate){
 /* ============================================================
    MAP (Leaflet + NASA GIBS; falls back to plain panel)
    ============================================================ */
-let map=null,ndviLayer=null,marks={},customMark=null;
+let map=null,ndviLayer=null,marks={},customMark=null,LAYERS={},curLayer="ndvi";
 function initMap(){
   if(!window.L){$("map").style.display="none";document.querySelector(".mapnote").style.display="none";return}
   map=L.map("map",{scrollWheelZoom:false,worldCopyJump:true}).setView([11.34,77.72],8);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:12,attribution:"© OpenStreetMap"}).addTo(map);
-  ndviLayer=L.tileLayer("https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",
-    {maxNativeZoom:9,maxZoom:12,opacity:.72,attribution:"NASA GIBS MODIS NDVI"}).addTo(map);
+  const G="https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/";
+  LAYERS={
+    ndvi:L.tileLayer(G+"MODIS_Terra_NDVI_8Day/default/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",{maxNativeZoom:9,maxZoom:12,opacity:.72,attribution:"NASA GIBS MODIS NDVI"}),
+    smap:L.tileLayer(G+"SMAP_L4_Analyzed_Root_Zone_Soil_Moisture/default/default/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png",{maxNativeZoom:6,maxZoom:12,opacity:.7,attribution:"NASA GIBS SMAP L4 root-zone soil moisture"}),
+    nisar:L.tileLayer(G+"NISAR_L2_Geocoded_Polarimetric_Covariance/default/2026-11-10/GoogleMapsCompatible_Level13/{z}/{y}/{x}.png",{maxNativeZoom:12,maxZoom:12,opacity:.85,attribution:"NASA GIBS NISAR radar backscatter (NASA + ISRO)"})
+  };
+  ndviLayer=LAYERS.ndvi; ndviLayer.addTo(map);
   for(const k in VILLAGES){const v=VILLAGES[k];
     marks[k]=L.circleMarker([v.lat,v.lon],{radius:v.region?6:9,color:"#16261D",weight:2,fillColor:"#E2A300",fillOpacity:1}).addTo(map)
       .on("click",e=>{L.DomEvent.stopPropagation(e);pick(k)});}
   map.on("click",e=>loadCustom(e.latlng.lat,e.latlng.lng));
-  $("ndvi").onchange=e=>{e.target.checked?ndviLayer.addTo(map):map.removeLayer(ndviLayer)};
+  $("layerSel").onchange=e=>{const k=e.target.value; for(const n in LAYERS)if(map.hasLayer(LAYERS[n]))map.removeLayer(LAYERS[n]); if(LAYERS[k])LAYERS[k].addTo(map); curLayer=k};
 }
 function syncMap(){
   if(!map)return;

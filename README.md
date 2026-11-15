@@ -12,7 +12,6 @@ A free Tamil and English web page for farmers, built on open NASA data.</p>
 
 <p align="center">
   <a href="https://amalnathkp13-boop.github.io/uzhavan/"><b>Open the live site</b></a> &nbsp;·&nbsp;
-  <a href="UZHAVAN_Judge_Day_Guide.pdf">Judge-day guide (PDF)</a> &nbsp;·&nbsp;
   <a href="SUBMISSION.md">Submission pack</a>
 </p>
 

@@ -19,8 +19,11 @@ def mean(model, var, years, p):
 
 
 complete = [m for m in models if all(mean(m, v, range(2001, 2056), p) for v in ("tas", "pr") for p in POINTS)]
+# other grid cells in the cache (the extra Erode cells) are added when they are complete for every model in use
+extra = sorted({k.split("|")[3] for k in cache} - set(POINTS))
+extra = [p for p in extra if all(mean(m, v, range(2001, 2056), p) for m in complete for v in ("tas", "pr"))]
 out = {"models": complete, "scenario": "SSP2-4.5", "base": "2001–2025", "win": ["2026–2035", "2036–2045", "2046–2055"]}
-for p in POINTS:
+for p in POINTS + extra:
     dT, rR = [], []
     for w in WINS:
         dts, rrs = [], []

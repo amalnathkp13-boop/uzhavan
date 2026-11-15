@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>UZHAVAN உழவன் — every farmer's satellite</title>
 <meta name="description" content="Crop-rotation advice for a village, built on open NASA data. Tamil and English.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2316251c'/%3E%3Cpath d='M16 26V13M16 17c-5 0-7-3-7-7 5 0 7 3 7 7zm0-3c0-4 2-7 7-7 0 4-2 7-7 7z' fill='none' stroke='%23e0a100' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anek+Tamil:wdth,wght@75..125,400..800&display=swap" rel="stylesheet">
@@ -737,14 +738,14 @@ function aiKey(){try{return localStorage.getItem("uzhavan_ai_key")||""}catch(e){
 function findCrop(q){
   const s=q.toLowerCase(); const ids=REGION[regionId()].map(r=>r[0]);
   let hit=null;
-  for(const id in CROPS)for(const a of CROPS[id].al)if(s.includes(a)){ if(!hit||ids.includes(id))hit=id }
+  for(const id in CROPS)for(const a of CROPS[id].al)if(/^[a-z ]+$/.test(a)?new RegExp("\\b"+a).test(s):s.includes(a)){ if(!hit||ids.includes(id))hit=id }
   return hit;
 }
 function findMonth(q){
   const s=q.toLowerCase();
-  for(let i=0;i<12;i++){ if(s.includes(MONL.en[i].toLowerCase())||q.includes(MONL.ta[i]))return i }
-  for(let i=0;i<12;i++){ if(new RegExp("\\b"+MON.en[i].toLowerCase()+"\\b").test(s))return i }
-  if(/this month|now|today|இந்த மாத|இப்போ|இன்று/.test(s))return new Date().getMonth();
+  for(let i=0;i<12;i++){ if((i===4?/\b(in|during|by|of)\s+may\b/.test(s):new RegExp("\\b"+MONL.en[i].toLowerCase()+"\\b").test(s))||q.includes(MONL.ta[i]))return i }
+  for(let i=0;i<12;i++){ if(i!==4&&new RegExp("\\b"+MON.en[i].toLowerCase()+"\\b").test(s))return i }
+  if(/this month|\bnow\b|today|இந்த மாத|இப்போ|இன்று/.test(s))return new Date().getMonth();
   return null;
 }
 function ruleAnswer(q){
@@ -785,8 +786,8 @@ function ruleAnswer(q){
     const y=+(/20[345]0/.exec(s)||[2050])[0], m=mon==null?S.sow:mon, now=rankAll(2026,m), fut=rankAll(y,m), cc=climate(v,y);
     if(!cc.has)return t('deltaNone');
     const line=a=>a.slice(0,3).map(r=>`${N(r.id)} ${r.score}`).join(", ");
-    return (ta?`${nm}, ${y}: NASA NEX-GDDP-CMIP6 (SSP2-4.5) சூழலில் வெப்பம் +${fmt(cc.dT,1)} °C, மழை ${Math.round(cc.dR*100)}%.\nஇன்று முதல் மூன்று: ${line(now)}.\n${y}-இல் முதல் மூன்று: ${line(fut)}.\nஇது ஒரு காலநிலைச் சூழல்; வானிலை முன்னறிவிப்பு அல்ல.`
-      :`${nm} in ${y}: NASA NEX-GDDP-CMIP6 (SSP2-4.5) adds ${fmt(cc.dT,1)} °C and changes rain by ${Math.round(cc.dR*100)}%.\nTop three today: ${line(now)}.\nTop three in ${y}: ${line(fut)}.\nThis is a climate scenario, not a weather forecast.`)+src;
+    return (ta?`${nm}, ${y}: NASA NEX-GDDP-CMIP6 (SSP2-4.5) சூழலில் வெப்பம் +${fmt(cc.dT,1)} °C, மழை ${cc.dR>=0?'+':''}${Math.round(cc.dR*100)}%.\nஇன்று முதல் மூன்று: ${line(now)}.\n${y}-இல் முதல் மூன்று: ${line(fut)}.\nஇது ஒரு காலநிலைச் சூழல்; வானிலை முன்னறிவிப்பு அல்ல.`
+      :`${nm} in ${y}: NASA NEX-GDDP-CMIP6 (SSP2-4.5) adds ${fmt(cc.dT,1)} °C and changes rain by ${cc.dR>=0?'+':''}${Math.round(cc.dR*100)}%.\nTop three today: ${line(now)}.\nTop three in ${y}: ${line(fut)}.\nThis is a climate scenario, not a weather forecast.`)+src;
   }
   // soil
   if(/soil|மண்/.test(s)){
@@ -802,7 +803,7 @@ function ruleAnswer(q){
       :`${nm}${yrNote}: ${Math.round(ann)} mm of rain a year. Wettest month ${M[wet]} (${Math.round(c.rain[wet])} mm), driest ${M[dry]} (${Math.round(c.rain[dry])} mm). Hottest month ${M[hot]}, averaging ${fmt(c.t[hot],1)} °C.`)+src;
   }
   // best crop
-  if(/what|which|best|grow|sow|plant|next|recommend|எது|எந்த|என்ன|அடுத்து|போடலாம்|விதை|பயிர்/.test(s)){
+  if(/best|grow|sow|plant|crop|next|recommend|cultivat|அடுத்து|போடலாம்|விதை|பயிர்|சாகுபடி|நடலாம்/.test(s)){
     const m=mon==null?S.sow:mon, all=rankAll(yr,m), top=all.slice(0,3);
     const why=r=>ta?`${N(r.id)} ${r.score}/100 (நீர் ${fmt(r.wf,2)}, மண் ${fmt(r.soil,2)}, லாபம் ${fmt(r.profit,2)}${r.bonus?", பயறு ஊக்கம் +8":""}${r.irr?", பாசனம் தேவை":""})`
                       :`${N(r.id)} ${r.score}/100 (water ${fmt(r.wf,2)}, soil ${fmt(r.soil,2)}, profit ${fmt(r.profit,2)}${r.bonus?", legume bonus +8":""}${r.irr?", needs irrigation":""})`;

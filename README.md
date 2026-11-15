@@ -34,7 +34,7 @@ UZHAVAN ("The Farmer") puts it on one screen, in Tamil. It was built for the NAS
 | **Crops** | 18, each with water need, temperature range, soil effect and profit rank |
 | **Languages** | Tamil first, English with one tap |
 | **Climate** | Today, 2030, 2040 and 2050, from five NASA NEX-GDDP-CMIP6 models |
-| **Runs on** | Any phone or laptop browser. One file, no login, no key, works offline |
+| **Runs on** | Any phone or laptop browser. One file, no login, no key. Once loaded, it keeps working if the connection drops |
 
 ## What a farmer gets
 

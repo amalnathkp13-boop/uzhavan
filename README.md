@@ -163,3 +163,15 @@ Then open http://localhost:8765. The live site is served by GitHub Pages from th
 [amalnathkp13-boop](https://github.com/amalnathkp13-boop) · [deexithamde](https://github.com/deexithamde) · [Bairavi Alagesan](https://github.com/bairavialagesan123-lgtm) · [hariprasanna4047-jpg](https://github.com/hariprasanna4047-jpg) · [jeevanandham2428-bit](https://github.com/jeevanandham2428-bit) · [hariharish472008-debug](https://github.com/hariharish472008-debug) · [sudharsanrajhan291-bit](https://github.com/sudharsanrajhan291-bit)
 
 Erode, Tamil Nadu, India.
+
+## Use of Super Intelligence (SI) tools
+
+The NASA Space Apps Challenge asks every team to describe how SI tools were used ("Super Intelligence" is the competition's 2026 term for what is commonly called AI). For UZHAVAN:
+
+- **Code.** The web page (`index.html`) and the data scripts in `tools/` were written with an SI coding assistant (Claude, by Anthropic), working from the team's project plan and instructions.
+- **Text.** The Tamil and English wording on the page, and the documents in this repository, were drafted with the same assistant.
+- **Research.** The assistant was used to find and read the published sources behind the crop table, profit ranks, fertilizer doses and the weed and pest schedules. Each figure is traced to a named source in the Data section.
+- **Not SI-generated.** The rain, temperature, climate-projection and soil numbers come from NASA and ISRIC data services. No SI-generated images, video or audio are used in the app or in this repository.
+- **Inside the app.** The answers in "Ask your field" are computed by the scoring engine, not by an SI model. An optional setting lets a user connect a language model with their own key; it is given only that village's data and scores and is told to refuse anything beyond them.
+
+The team chose the idea, the places and the features, and is responsible for checking the content.

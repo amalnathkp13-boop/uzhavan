@@ -10,7 +10,7 @@ Submit by 21:00 IST, 15 November. The form closes at 23:59.
 - [ ] Record the screen demo using the shot list below.
 - [ ] Edit it with the farmer footage, keep it under 4:00, add subtitles, upload (YouTube unlisted).
 - [ ] Open the live site, the repo and the video in an incognito window. All three must load.
-- [ ] Read the "Use of AI" and "Honest limits" sections and make sure you agree with every line before pasting.
+- [ ] Read the "Use of Super Intelligence (SI) tools" and "Honest limits" sections and make sure you agree with every line before pasting. The rules require a description of how SI tools were used.
 - [ ] Paste, attach the four screenshots, submit.
 
 ## Links
@@ -90,9 +90,19 @@ Roadmap, not used yet: NASA SMAP soil moisture, and NISAR, the radar satellite b
 - The 0 to 1 soil effect given to each class of crop is the team's judgement; the classes come from FAO Bulletin 16.
 - SoilGrids has no value at the exact Vellode and Kano points; the soil card uses the nearest cell that has data and says how far away it is.
 
-### Use of AI
+### Use of Super Intelligence (SI) tools
 
-[Confirm this matches what your team actually did, then paste.] The prototype's code and its Tamil text were drafted with an AI assistant (Claude, by Anthropic) and reviewed by the team. The chat box can optionally call an AI model; it is given only the village's data and scores and is told to refuse anything beyond them. Without it, answers come from the scoring engine. No AI-generated images, video or audio are used.
+[Confirm this matches what your team actually did, add anything else the team used, then paste.]
+
+The NASA Space Apps Challenge asks every team to describe how SI tools were used ("Super Intelligence" is the competition's 2026 term for what is commonly called AI). For UZHAVAN:
+
+- **Code.** The web page (`index.html`) and the data scripts in `tools/` were written with an SI coding assistant (Claude, by Anthropic), working from the team's project plan and instructions.
+- **Text.** The Tamil and English wording on the page, and the documents in this repository, were drafted with the same assistant.
+- **Research.** The assistant was used to find and read the published sources behind the crop table, profit ranks, fertilizer doses and the weed and pest schedules. Each figure is traced to a named source in the Data section.
+- **Not SI-generated.** The rain, temperature, climate-projection and soil numbers come from NASA and ISRIC data services. No SI-generated images, video or audio are used in the app or in this repository.
+- **Inside the app.** The answers in "Ask your field" are computed by the scoring engine, not by an SI model. An optional setting lets a user connect a language model with their own key; it is given only that village's data and scores and is told to refuse anything beyond them.
+
+The team chose the idea, the places and the features, and is responsible for checking the content.
 
 ### Team
 

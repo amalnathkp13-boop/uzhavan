@@ -84,7 +84,7 @@ pre{font-family:Consolas,monospace;font-size:8.3pt;background:#f6ecc6;border-rad
 <p>A farmer has to choose the next crop months before knowing how the season will go. The rain is changing, and the data that could help is free but hard to reach: it sits behind technical websites, in English, in units nobody farms in.</p>
 
 <h3>What UZHAVAN does about it</h3>
-<p>The farmer picks a village. The page pulls that village's rain and temperature from NASA and its soil from a world soil map, then does four things:</p>
+<p>The farmer picks a village. The page pulls that village's rain and temperature from NASA and its soil from a world soil map, then does five things:</p>
 <table>
 <thead><tr><th style="width:8mm"></th><th style="width:42mm">Feature</th><th>What the farmer sees</th></tr></thead>
 <tbody>
@@ -92,6 +92,7 @@ pre{font-family:Consolas,monospace;font-size:8.3pt;background:#f6ecc6;border-rad
 <tr><td><span class="num">2</span></td><td><b>Crop rotation advisor</b></td><td>The three best crops to sow next, each with a score out of 100. The score is split into water, soil and profit so the farmer can see why.</td></tr>
 <tr><td><span class="num">3</span></td><td><b>Climate time machine</b></td><td>A slider from 2026 to 2050. As it moves, the climate shifts using NASA's projections and the crops are re-ranked.</td></tr>
 <tr><td><span class="num">4</span></td><td><b>Ask your field</b></td><td>A chat box. The farmer asks in Tamil or English and gets an answer built only from that village's numbers.</td></tr>
+<tr><td><span class="num">5</span></td><td><b>Fertilizer plan</b></td><td>For each crop: how much chemical fertilizer (as bags of urea, super phosphate and potash per acre), how much farmyard manure, and which biofertilizer, from the published recommendation.</td></tr>
 </tbody></table>
 
 <p>It works for three pilot places with the same engine: <b>Vellode</b> (Erode, India), <b>Fresno County</b> (California, USA) and <b>Kano</b> (Nigeria). Tapping the map loads the climate of any other place on Earth.</p>
@@ -163,26 +164,24 @@ pre{font-family:Consolas,monospace;font-size:8.3pt;background:#f6ecc6;border-rad
 
 <section>
 <h2>4. The demo, click by click</h2>
-<p class="lead">About three minutes. Start from the setup on page 4. Speak the line in the middle column as you do the action.</p>
-<p style="font-size:9pt;color:var(--ink2)">The scores below were read from the live site on 15 November 2026 with sowing month November and last crop paddy. Any other month or crop gives different numbers; that is expected. <b>If you only have one minute, do steps 3, 6 and 8.</b></p>
+<p class="lead">About three and a half minutes. Start from the setup on page 4 and say the middle column as you act. With only one minute, do steps 3, 7 and 9.</p>
+
 <table>
 <thead><tr><th style="width:8mm"></th><th style="width:52mm">Do this</th><th>Say this</th><th style="width:50mm">You should see</th></tr></thead>
 <tbody>
 <tr><td><span class="num">1</span></td><td>Start at the top of the page. Point at the three village buttons.</td><td>"A farmer picks their village. This is Vellode, near Erode, the turmeric city."</td><td>Vellode highlighted in yellow. Badge says "Live NASA data".</td></tr>
-<tr><td><span class="num">2</span></td><td>Scroll down to the chart.</td><td>"This is 25 years of NASA rain and temperature for this village. Most of the rain comes in October, with the north-east monsoon. On the right is the soil, from the SoilGrids world map."</td><td>Tallest blue bar on October (150). About 727 mm of rain a year. Soil card says "Clay loam".</td></tr>
+<tr><td><span class="num">2</span></td><td>Scroll down to the chart.</td><td>"This is 25 years of NASA rain and temperature. Most rain comes in October, with the north-east monsoon. On the right is the soil, from SoilGrids."</td><td>Tallest blue bar on October (150). About 727 mm of rain a year. Soil card says "Clay loam".</td></tr>
 <tr><td><span class="num">3</span></td><td>Scroll to the three crop cards.</td><td>"The farmer has just harvested paddy and wants to sow in November. The page recommends groundnut, onion and black gram, each with a score out of 100."</td><td>Groundnut 65, Onion 64, Black gram 63.</td></tr>
 <tr><td><span class="num">4</span></td><td>Click <b>See the math</b> on the groundnut card.</td><td>"Nothing is hidden. Here is the rain, the water the crop needs, the profit figure and where it came from, and the final sum."</td><td>A box of arithmetic ending in "= 65 / 100".</td></tr>
-<tr><td><span class="num">5</span></td><td>Drag <b>Save water</b> and <b>Soil health</b> all the way left. Leave <b>Profit</b> where it is.</td><td>"Every farmer is different. This one cares most about profit, so turmeric jumps to first place. The farmer's priorities are the weights in the formula."</td><td>Cards slide. Turmeric is now first. Then put both sliders back to the middle.</td></tr>
-<tr><td><span class="num">6</span></td><td>Drag the bar at the bottom of the screen slowly from 2026 to <b>2050</b>.</td><td>"Now the time machine. This uses NASA's NEX-GDDP-CMIP6 climate projections, averaged over five climate models. By 2050 Vellode is about one degree warmer. Onion loses 8 points to heat and drops out of the top three. Turmeric moves in."</td><td>Groundnut 63, Turmeric 62, Black gram 60. Red "vs today" chips. The "2050 outlook" panel says the top three change.</td></tr>
-<tr><td><span class="num">7</span></td><td>Click <b>Kano</b> at the top (leave the slider on 2050), scroll to the cards.</td><td>"Same engine, another continent. In Kano, Nigeria, onion is first today. By 2050 tomato overtakes it."</td><td>Tomato 54 first, Onion 51 second.</td></tr>
-<tr><td><span class="num">8</span></td><td>Click <b>Vellode</b>. Drag the bottom bar back to 2026. Click <b>தமிழ்</b>. Scroll to the chat and tap the first suggested question.</td><td>"And the farmer can simply ask, in Tamil: can I sow turmeric this month? The answer uses only this village's numbers. It never invents one."</td><td>A Tamil answer with "62/100" and a note that the top choice is groundnut (65/100).</td></tr>
-<tr><td><span class="num">9</span></td><td>Scroll to <b>Check our work</b> (in Tamil: எங்கள் கணக்கைச் சரிபாருங்கள்).</td><td>"The page tests its own arithmetic every time it loads, and lists where every number comes from."</td><td>Three green ticks: 65, 75, 0. A list of data sources on the right.</td></tr>
+<tr><td><span class="num">5</span></td><td>Click <b>Fertilizer plan</b> on the same card.</td><td>"It also says what to feed the crop. For rainfed groundnut: 9 kilos of urea, 25 of super phosphate and 30 of potash per acre, plus farmyard manure and Rhizobium, from Tamil Nadu Agricultural University's guide."</td><td>N 10 : P₂O₅ 10 : K₂O 45 kg per hectare, then the bag amounts, "Organic" and "Biofertilizer" lines, and the source.</td></tr>
+<tr><td><span class="num">6</span></td><td>Drag <b>Save water</b> and <b>Soil health</b> all the way left. Leave <b>Profit</b> where it is.</td><td>"Every farmer is different. This one cares most about profit, so turmeric jumps to first place. The farmer's priorities are the weights in the formula."</td><td>Cards slide. Turmeric is now first. Then put both sliders back to the middle.</td></tr>
+<tr><td><span class="num">7</span></td><td>Drag the bar at the bottom of the screen slowly from 2026 to <b>2050</b>.</td><td>"Now the time machine. This uses NASA's NEX-GDDP-CMIP6 climate projections. By 2050 Vellode is about one degree warmer. Onion loses 8 points to heat and drops out of the top three. Turmeric moves in."</td><td>Groundnut 63, Turmeric 62, Black gram 60. Red "vs today" chips. The "2050 outlook" panel says the top three change.</td></tr>
+<tr><td><span class="num">8</span></td><td>Click <b>Kano</b> at the top (leave the slider on 2050), scroll to the cards.</td><td>"Same engine, another continent. In Kano, Nigeria, onion is first today. By 2050 tomato overtakes it."</td><td>Tomato 54 first, Onion 51 second.</td></tr>
+<tr><td><span class="num">9</span></td><td>Click <b>Vellode</b>. Drag the bottom bar back to 2026. Click <b>தமிழ்</b>. Scroll to the chat and tap the first suggested question.</td><td>"And the farmer can simply ask, in Tamil: can I sow turmeric this month? The answer uses only this village's numbers. It never invents one."</td><td>A Tamil answer with "62/100" and a note that the top choice is groundnut (65/100).</td></tr>
+<tr><td><span class="num">10</span></td><td>Scroll to <b>Check our work</b> (in Tamil: எங்கள் கணக்கைச் சரிபாருங்கள்).</td><td>"The page tests its own arithmetic every time it loads, and lists where every number comes from. Open NASA data, zero cost, any village, in the farmer's own language. That is UZHAVAN."</td><td>Three green ticks: 65, 75, 0. A list of data sources on the right.</td></tr>
 </tbody></table>
 
-<div class="box say">
-<h3>Closing line</h3>
-<p class="say-text">"Open NASA data, zero cost, any village, in the farmer's own language. That is UZHAVAN."</p>
-</div>
+
 
 
 
@@ -245,6 +244,7 @@ score     = 100 x base x (1 - 0.6 x temperature stress)
 <tr><td><b>Govt of India cost of cultivation, 2021-22</b></td><td>Profit rank for Tamil Nadu crops</td><td>Official figures of cost and income per hectare.</td></tr>
 <tr><td><b>Tamil Nadu statistics; USDA census</b></td><td>Which crops are irrigated</td><td>The share of each crop's area that is irrigated.</td></tr>
 <tr><td><b>Fresno County Crop Report 2025; IITA study</b></td><td>Profit rank for Fresno and Kano</td><td>County farm-value figures for Fresno, a field study for Kano.</td></tr>
+<tr><td><b>TNAU Crop Production Guide 2020; CDFA guidelines; Nigeria FMARD</b></td><td>Fertilizer plan</td><td>The official fertilizer recommendation for each crop in Tamil Nadu, California and Nigeria.</td></tr>
 <tr><td><b>FAO Bulletin 16</b></td><td>Which crops build or drain the soil</td><td>How much nitrogen legumes add and how much other crops take.</td></tr>
 </tbody></table>
 <p>The full list with links is on the page under "Where every number comes from", and in the README of the code repository.</p>
@@ -255,6 +255,7 @@ score     = 100 x base x (1 - 0.6 x temperature stress)
 <li>The soil effect <b>value</b> for each kind of crop (0.9 for pulses, 0.1 to 0.5 for others) is the team's judgement. Only the grouping is from FAO.</li>
 <li>No published profit figure was found for sesame at Vellode, or for rice, tomato, onion, sesame and soybean at Kano. Those ranks are estimates.</li>
 <li>Water need for green gram, cowpea and garlic is an estimate.</li>
+<li>Fertilizer plans are the general recommendation, not adjusted to a soil test. No manure quantity was found for Fresno or Kano, and nothing for sesame at Kano; the page says so.</li>
 <li>The SoilGrids map has no value at the exact Vellode and Kano points, so the soil card uses the nearest point that has one (4 km away for Vellode) and says so.</li>
 </ul>
 <p>"See the math" on every card marks each estimate. Being open about this earns marks; hiding it loses them.</p>
@@ -272,6 +273,7 @@ score     = 100 x base x (1 - 0.6 x temperature stress)
 <tr><td>Why does turmeric appear when Erode gets so little rain?</td><td>Because it is irrigated. The score counts canal and well water for irrigated crops and flags "needs assured irrigation".</td></tr>
 <tr><td>Why is paddy after paddy zero?</td><td>Growing the same plant family twice builds up pests and drains the same nutrients. The rule takes 50 points off, which brings it to zero.</td></tr>
 <tr><td>Where does the profit number come from?</td><td>Published figures: Government of India cost-of-cultivation data for Tamil Nadu, the county crop report for Fresno, a field study for Kano. Open "See the math" to show the figure.</td></tr>
+<tr><td>Where do the fertilizer amounts come from?</td><td>The official recommendation for each place: Tamil Nadu Agricultural University's Crop Production Guide 2020 for Vellode, California's CDFA guidelines for Fresno, Nigeria's federal recommendation for Kano. The bag amounts are simple arithmetic: urea is 46% nitrogen, super phosphate 16% phosphate, potash 60%. It is a general dose; a soil test should adjust it.</td></tr>
 <tr><td>Does the chat use AI? Can it make things up?</td><td>The answers you saw come from the scoring engine itself, so every number in them is one the page computed. There is an optional setting to connect an AI model, which is told to answer only from the village's data.</td></tr>
 <tr><td>Did you use AI to build this?</td><td>Yes, and it is disclosed on the project page. The code and the Tamil text were drafted with an AI assistant and reviewed by the team.</td></tr>
 <tr><td>What happens with no internet?</td><td>The page keeps a saved copy of the NASA data for the three villages. Scores and chat answers still work. The badge changes to "Saved NASA data".</td></tr>
@@ -295,6 +297,8 @@ score     = 100 x base x (1 - 0.6 x temperature stress)
 <tr><td><b>NDVI</b></td><td>A measure of how green and healthy vegetation looks from a satellite.</td></tr>
 <tr><td><b>NEX-GDDP-CMIP6</b></td><td>NASA's set of climate projections up to 2100, detailed enough to use for one village.</td></tr>
 <tr><td><b>SSP2-4.5</b></td><td>One possible future: a "middle of the road" path where emissions neither stop nor explode.</td></tr>
+<tr><td><b>N, P, K</b></td><td>The three main plant foods: nitrogen (N), phosphorus (written P₂O₅) and potassium (written K₂O). Urea supplies N, super phosphate P, potash K.</td></tr>
+<tr><td><b>Biofertilizer</b></td><td>Helpful bacteria such as Rhizobium or Azospirillum, mixed with the seed or soil, that help the plant get nutrients.</td></tr>
 <tr><td><b>Water fit</b></td><td>Our name for "how much of the crop's water need is covered", from 0 to 1.</td></tr>
 <tr><td><b>North-east monsoon</b></td><td>The rainy season from October to December that brings most of Erode's rain.</td></tr>
 <tr><td><b>Open data</b></td><td>Data anyone may use for free, without a login.</td></tr>

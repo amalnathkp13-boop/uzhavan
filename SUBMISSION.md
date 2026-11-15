@@ -103,6 +103,7 @@ In the `screenshots` folder, taken from the live site:
 1. `1-dashboard.png`: Vellode rain, temperature and soil card
 2. `2-crop-cards.png`: top three crops for Vellode, November, after paddy
 3. `3-time-machine-2050.png`: Vellode at 2050, onion has dropped out of the top three and turmeric has moved in
+5. `5-fertilizer-plan.png`: the fertilizer plan opened on the groundnut card
 4. `4-tamil-chat.png`: "Can I sow turmeric this month?" answered in Tamil
 
 ## Screen demo shot list (the 1:00–2:30 block, 90 seconds)

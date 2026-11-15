@@ -59,7 +59,9 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | FAO Fertilizer and Plant Nutrition Bulletin 16, Tables 22 and 29, chapter 8 | Soil effect classes | Legumes fix nitrogen, other crops draw nutrients down. The 0-1 value per class is the team's |
 | TNAU Crop Production Guide 2020 (Agriculture, Horticulture) | Fertilizer plan, Vellode: all 11 crops | N, P2O5, K2O, farmyard manure, biofertilizer, timing. Rainfed dose for rainfed crops, with the irrigated dose in a note |
 | CDFA FREP California Fertilization Guidelines; Tyler et al. 1988 (garlic); UC Davis 2026 blackeye study | Fertilizer plan, Fresno | Converted from lb/acre. Mostly ranges that depend on yield or soil test |
-| Nigeria FMARD 2015 recommendation via the IFDC AfricaFertilizer review 2018; NAERLS bulletins 239 and 242 | Fertilizer plan, Kano: 9 of 10 crops | N, P2O5, K2O for the Sudan savanna |
+| Nigeria FMARD 2015 recommendation via the IFDC AfricaFertilizer review 2018; NAERLS bulletins 239 and 242; STDF/NEPC sesame farmers' guide 2014; ICRISAT handbooks 2020 | Fertilizer plan, Kano: all 10 crops | N, P2O5, K2O; manure for millet, sorghum, groundnut and sesame |
+| CDFA Healthy Soils Program compost white paper; CDFA FREP tomato brochure | Fresno compost rate; processing-tomato season nitrogen | 3 to 5 tons/acre of compost a year for annual crops; about 175 lb N/acre |
+| ICAR, Indian Farming 70(3):18-21, 2020 | Soil-test adjustment at Vellode | Low fertility +25%, high -25%, with the class limits |
 | NASA SMAP, NISAR | Soil moisture | Roadmap only, not used |
 
 ## Known gaps
@@ -71,7 +73,8 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 - Fresno wheat was 16% irrigated in the 2022 census (a drought year) and 63% in 2017; the app treats it as not irrigated.
 - TNAU water figures are irrigation applied in Tamil Nadu; FAO figures are crop water need. They are different quantities and are used as published.
 - EcoCrop does not say whether its temperatures are daily means or daytime highs; the app compares them with mean temperature.
-- Fertilizer plans are general (blanket) recommendations, not adjusted to the SoilGrids values, which are not a soil test. No organic-manure quantity was found for Fresno or Kano, no processing-tomato season nitrogen total for Fresno, and nothing for sesame at Kano. Vellode maize and cotton show the irrigated dose because no rainfed one was found.
+- Fertilizer plans are general (blanket) recommendations. At Vellode the farmer can enter Soil Health Card values (organic carbon, available P and K) and each nutrient moves +25% where the soil is low and -25% where it is high (ICAR, Indian Farming 70(3), 2020). The SoilGrids organic carbon can be used instead, but it is a map estimate for the top 5 cm, not a lab test, and the page says so.
+- Fresno compost rates are the CDFA Healthy Soils Program's statewide rate for annual crops, not crop-specific. Kano manure rates for millet, sorghum and groundnut come from ICRISAT handbooks written for north-east Nigeria; none was found for maize, soybean, cowpea, tomato or onion. The Kano sesame rate comes from a 2014 farmers' guide that names no zone.
 - The time machine applies climate-model changes to a climatology. It is a scenario, not a forecast.
 
 ## Use of AI

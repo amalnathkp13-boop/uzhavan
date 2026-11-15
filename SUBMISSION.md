@@ -83,7 +83,7 @@ Roadmap, not used yet: NASA SMAP soil moisture, and NISAR, the radar satellite b
 
 - The 2050 view is a scenario, not a forecast. The projected change is modest: about +0.9 °C and +6% annual rain at Vellode, +1.1 °C at Fresno, +1.0 °C at Kano.
 - Some values are still the team's estimate because no published figure was found: the profit rank for sesame at Vellode and for rice, vegetables, sesame and soybean at Kano; whether turmeric, maize, the pulses and sesame count as irrigated at Vellode; water need for green gram, cowpea and garlic. The page marks each one under "See the math".
-- Fertilizer plans are the general published recommendation, not adjusted to a soil test. No organic-manure quantity was found for Fresno or Kano, and no recommendation at all for sesame at Kano.
+- Fertilizer plans are the general published recommendation. At Vellode a farmer can enter Soil Health Card values and the plan adjusts by ICAR's rule (+25% where the soil is low, -25% where it is high). Compost rates for Fresno are a statewide rate, not crop-specific, and no manure quantity was found for five of the Kano crops.
 - The profit figures are net return in Tamil Nadu, gross value in Fresno and gross margin in Kano, so ranks are compared only inside one village.
 - The 0 to 1 soil effect given to each class of crop is the team's judgement; the classes come from FAO Bulletin 16.
 - SoilGrids has no value at the exact Vellode and Kano points; the soil card uses the nearest cell that has data and says how far away it is.

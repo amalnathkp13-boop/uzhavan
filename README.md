@@ -19,6 +19,7 @@ It is one file, `index.html`. No build step, no key, no login.
 2. **Crop rotation advisor**: top three crops with a 0-100 score split into water fit, soil effect and profit. The farmer's three sliders are the weights.
 3. **Climate time machine**: the bar at the bottom moves the climate from 2026 to 2050 using NASA NEX-GDDP-CMIP6. Crop cards re-order and each shows its gain or loss against today.
 4. **Ask your field**: Tamil or English questions answered only from the village's data and scores.
+5. **Fertilizer plan**: each crop card opens to the published recommendation for that crop and place: N, P2O5 and K2O per hectare, the same as urea, super phosphate and potash per hectare and per acre, plus farmyard manure, biofertilizer and timing where the source gives them.
 
 Pilot villages: Vellode (Erode, India), Fresno County (California, USA), Kano (Nigeria). Tapping the map loads any other point live from NASA POWER (without projections).
 
@@ -56,6 +57,9 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 | USDA Census of Agriculture 2022, Fresno County | Irrigated flag, Fresno: cotton, alfalfa, maize, wheat | Irrigated share of harvested acres |
 | IITA KKM baseline (Ayanwale et al. 2011), Bunkure, 2008; Sufiyan et al. 2022 | Kano: order of millet, sorghum, maize, cowpea, groundnut; which crops are rain-fed or dry-season irrigated | Gross margin per hectare; the five are ranked against each other with groundnut held at 3 |
 | FAO Fertilizer and Plant Nutrition Bulletin 16, Tables 22 and 29, chapter 8 | Soil effect classes | Legumes fix nitrogen, other crops draw nutrients down. The 0-1 value per class is the team's |
+| TNAU Crop Production Guide 2020 (Agriculture, Horticulture) | Fertilizer plan, Vellode: all 11 crops | N, P2O5, K2O, farmyard manure, biofertilizer, timing. Rainfed dose for rainfed crops, with the irrigated dose in a note |
+| CDFA FREP California Fertilization Guidelines; Tyler et al. 1988 (garlic); UC Davis 2026 blackeye study | Fertilizer plan, Fresno | Converted from lb/acre. Mostly ranges that depend on yield or soil test |
+| Nigeria FMARD 2015 recommendation via the IFDC AfricaFertilizer review 2018; NAERLS bulletins 239 and 242 | Fertilizer plan, Kano: 9 of 10 crops | N, P2O5, K2O for the Sudan savanna |
 | NASA SMAP, NISAR | Soil moisture | Roadmap only, not used |
 
 ## Known gaps
@@ -67,6 +71,7 @@ The "Check our work" panel runs three tests in the browser on the Vellode data: 
 - Fresno wheat was 16% irrigated in the 2022 census (a drought year) and 63% in 2017; the app treats it as not irrigated.
 - TNAU water figures are irrigation applied in Tamil Nadu; FAO figures are crop water need. They are different quantities and are used as published.
 - EcoCrop does not say whether its temperatures are daily means or daytime highs; the app compares them with mean temperature.
+- Fertilizer plans are general (blanket) recommendations, not adjusted to the SoilGrids values, which are not a soil test. No organic-manure quantity was found for Fresno or Kano, no processing-tomato season nitrogen total for Fresno, and nothing for sesame at Kano. Vellode maize and cotton show the irrigated dose because no rainfed one was found.
 - The time machine applies climate-model changes to a climatology. It is a scenario, not a forecast.
 
 ## Use of AI

@@ -113,6 +113,8 @@ input[type=range]{width:100%;accent-color:var(--leaf)}
 .chip.good{background:#D3EBD9;color:#12491f}
 .chip.warn{background:#FCE3A6;color:#6a4a00}
 details.math{margin-top:10px;font-size:.84rem}
+details.fert{margin-top:6px}
+a.fsrc{display:inline-block;margin-top:6px;font-size:.82rem}
 details.math summary{cursor:pointer;color:var(--leaf);font-weight:650}
 details.math pre{white-space:pre-wrap;font-family:inherit;background:#F6ECC6;border-radius:10px;padding:10px;margin:8px 0 0;line-height:1.55}
 .outlook{margin-top:14px}
@@ -323,7 +325,7 @@ const NEX=/*NEXDATA*/{"models":["ACCESS-CM2","GFDL-ESM4","IITM-ESM","MIROC6","MP
    oLo..oHi = optimal temperature range, aLo / aHi = absolute limits (deg C), FAO EcoCrop.
    soil = effect on soil 0-1 (team judgement, not sourced). */
 const CROPS={
- turmeric:{en:"Turmeric",ta:"மஞ்சள்",fam:"ginger",dur:9,need:1390,ws:"TNAU",oLo:20,oHi:28,aLo:18,aHi:32,soil:0.2,exh:true,al:["turmeric","manjal","மஞ்சள்"]},
+ turmeric:{en:"Turmeric",ta:"மஞ்சள்",fam:"ginger",dur:9,need:1390,ws:"TNAU",oLo:20,oHi:28,aLo:18,aHi:32,soil:0.2,exh:true,al:["turmeric","manjal","மஞ்சள்","மஞ்சளு"]},
  paddy:{en:"Paddy",ta:"நெல்",fam:"cereal",dur:4,need:1250,ws:"TNAU",oLo:20,oHi:30,aLo:10,aHi:36,soil:0.15,exh:true,al:["paddy","rice","nel","நெல்"]},
  sugarcane:{en:"Sugarcane",ta:"கரும்பு",fam:"cereal",dur:12,need:2200,ws:"TNAU",oLo:24,oHi:37,aLo:15,aHi:41,soil:0.1,exh:true,al:["sugarcane","karumbu","கரும்பு"]},
  groundnut:{en:"Groundnut",ta:"நிலக்கடலை",fam:"legume",dur:4,need:510,ws:"TNAU",oLo:22,oHi:32,aLo:10,aHi:45,soil:0.9,leg:true,al:["groundnut","peanut","நிலக்கடலை","கடலை"]},
@@ -332,14 +334,14 @@ const CROPS={
  cowpea:{en:"Cowpea",ta:"தட்டைப்பயறு",fam:"legume",dur:4,need:320,ws:"",oLo:25,oHi:35,aLo:15,aHi:40,soil:0.9,leg:true,al:["cowpea","blackeye","தட்டைப்பயறு","காராமணி"]},
  soybean:{en:"Soybean",ta:"சோயா",fam:"legume",dur:5,need:575,ws:"FAO",oLo:20,oHi:33,aLo:10,aHi:38,soil:0.85,leg:true,al:["soybean","soya","சோயா"]},
  alfalfa:{en:"Alfalfa",ta:"குதிரைமசால்",fam:"legume",dur:12,need:1200,ws:"FAO",oLo:21,oHi:27,aLo:5,aHi:45,soil:0.95,leg:true,al:["alfalfa","lucerne","குதிரைமசால்"]},
- maize:{en:"Maize",ta:"மக்காச்சோளம்",fam:"cereal",dur:4,need:500,ws:"TNAU",oLo:18,oHi:33,aLo:10,aHi:47,soil:0.4,al:["maize","corn","மக்காச்சோளம்"]},
- sorghum:{en:"Sorghum",ta:"சோளம்",fam:"cereal",dur:4,need:500,ws:"TNAU",oLo:22,oHi:35,aLo:8,aHi:40,soil:0.5,al:["sorghum","cholam","jowar","சோளம்"]},
+ maize:{en:"Maize",ta:"மக்காச்சோளம்",fam:"cereal",dur:4,need:500,ws:"TNAU",oLo:18,oHi:33,aLo:10,aHi:47,soil:0.4,al:["maize","corn","மக்காச்சோளம்","மக்காச்சோள"]},
+ sorghum:{en:"Sorghum",ta:"சோளம்",fam:"cereal",dur:4,need:500,ws:"TNAU",oLo:22,oHi:35,aLo:8,aHi:40,soil:0.5,al:["sorghum","cholam","jowar","சோளம்","சோள"]},
  millet:{en:"Pearl millet",ta:"கம்பு",fam:"cereal",dur:4,need:550,ws:"FAO",oLo:25,oHi:35,aLo:12,aHi:40,soil:0.5,al:["millet","kambu","bajra","கம்பு"]},
  wheat:{en:"Wheat",ta:"கோதுமை",fam:"cereal",dur:5,need:550,ws:"FAO",oLo:15,oHi:23,aLo:5,aHi:27,soil:0.4,al:["wheat","கோதுமை"]},
  cotton:{en:"Cotton",ta:"பருத்தி",fam:"mallow",dur:6,need:600,ws:"TNAU",oLo:22,oHi:36,aLo:15,aHi:42,soil:0.35,al:["cotton","paruthi","பருத்தி"]},
  sesame:{en:"Sesame",ta:"எள்",fam:"sesame",dur:3,need:150,ws:"TNAU",oLo:20,oHi:30,aLo:10,aHi:40,soil:0.5,al:["sesame","gingelly","ellu","எள்"]},
  tomato:{en:"Tomato",ta:"தக்காளி",fam:"nightshade",dur:5,need:600,ws:"FAO",oLo:20,oHi:27,aLo:7,aHi:35,soil:0.35,al:["tomato","தக்காளி"]},
- onion:{en:"Onion",ta:"வெங்காயம்",fam:"allium",dur:6,need:450,ws:"FAO",oLo:12,oHi:25,aLo:4,aHi:30,soil:0.4,al:["onion","வெங்காயம்"]},
+ onion:{en:"Onion",ta:"வெங்காயம்",fam:"allium",dur:6,need:450,ws:"FAO",oLo:12,oHi:25,aLo:4,aHi:30,soil:0.4,al:["onion","வெங்காயம்","வெங்காய"]},
  garlic:{en:"Garlic",ta:"பூண்டு",fam:"allium",dur:4,need:450,ws:"",oLo:18,oHi:30,aLo:7,aHi:35,soil:0.4,al:["garlic","பூண்டு"]}
 };
 /* Per-region: [crop, profit rank 1-5, irrigated?, profit figure behind the rank, irrigation figure behind the flag]
@@ -359,6 +361,59 @@ const REGION={
  kano:[["millet",3,0,"N52,219/ha","rain-fed"],["sorghum",3,0,"N51,001/ha","rain-fed"],["cowpea",2,0,"N22,868/ha","rain-fed"],["groundnut",3,0,"N65,013/ha","rain-fed"],["maize",3,0,"N64,557/ha","rain-fed"],["paddy",4,1,"","dry-season irrigated"],["sesame",3,0,"",""],["soybean",3,0,"",""],["tomato",4,1,"","dry-season irrigated"],["onion",4,1,"","dry-season irrigated"]]
 };
 const USABLE=0.7, TOPUP=0.45, HEAT_K=0.6, ROT_PEN=50, LEG_BONUS=8;
+
+/* ============================================================
+   FERTILIZER PLAN
+   FERT[village][crop] = {n,p,k: recommended N, P2O5, K2O in kg/ha (null = the source gives none),
+     sys: growing system the figure is for, extra/org/bio: [[item key, amount, unit key, note?]],
+     split: {en,ta} timing, src: source name, url}.
+   Only published recommendations go in here. A crop with no entry shows "no published recommendation found".
+   Product amounts are arithmetic from the nutrient content: urea 46% N, single super phosphate 16% P2O5,
+   muriate of potash 60% K2O.
+   ============================================================ */
+/*FERTDATA*/const FERT={"vellode":{"turmeric":{"n":150,"p":60,"k":108,"sys":{"en":"irrigated","ta":"பாசனம்"},"extra":[["feso4",30,"kg/ha"],["znso4",15,"kg/ha"]],"org":[["fym",25,"t/ha"],["neem",200,"kg/ha",["or groundnut cake","அல்லது கடலைப் புண்ணாக்கு"]]],"bio":[["azos",10,"kg/ha"],["phospho",10,"kg/ha"]],"split":{"en":"25 N, all 60 P and 18 K at planting; then 25 N and 18 K at 30, 60, 90, 120 and 150 days","ta":"நடவின்போது தழை 25, மணி 60, சாம்பல் 18; பின் 30, 60, 90, 120, 150-ஆம் நாளில் தழை 25, சாம்பல் 18"},"src":"TNAU Crop Production Guide, Horticulture 2020","url":"https://web.archive.org/web/20250521124319/https://agritech.tnau.ac.in//pdf/HORTICULTURE.pdf"},"paddy":{"n":150,"p":50,"k":50,"sys":{"en":"transplanted, medium and long duration varieties","ta":"நடவு, நடுத்தர மற்றும் நீண்ட கால ரகங்கள்"},"extra":[["znso4",25,"kg/ha"],["gypsum",500,"kg/ha"]],"org":[["fym",12.5,"t/ha",["or green leaf manure 6.25 t/ha","அல்லது பசுந்தழை உரம் 6.25 டன்/ஹெ."]]],"bio":[["azos",2,"kg/ha"],["phospho",2,"kg/ha"]],"split":{"en":"N and K in four equal parts: at planting, tillering, panicle initiation and heading; all P at planting","ta":"தழை, சாம்பல் நான்கு சம பங்குகளாக: நடவு, தூர் கட்டும், கதிர் உருவாகும், கதிர் வெளிவரும் பருவங்களில்; மணிச்சத்து முழுவதும் நடவின்போது"},"note":{"en":"Short-duration varieties outside the Cauvery delta and Coimbatore tract: 120:40:40.","ta":"காவிரி டெல்டா, கோயம்புத்தூர் பகுதி அல்லாத இடங்களில் குறுகிய கால ரகங்கள்: 120:40:40."},"src":"TNAU Crop Production Guide, Agriculture 2020","url":"https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf"},"sugarcane":{"n":300,"p":100,"k":200,"sys":{"en":"plant crop for sugar mills","ta":"சர்க்கரை ஆலைக்கான நடவுப் பயிர்"},"org":[["fym",12.5,"t/ha",["or compost 25 t/ha, or pressmud 37.5 t/ha","அல்லது மக்கிய உரம் 25 டன்/ஹெ., அல்லது பிரஸ்மட் 37.5 டன்/ஹெ."]]],"bio":[["azos",12,"pk/ha",["at day 30, repeated at day 60","30-ஆம் நாள்; 60-ஆம் நாள் மீண்டும்"]]],"split":{"en":"N and K in three equal parts at 30, 60 and 90 days","ta":"தழை, சாம்பல் மூன்று சம பங்குகளாக 30, 60, 90-ஆம் நாளில்"},"src":"TNAU Crop Production Guide, Agriculture 2020; TNAU Agritech sugarcane page","url":"https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf"},"groundnut":{"n":10,"p":10,"k":45,"sys":{"en":"rainfed","ta":"மானாவாரி"},"extra":[["gypsum",400,"kg/ha",["at 40 to 45 days; not on calcareous soil","40–45-ஆம் நாளில்; சுண்ணாம்பு மண்ணில் வேண்டாம்"]]],"org":[["fym",12.5,"t/ha",["or composted coir pith","அல்லது மக்கிய தென்னை நார்க் கழிவு"]]],"bio":[["rhizo",3,"pk/st"]],"note":{"en":"Irrigated crop: 25:50:75.","ta":"பாசனப் பயிர்: 25:50:75."},"src":"TNAU Crop Production Guide, Agriculture 2020","url":"https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf"},"blackgram":{"n":12.5,"p":25,"k":12.5,"sys":{"en":"rainfed","ta":"மானாவாரி"},"extra":[["sulphur",20,"kg/ha"]],"org":[["fym",12.5,"t/ha",["against soil crusting","மண் இறுக்கத்தைத் தடுக்க"]]],"bio":[["rhizo",200,"g/st"],["phospho",200,"g/st"]],"split":{"en":"all at sowing","ta":"அனைத்தும் விதைப்பின்போது"},"note":{"en":"Irrigated crop: 25:50:25 with 40 kg sulphur.","ta":"பாசனப் பயிர்: 25:50:25, கந்தகம் 40 கி.கி."},"src":"TNAU Crop Production Guide, Agriculture 2020","url":"https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf"},"greengram":{"n":12.5,"p":25,"k":12.5,"sys":{"en":"rainfed","ta":"மானாவாரி"},"extra":[["sulphur",20,"kg/ha"]],"org":[["fym",12.5,"t/ha",["against soil crusting","மண் இறுக்கத்தைத் தடுக்க"]]],"bio":[["rhizo",200,"g/st"],["phospho",200,"g/st"]],"split":{"en":"all at sowing","ta":"அனைத்தும் விதைப்பின்போது"},"note":{"en":"Irrigated crop: 25:50:25 with 40 kg sulphur.","ta":"பாசனப் பயிர்: 25:50:25, கந்தகம் 40 கி.கி."},"src":"TNAU Crop Production Guide, Agriculture 2020","url":"https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf"},"maize":{"n":135,"p":62.5,"k":50,"sys":{"en":"irrigated, varieties","ta":"பாசனம், ரகங்கள்"},"extra":[["znso4",25,"kg/ha"]],"org":[["fym",12.5,"t/ha"]],"bio":[["azos",10,"pk/ha"]],"split":{"en":"a quarter of N with all P and K at sowing; half of N at day 25; a quarter at day 45","ta":"விதைப்பின்போது தழையில் கால் பங்கு, மணி, சாம்பல் முழுவதும்; 25-ஆம் நாள் தழையில் பாதி; 45-ஆம் நாள் கால் பங்கு"},"note":{"en":"This is the irrigated dose. Hybrids: 250:75:75.","ta":"இது பாசனப் பயிருக்கான அளவு. வீரிய ஒட்டு ரகங்கள்: 250:75:75."},"src":"TNAU Crop Production Guide, Agriculture 2020","url":"https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf"},"sorghum":{"n":40,"p":20,"k":0,"sys":{"en":"rainfed","ta":"மானாவாரி"},"org":[["fym",12.5,"t/ha",["or composted coir pith","அல்லது மக்கிய தென்னை நார்க் கழிவு"]]],"bio":[["azos",10,"pk/ha"],["phospho",10,"pk/ha"]],"note":{"en":"Irrigated crop: 90:45:45.","ta":"பாசனப் பயிர்: 90:45:45."},"src":"TNAU Crop Production Guide, Agriculture 2020; TNAU Agritech sorghum page (rainfed dose)","url":"https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf"},"cotton":{"n":80,"p":40,"k":40,"sys":{"en":"irrigated varieties MCU 5, MCU 12, MCU 13","ta":"பாசனம்; MCU 5, MCU 12, MCU 13 ரகங்கள்"},"extra":[["micro",12.5,"kg/ha"]],"org":[["fym",12.5,"t/ha",["or vermicompost 2.5 t/ha","அல்லது மண்புழு உரம் 2.5 டன்/ஹெ."]]],"bio":[["azos",2,"kg/ha"],["phospho",2,"kg/ha"]],"split":{"en":"half of N and K with all P at sowing; the rest at 40 to 45 days","ta":"விதைப்பின்போது தழை, சாம்பலில் பாதி, மணி முழுவதும்; மீதி 40–45-ஆம் நாளில்"},"note":{"en":"This is the irrigated dose. No general dose was found for hybrid or Bt cotton.","ta":"இது பாசனப் பயிருக்கான அளவு. வீரிய ஒட்டு, Bt பருத்திக்குப் பொது அளவு கிடைக்கவில்லை."},"src":"TNAU Crop Production Guide, Agriculture 2020","url":"https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf"},"sesame":{"n":23,"p":13,"k":13,"sys":{"en":"rainfed","ta":"மானாவாரி"},"org":[["fym",12.5,"t/ha"]],"bio":[["azos",3,"pk/st"],["phospho",3,"pk/st"]],"note":{"en":"Irrigated crop: 35:23:23.","ta":"பாசனப் பயிர்: 35:23:23."},"src":"TNAU Crop Production Guide, Agriculture 2020","url":"https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf"},"onion":{"n":60,"p":60,"k":30,"sys":{"en":"small onion, irrigated","ta":"சின்ன வெங்காயம், பாசனம்"},"org":[["fym",25,"t/ha"]],"bio":[["azos",2,"kg/ha"],["phospho",2,"kg/ha"]],"split":{"en":"30 N with all P and K at planting; 30 N on day 30","ta":"நடவின்போது தழை 30, மணி, சாம்பல் முழுவதும்; 30-ஆம் நாள் தழை 30"},"note":{"en":"Bellary (big) onion: 100:150:75.","ta":"பெல்லாரி (பெரிய) வெங்காயம்: 100:150:75."},"src":"TNAU Crop Production Guide, Horticulture 2020","url":"https://web.archive.org/web/20250521124319/https://agritech.tnau.ac.in//pdf/HORTICULTURE.pdf"}},"fresno":{"tomato":{"n":null,"p":[67,112],"k":112,"sys":{"en":"processing tomato; P for soil low in phosphorus","ta":"பதப்படுத்தும் தக்காளி; மணிச்சத்து குறைந்த மண்ணுக்கு"},"note":{"en":"The season's nitrogen total was not found. Before planting, at most 34 kg N/ha (30 lb/acre).","ta":"பருவ மொத்த தழைச்சத்து அளவு கிடைக்கவில்லை. நடவுக்கு முன் அதிகபட்சம் 34 கி.கி/ஹெ. தழை."},"src":"CDFA FREP California Fertilization Guidelines (converted from lb/acre)","url":"https://www.cdfa.ca.gov/is/ffldrs/frep/FertilizationGuidelines/Tomato.html"},"cotton":{"n":[62,224],"p":[45,101],"k":[112,448],"sys":{"en":"N by expected yield; P and K for soil that tests low","ta":"தழை: எதிர்பார்க்கும் மகசூலைப் பொறுத்து; மணி, சாம்பல்: சத்து குறைந்த மண்ணுக்கு"},"note":{"en":"No P is needed where the soil tests high.","ta":"மண்ணில் மணிச்சத்து அதிகமிருந்தால் மணிச்சத்து தேவையில்லை."},"src":"CDFA FREP California Fertilization Guidelines (converted from lb/acre)","url":"https://www.cdfa.ca.gov/is/ffldrs/frep/FertilizationGuidelines/Cotton.html"},"wheat":{"n":[168,224],"p":null,"k":null,"sys":{"en":"total N; no general P or K rate","ta":"மொத்த தழை; மணி, சாம்பலுக்குப் பொது அளவு இல்லை"},"src":"CDFA FREP California Fertilization Guidelines (converted from lb/acre)","url":"https://www.cdfa.ca.gov/is/ffldrs/frep/FertilizationGuidelines/Wheat.html"},"alfalfa":{"n":0,"p":null,"k":null,"sys":{"en":"nitrogen is seldom needed","ta":"தழைச்சத்து பொதுவாகத் தேவையில்லை"},"bio":[["inoc","","",["if the field has had no alfalfa for 10 years","10 ஆண்டுகளாகக் குதிரைமசால் பயிரிடாத வயலில்"]]],"note":{"en":"If the soil is short of them: 15 to 22.5 lb P2O5 and up to 50 lb K2O for each ton of hay.","ta":"மண்ணில் குறைவிருந்தால்: ஒரு டன் வைக்கோலுக்கு 15–22.5 பவுண்டு மணி, 50 பவுண்டு வரை சாம்பல்."},"src":"CDFA FREP California Fertilization Guidelines (converted from lb/acre)","url":"https://www.cdfa.ca.gov/is/ffldrs/frep/FertilizationGuidelines/Alfalfa.html"},"garlic":{"n":[112,224],"p":null,"k":null,"sys":{"en":"no response to P or K was found","ta":"மணி, சாம்பலுக்குப் பலன் காணப்படவில்லை"},"src":"Tyler et al. 1988, California Agriculture (converted from lb/acre)","url":"https://www.haifa-group.com/sites/default/files/2024-03/Tyler%2520et%2520al.%25201988%252C%2520Diagnosing%2520nutrient%2520need%2520of%2520garlic.pdf"},"maize":{"n":[224,308],"p":[45,67],"k":[22,45],"sys":{"en":"grain corn; P and K banded at planting","ta":"தானிய மக்காச்சோளம்; மணி, சாம்பல் விதைப்பின்போது வரிசையில்"},"src":"CDFA FREP California Fertilization Guidelines (converted from lb/acre)","url":"https://www.cdfa.ca.gov/is/ffldrs/frep/FertilizationGuidelines/Corn.html"},"onion":{"n":[280,336],"p":null,"k":null,"sys":{"en":"nitrogen from all sources","ta":"அனைத்து மூலங்களிலிருந்தும் தழைச்சத்து"},"note":{"en":"Up to 224 kg P2O5/ha if soil phosphorus is low, and up to 168 kg K2O/ha if soil potassium is low.","ta":"மண்ணில் மணிச்சத்து குறைவானால் 224 கி.கி/ஹெ. வரை; சாம்பல்சத்து குறைவானால் 168 கி.கி/ஹெ. வரை."},"src":"CDFA FREP California Fertilization Guidelines (converted from lb/acre)","url":"https://www.cdfa.ca.gov/is/ffldrs/frep/FertilizationGuidelines/Onion.html"},"cowpea":{"n":0,"p":0,"k":0,"sys":{"en":"no fertilizer is normally applied","ta":"பொதுவாக உரம் இடுவதில்லை"},"bio":[["rhizo","","",["on the seed at planting","விதைப்பின்போது விதையில்"]]],"note":{"en":"112 kg P2O5/ha only if soil phosphorus is 5 ppm or less.","ta":"மண்ணில் மணிச்சத்து 5 ppm அல்லது குறைவானால் மட்டும் 112 கி.கி/ஹெ. மணி."},"src":"UC Davis cost study, blackeye beans, San Joaquin Valley South 2026; CDFA FREP guidelines","url":"https://ucanr.edu/sites/default/files/2026-09/FINAL%20blackeyebeans-sjv-south-2026.pdf"}},"kano":{"millet":{"n":60,"p":30,"k":30,"sys":{"en":"Sudan savanna","ta":"சூடான் சவானா மண்டலம்"},"src":"Nigeria federal recommendation (FMARD 2015), from IFDC AfricaFertilizer review 2018, Table 57","url":"https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content"},"sorghum":{"n":64,"p":32,"k":30,"sys":{"en":"Sudan savanna","ta":"சூடான் சவானா மண்டலம்"},"src":"Nigeria federal recommendation (FMARD 2015), from IFDC AfricaFertilizer review 2018, Table 57","url":"https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content"},"cowpea":{"n":20,"p":40,"k":25,"sys":{"en":"Sudan savanna","ta":"சூடான் சவானா மண்டலம்"},"note":{"en":"The nitrogen is a small starter dose only.","ta":"தழைச்சத்து தொடக்க அளவு மட்டுமே."},"src":"Nigeria federal recommendation (FMARD 2015), from IFDC AfricaFertilizer review 2018, Table 57","url":"https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content"},"groundnut":{"n":0,"p":54,"k":25,"sys":{"en":"no nitrogen","ta":"தழைச்சத்து இல்லை"},"src":"Nigeria federal recommendation (FMARD 2015), from IFDC AfricaFertilizer review 2018, Table 57","url":"https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content"},"maize":{"n":120,"p":60,"k":30,"sys":{"en":"Sudan savanna","ta":"சூடான் சவானா மண்டலம்"},"split":{"en":"part at planting or 2 to 3 weeks after; the rest as urea at 5 to 6 weeks","ta":"ஒரு பகுதி விதைப்பின்போது அல்லது 2–3 வாரத்தில்; மீதி யூரியாவாக 5–6 வாரத்தில்"},"src":"Nigeria federal recommendation (FMARD 2015), from IFDC AfricaFertilizer review 2018, Table 57","url":"https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content"},"paddy":{"n":100,"p":[40,50],"k":[30,40],"sys":{"en":"lowland rice","ta":"தாழ்நில நெல்"},"src":"Nigeria federal recommendation (FMARD 2015), from IFDC AfricaFertilizer review 2018, Table 57","url":"https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content"},"soybean":{"n":30,"p":60,"k":30,"sys":{"en":"Sudan savanna","ta":"சூடான் சவானா மண்டலம்"},"note":{"en":"An IITA guide (2009) gives a lower 20:40:20.","ta":"IITA வழிகாட்டி (2009) 20:40:20 என்று குறைவாகக் கூறுகிறது."},"src":"Nigeria federal recommendation (FMARD 2015), from IFDC AfricaFertilizer review 2018, Table 57","url":"https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content"},"tomato":{"n":125,"p":50,"k":50,"sys":{"en":"irrigated","ta":"பாசனம்"},"note":{"en":"Compost and farmyard manure are advised; no quantity is given.","ta":"மக்கிய உரம், தொழு உரம் பரிந்துரைக்கப்படுகின்றன; அளவு குறிப்பிடப்படவில்லை."},"src":"NAERLS Extension Bulletin 242","url":"https://naerls.gov.ng/wp-content/uploads/2022/11/Heat-Tolerant-Tomato-Production-Under-Irrigation.pdf"},"onion":{"n":65,"p":40,"k":45,"sys":{"en":"irrigated","ta":"பாசனம்"},"note":{"en":"The bulletin writes P and K without saying whether they are oxide amounts.","ta":"மணி, சாம்பல் ஆக்சைடு அளவா என்று அறிக்கை குறிப்பிடவில்லை."},"src":"NAERLS Extension Bulletin 239","url":"https://naerls.gov.ng/wp-content/uploads/2022/11/Irrigated-Onion-Production-And-Management.pdf"}}};/*FERTEND*/
+const FPROD={urea:0.46, ssp:0.16, mop:0.60}, HA_PER_ACRE=0.4047;
+const FNAME={
+ fym:["Farmyard manure","தொழு உரம்"], compost:["Compost","மக்கிய உரம்"], vermi:["Vermicompost","மண்புழு உரம்"],
+ neem:["Neem cake","வேப்பம் புண்ணாக்கு"], green:["Green manure","பசுந்தாள் உரம்"], pressmud:["Pressmud","கரும்பு ஆலைக் கழிவு (பிரஸ்மட்)"],
+ manure:["Animal manure","கால்நடை எரு"], poultry:["Poultry manure","கோழி எரு"],
+ azos:["Azospirillum","அசோஸ்பைரில்லம்"], rhizo:["Rhizobium","ரைசோபியம்"], phospho:["Phosphobacteria","பாஸ்போபாக்டீரியா"], azophos:["Azophos","அசோபாஸ்"],
+ pseudo:["Pseudomonas fluorescens","சூடோமோனாஸ்"], inoc:["Rhizobium inoculant","ரைசோபியம் நுண்ணுயிர்"],
+ gypsum:["Gypsum","ஜிப்சம்"], znso4:["Zinc sulphate","துத்தநாக சல்பேட்"], feso4:["Ferrous sulphate","இரும்பு சல்பேட்"], borax:["Borax","போராக்ஸ்"],
+ sulphur:["Sulphur","கந்தகம்"], micro:["Micronutrient mixture","நுண்ணூட்டக் கலவை"], lime:["Lime","சுண்ணாம்பு"]
+};
+const FUNIT={ "t/ha":["t/ha","டன்/ஹெ."], "kg/ha":["kg/ha","கி.கி/ஹெ."], "g/kg":["g per kg of seed","கிராம் / கிலோ விதை"],
+ "pk/ha":["packets/ha","பொட்டலம்/ஹெ."], "pk/seed":["packets for the seed of 1 ha","பொட்டலம் (1 ஹெ. விதைக்கு)"], "pk/st":["packets, as seed treatment","பொட்டலம், விதை நேர்த்தியாக"], "g/st":["g, as seed treatment","கிராம், விதை நேர்த்தியாக"], "":["",""] };
+const fnut=x=>x==null?"–":Array.isArray(x)?x[0]+"–"+x[1]:x;
+function fertFor(id){ return (FERT[regionId()]||{})[id]||null }
+function fertProducts(f){
+  const out=[]; const add=(k,nut,name)=>{ const v=Array.isArray(nut)?nut:[nut]; if(!(v[v.length-1]>0))return; const q=f=>v.map(x=>Math.round(x/FPROD[k]*f)).join("–"); out.push({k,name,ha:q(1),ac:q(HA_PER_ACRE)}) };
+  add("urea",f.n,["Urea","யூரியா"]); add("ssp",f.p,["Single super phosphate","சூப்பர் பாஸ்பேட்"]); add("mop",f.k,["Muriate of potash","பொட்டாஷ் (MOP)"]);
+  return out;
+}
+function fertItems(list){
+  const i=S.lang==="ta"?1:0;
+  return (list||[]).map(([k,amt,u,note])=>`${(FNAME[k]||[k,k])[i]}${amt===""?"":`: ${amt} ${(FUNIT[u]||[u,u])[i]}`}${note?` (${typeof note==="string"?note:note[i]})`:""}`);
+}
+function fertHTML(r){
+  const f=fertFor(r.id), L=S.lang==="ta";
+  const head=`<details class="math fert"><summary>${L?"உரத் திட்டம்":"Fertilizer plan"}</summary>`;
+  if(!f)return head+`<pre>${esc(L?"இந்த இடத்தில் இந்தப் பயிருக்கு வெளியிடப்பட்ட உரப் பரிந்துரை கிடைக்கவில்லை. உங்கள் வேளாண் அலுவலகத்தைக் கேளுங்கள்.":"No published fertilizer recommendation was found for this crop here. Ask the local agricultural office.")}</pre></details>`;
+  const lines=[];
+  const nut=fnut;
+  lines.push(L?`ரசாயன உரம் (${f.sys?f.sys.ta:""})`.replace(" ()",""):`Inorganic (${f.sys?f.sys.en:""})`.replace(" ()",""));
+  lines.push(L?`  தழை (N) ${nut(f.n)} : மணி (P₂O₅) ${nut(f.p)} : சாம்பல் (K₂O) ${nut(f.k)} கி.கி/ஹெ.`:`  N ${nut(f.n)} : P₂O₅ ${nut(f.p)} : K₂O ${nut(f.k)} kg per hectare`);
+  fertProducts(f).forEach(x=>lines.push(L?`  = ${x.name[1]} ${x.ha} கி.கி/ஹெ. (ஏக்கருக்கு ${x.ac} கி.கி)`:`  = ${x.name[0]} ${x.ha} kg/ha (${x.ac} kg per acre)`));
+  fertItems(f.extra).forEach(x=>lines.push("  + "+x));
+  if(f.org&&f.org.length){lines.push(L?"இயற்கை உரம்":"Organic"); fertItems(f.org).forEach(x=>lines.push("  "+x))}
+  else lines.push(L?"இயற்கை உரம்: இந்த இடத்துக்கு வெளியிடப்பட்ட அளவு கிடைக்கவில்லை":"Organic: no published quantity was found for this place");
+  if(f.bio&&f.bio.length){lines.push(L?"உயிர் உரம்":"Biofertilizer"); fertItems(f.bio).forEach(x=>lines.push("  "+x))}
+  if(f.split)lines.push((L?"எப்போது: ":"When: ")+(L?f.split.ta:f.split.en));
+  if(f.note)lines.push(L?f.note.ta:f.note.en);
+  lines.push((L?"ஆதாரம்: ":"Source: ")+f.src);
+  lines.push(L?"இது பொதுப் பரிந்துரை. மண் பரிசோதனை இருந்தால் அதன்படி மாற்றுங்கள்.":"This is the general recommendation. Adjust it to a soil test if you have one.");
+  return head+`<pre>${esc(lines.join("\n"))}</pre>${f.url?`<a class="fsrc" href="${f.url}" target="_blank" rel="noopener">${L?"ஆதாரத்தைத் திற":"Open the source"}</a>`:""}</details>`;
+}
 
 /* ============================================================
    TEXT
@@ -382,7 +437,7 @@ en:{hero:"What should this field grow next?",
  math:"See the math",restTitle:"All crops for this village",crop:"Crop",window:"In the field",
  chatTitle:"Ask your field",chatSrc:"Answers use only this village's data and scores",
  qph:"Can I sow turmeric this month?",askBtn:"Ask",
- s1:"Can I sow turmeric this month?",s2:"What should I grow next?",s3:"What happens in 2050?",s4:"How is my soil?",
+ s1:"Can I sow turmeric this month?",s2:"What should I grow next?",s3:"What happens in 2050?",s4:"How is my soil?",s5:"What fertilizer does it need?",
  aiSummary:"Connect an AI model (optional)",aiNote:"Without a key, answers are computed by the scoring engine and work offline. With an Anthropic API key, the model is given only this village's numbers and told to refuse anything beyond them. The key stays in this browser.",
  aiSave:"Save key",aiOn:"AI model connected.",aiOff:"Using the offline answer engine.",
  tagRule:"Offline answer engine",tagAI:"AI model, grounded in village data",tagFail:"AI unreachable; offline answer engine",
@@ -413,7 +468,7 @@ ta:{hero:"இந்த வயலில் அடுத்து எந்தப�
  math:"கணக்கைப் பாருங்கள்",restTitle:"இந்தக் கிராமத்துக்கான எல்லாப் பயிர்களும்",crop:"பயிர்",window:"வயலில் இருக்கும் காலம்",
  chatTitle:"உங்கள் வயலிடம் கேளுங்கள்",chatSrc:"இந்தக் கிராமத்தின் தரவு, மதிப்பெண்களை மட்டுமே வைத்துப் பதில்",
  qph:"இந்த மாதம் மஞ்சள் விதைக்கலாமா?",askBtn:"கேள்",
- s1:"இந்த மாதம் மஞ்சள் விதைக்கலாமா?",s2:"அடுத்து எந்தப் பயிர் போடலாம்?",s3:"2050-இல் என்ன ஆகும்?",s4:"என் மண் எப்படி இருக்கிறது?",
+ s1:"இந்த மாதம் மஞ்சள் விதைக்கலாமா?",s2:"அடுத்து எந்தப் பயிர் போடலாம்?",s3:"2050-இல் என்ன ஆகும்?",s4:"என் மண் எப்படி இருக்கிறது?",s5:"என்ன உரம் போட வேண்டும்?",
  aiSummary:"AI மாதிரியை இணைக்க (விருப்பம்)",aiNote:"சாவி இல்லாமல், மதிப்பெண் இயந்திரமே பதில் தரும்; இணையம் இல்லாமலும் வேலை செய்யும். Anthropic API சாவி கொடுத்தால், AI-க்கு இந்தக் கிராமத்தின் எண்கள் மட்டுமே தரப்படும்; அதற்கு அப்பால் பதில் சொல்ல மறுக்கும். சாவி இந்த உலாவியிலேயே இருக்கும்.",
  aiSave:"சாவியைச் சேமி",aiOn:"AI மாதிரி இணைக்கப்பட்டது.",aiOff:"இணையமில்லாப் பதில் இயந்திரம் பயன்பாட்டில்.",
  tagRule:"இணையமில்லாப் பதில் இயந்திரம்",tagAI:"AI மாதிரி, கிராமத் தரவின் அடிப்படையில்",tagFail:"AI கிடைக்கவில்லை; இணையமில்லாப் பதில் இயந்திரம்",
@@ -557,7 +612,7 @@ function renderStatic(){
   $("q").placeholder=t("qph");
   $("sow").innerHTML=MONL[S.lang].map((m,i)=>`<option value="${i}">${m}</option>`).join("");
   $("sow").value=S.sow;
-  $("sugg").innerHTML=["s1","s2","s3","s4"].map(k=>`<button type="button">${esc(t(k))}</button>`).join("");
+  $("sugg").innerHTML=["s1","s2","s3","s4","s5"].map(k=>`<button type="button">${esc(t(k))}</button>`).join("");
   $("aistate").textContent=aiKey()?t("aiOn"):t("aiOff");
   renderData();
 }
@@ -665,6 +720,7 @@ function cardHTML(r,i){
     <div class="ing">${bar(t("iWater"),r.wf,"#2C6FA8")}${bar(t("iSoil"),r.soil,"#6B4423")}${bar(t("iProfit"),r.profit,"#E2A300")}</div>
     <div class="chips">${chips.join("")}</div>
     <details class="math"><summary>${t("math")}</summary><pre>${esc(mathText(r))}</pre></details>
+    ${fertHTML(r)}
   </article>`;
 }
 function renderAdvisor(animate){
@@ -673,11 +729,12 @@ function renderAdvisor(animate){
   const ranked=rankAll(), box=$("cards"), now={};
   rankAll(2026).forEach(r=>now[r.id]=r.score); ranked.forEach(r=>r.d=r.score-now[r.id]);
   const fut=S.year>2026;
-  const open=new Set([...box.querySelectorAll("details[open]")].map(d=>d.closest(".card").dataset.id));
+  const dk=d=>d.closest(".card").dataset.id+(d.classList.contains("fert")?"|f":"|m");
+  const open=new Set([...box.querySelectorAll("details[open]")].map(dk));
   const before={}; if(animate)box.querySelectorAll(".card").forEach(el=>before[el.dataset.id]=el.getBoundingClientRect());
   box.innerHTML=ranked.slice(0,3).map(cardHTML).join("");
   box.querySelectorAll(".card").forEach(el=>{
-    if(open.has(el.dataset.id))el.querySelector("details").open=true;
+    el.querySelectorAll("details").forEach(d=>{if(open.has(dk(d)))d.open=true});
     if(!animate||matchMedia("(prefers-reduced-motion:reduce)").matches)return;
     const b=before[el.dataset.id], a=el.getBoundingClientRect();
     if(b){const dx=b.left-a.left,dy=b.top-a.top; if(dx||dy)el.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:"none"}],{duration:420,easing:"cubic-bezier(.2,.8,.2,1)"})}
@@ -743,7 +800,8 @@ function renderData(){
    [L?"பாசனப் பங்கு: தமிழ்நாடு":"Irrigated share: Tamil Nadu","https://des.tn.gov.in/sites/default/files/2025-07/5.%20IRRIGATION.pdf",L?"தமிழ்நாடு புள்ளியியல் கையேடு 2022-23, அட்டவணை 5.4 (நெல், சோளம், கரும்பு, பருத்தி, நிலக்கடலை); வெங்காயம்: TRS அறிக்கை 2021-22. பயிர்ப் பரப்பில் பாதிக்கு மேல் பாசனம் என்றால் பாசனப் பயிர். மஞ்சள், மக்காச்சோளம், பயறு வகைகள், எள்: குழுவின் மதிப்பீடு.":"Statistical Hand Book of Tamil Nadu 2022-23, Table 5.4 (paddy, sorghum, sugarcane, cotton, groundnut); onion from the TRS report 2021-22. A crop counts as irrigated when more than half its area is irrigated. Turmeric, maize, the pulses and sesame are the team's estimate."],
    [L?"லாபம், பாசனம்: ஃப்ரெஸ்னோ":"Profit and irrigation: Fresno","https://www.fresnocountyca.gov/files/sharedassets/county/v/1/agricultural-commissioner/ag-crop-reports/ag-crop-and-livestock-report-2025.pdf",L?"Fresno County Crop & Livestock Report 2025: அறுவடை ஏக்கருக்கு மொத்த மதிப்பு (நிகர லாபம் அல்ல). தட்டைப்பயறு: UC Davis 2026 செலவு ஆய்வு. பாசனப் பங்கு: USDA Census of Agriculture 2022 (பருத்தி, குதிரைமசால், மக்காச்சோளம், கோதுமை); தக்காளி, பூண்டு, வெங்காயம்: குழுவின் மதிப்பீடு.":"Fresno County Crop & Livestock Report 2025: gross value per harvested acre (not net profit). Cowpea is from the UC Davis 2026 cost study. Irrigated share: USDA Census of Agriculture 2022 (cotton, alfalfa, maize, wheat); tomato, garlic and onion are the team's estimate."],
    [L?"லாபம், பாசனம்: கானோ":"Profit and irrigation: Kano","https://cgspace.cgiar.org/bitstream/10568/88189/3/U11RepAyanwaleBaselineNothomDev.pdf",L?"IITA KKM அடிப்படை ஆய்வு (Ayanwale et al. 2011), புங்குரே, 2008: கம்பு, சோளம், மக்காச்சோளம், தட்டைப்பயறு, நிலக்கடலை ஆகியவற்றின் மொத்த லாபம்; இவை ஒன்றுக்கொன்று ஒப்பிட்டு வரிசைப்படுத்தப்பட்டன (நிலக்கடலை = 3). நெல், தக்காளி, வெங்காயம், எள், சோயா: குழுவின் மதிப்பீடு. மானாவாரி / வறண்ட காலப் பாசனம்: Sufiyan et al. 2022.":"IITA KKM baseline study (Ayanwale et al. 2011), Bunkure, 2008: gross margin for millet, sorghum, maize, cowpea and groundnut, ranked against each other with groundnut held at 3. Rice, tomato, onion, sesame and soybean are the team's estimate. Rain-fed or dry-season irrigated: Sufiyan et al. 2022."],
-   [L?"மண் விளைவு":"Soil effect","https://www.fao.org/4/a0443e/a0443e03.pdf",L?"பயறு வகைகள் தழைச்சத்தை நிலைநிறுத்துகின்றன (நிலக்கடலை 110–150, சோயா 100+, உளுந்து 60, பச்சைப்பயறு 55, தட்டைப்பயறு 60 கி.கி N/ஹெ.); மற்ற பயிர்கள் சத்தை எடுக்கின்றன: FAO Fertilizer and Plant Nutrition Bulletin 16, அட்டவணை 22, 29, அத்தியாயம் 8. ஒவ்வொரு வகைக்கும் 0–1 மதிப்பு குழுவின் தீர்மானம்.":"Legumes fix nitrogen (groundnut 110–150, soybean 100 or more, black gram 60, green gram 55, cowpea 60 kg N/ha) and other crops draw nutrients down: FAO Fertilizer and Plant Nutrition Bulletin 16, Tables 22 and 29 and chapter 8. The 0–1 value given to each class is the team's judgement."]
+   [L?"மண் விளைவு":"Soil effect","https://www.fao.org/4/a0443e/a0443e03.pdf",L?"பயறு வகைகள் தழைச்சத்தை நிலைநிறுத்துகின்றன (நிலக்கடலை 110–150, சோயா 100+, உளுந்து 60, பச்சைப்பயறு 55, தட்டைப்பயறு 60 கி.கி N/ஹெ.); மற்ற பயிர்கள் சத்தை எடுக்கின்றன: FAO Fertilizer and Plant Nutrition Bulletin 16, அட்டவணை 22, 29, அத்தியாயம் 8. ஒவ்வொரு வகைக்கும் 0–1 மதிப்பு குழுவின் தீர்மானம்.":"Legumes fix nitrogen (groundnut 110–150, soybean 100 or more, black gram 60, green gram 55, cowpea 60 kg N/ha) and other crops draw nutrients down: FAO Fertilizer and Plant Nutrition Bulletin 16, Tables 22 and 29 and chapter 8. The 0–1 value given to each class is the team's judgement."],
+   [L?"உரத் திட்டம்":"Fertilizer plan","https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf",L?"வெள்ளோடு: TNAU பயிர் உற்பத்தி வழிகாட்டி 2020 (வேளாண்மை, தோட்டக்கலை): தழை, மணி, சாம்பல் அளவு, தொழு உரம், உயிர் உரம். ஃப்ரெஸ்னோ: CDFA FREP California Fertilization Guidelines (பவுண்டு/ஏக்கரிலிருந்து மாற்றப்பட்டது); இயற்கை உர அளவு கிடைக்கவில்லை. கானோ: நைஜீரிய அரசின் பரிந்துரை (FMARD 2015, IFDC 2018 வழியாக), NAERLS அறிக்கைகள் 239, 242; எள்ளுக்கு அளவு கிடைக்கவில்லை. யூரியா (46% N), சூப்பர் பாஸ்பேட் (16% P₂O₅), பொட்டாஷ் (60% K₂O) அளவுகள் சத்து அளவிலிருந்து கணக்கிடப்பட்டவை.":"Vellode: TNAU Crop Production Guide 2020 (Agriculture and Horticulture) for N, P₂O₅, K₂O, farmyard manure and biofertilizer. Fresno: CDFA FREP California Fertilization Guidelines, converted from lb/acre; no organic quantity was found. Kano: Nigeria's federal recommendation (FMARD 2015, via the IFDC 2018 review) and NAERLS bulletins 239 and 242; nothing was found for sesame. Urea (46% N), single super phosphate (16% P₂O₅) and muriate of potash (60% K₂O) amounts are arithmetic from the nutrient figures."]
   ];
   $("datalist").innerHTML=items.map(i=>`<li><a href="${i[1]}" target="_blank" rel="noopener">${i[0]}</a>: ${i[2]}</li>`).join("");
 }
@@ -786,8 +844,12 @@ function pick(k){
 function aiKey(){try{return localStorage.getItem("uzhavan_ai_key")||""}catch(e){return ""}}
 function findCrop(q){
   const s=q.toLowerCase(); const ids=REGION[regionId()].map(r=>r[0]);
-  let hit=null;
-  for(const id in CROPS)for(const a of CROPS[id].al)if(/^[a-z ]+$/.test(a)?new RegExp("\\b"+a).test(s):s.includes(a)){ if(!hit||ids.includes(id))hit=id }
+  // longest alias wins (so "மக்காச்சோளம்" is maize, not sorghum); a crop grown in this village beats one that is not
+  let hit=null, best=-1;
+  for(const id in CROPS)for(const a of CROPS[id].al){
+    if(!(/^[a-z ]+$/.test(a)?new RegExp("\\b"+a).test(s):s.includes(a)))continue;
+    const sc=(ids.includes(id)?1000:0)+a.length; if(sc>best){best=sc;hit=id}
+  }
   return hit;
 }
 function findMonth(q){
@@ -805,7 +867,7 @@ function ruleAnswer(q){
   const s=q.toLowerCase(), crop=findCrop(q), mon=findMonth(q);
   const ids=REGION[regionId()].map(r=>r[0]);
   // sow question
-  if(crop){
+  if(crop&&!/fertili[sz]|manure|urea|npk|compost|nutrient|உரம்|உரத்|எரு|யூரியா/.test(s)){
     if(!ids.includes(crop))return (ta?`${nm}-க்கான பயிர்ப் பட்டியலில் ${N(crop)} இல்லை; அதனால் அதற்கு மதிப்பெண் தர இயலாது. பட்டியலில் உள்ளவை: ${ids.map(N).join(", ")}.`:`${N(crop)} is not in the crop table for ${nm}, so I cannot score it. I can score: ${ids.map(N).join(", ")}.`);
     const m=mon==null?S.sow:mon, all=rankAll(yr,m), r=all.find(x=>x.id===crop), c=CROPS[crop], best=all[0];
     let a;
@@ -829,6 +891,15 @@ function ruleAnswer(q){
       if(best.id!==crop)a+=`\nTop choice for that month: ${N(best.id)} (${best.score}/100).`;
     }
     return a+src;
+  }
+  // fertilizer
+  if(/fertili[sz]|manure|urea|npk|compost|nutrient|உரம்|உரத்|எரு|யூரியா/.test(s)){
+    const id=crop&&ids.includes(crop)?crop:rankAll(yr,mon==null?S.sow:mon)[0].id, f=fertFor(id);
+    if(!f)return ta?`${nm}-இல் ${N(id)}-க்கு வெளியிடப்பட்ட உரப் பரிந்துரை கிடைக்கவில்லை. உங்கள் வேளாண் அலுவலகத்தைக் கேளுங்கள்.`:`No published fertilizer recommendation was found for ${N(id)} at ${nm}. Ask the local agricultural office.`;
+    const pr=fertProducts(f).map(x=>ta?`${x.name[1]} ${x.ac} கி.கி`:`${x.name[0]} ${x.ac} kg`).join(", ");
+    const nv=fnut, org=fertItems(f.org).concat(fertItems(f.bio)).join("; ");
+    return (ta?`${N(id)}-க்கு உரம் (${nm}): தழை ${nv(f.n)} : மணி ${nv(f.p)} : சாம்பல் ${nv(f.k)} கி.கி/ஹெ.${pr?`\nஏக்கருக்கு: ${pr}.`:""}${org?`\nஇயற்கை, உயிர் உரம்: ${org}.`:""}${f.split?`\nஎப்போது: ${f.split.ta}`:""}\nஆதாரம்: ${f.src}. மண் பரிசோதனை இருந்தால் அதன்படி மாற்றுங்கள்.`
+      :`Fertilizer for ${N(id)} at ${nm}: N ${nv(f.n)} : P₂O₅ ${nv(f.p)} : K₂O ${nv(f.k)} kg per hectare.${pr?`\nPer acre: ${pr}.`:""}${org?`\nOrganic and biofertilizer: ${org}.`:""}${f.split?`\nWhen: ${f.split.en}`:""}\nSource: ${f.src}. Adjust to a soil test if you have one.`);
   }
   // future
   if(/2030|2040|2050|future|climate|எதிர்கால|காலநிலை/.test(s)){
@@ -927,7 +998,7 @@ async function aiCheck(){
   catch(e){st.textContent=(L?"AI மாதிரி பதிலளிக்கவில்லை (":"AI model did not answer (")+String(e.message).slice(0,140)+(L?"). இணையமில்லாப் பதில் இயந்திரம் பயன்படும்.":"). The offline answer engine will be used.")}
 }
 
-window.UZ={S,rankAll,scoreCrop,climate,VILLAGES,CROPS,ruleAnswer};
+window.UZ={S,rankAll,scoreCrop,climate,VILLAGES,CROPS,ruleAnswer,FERT,fertFor,fertProducts};
 initMap(); renderStatic(); renderAll(); refreshLive();
 </script>
 </body>

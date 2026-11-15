@@ -35,6 +35,7 @@ Farmers in Erode plan around the north-east monsoon, and they tell us it no long
 2. **Crop rotation advisor.** The top three crops for the chosen sowing month, after the crop just harvested. The farmer's three sliders (save water, soil health, profit) are the weights in the score.
 3. **Climate time machine.** Drag from 2026 to 2050. Rain and temperature shift by the month-by-month change projected by five NEX-GDDP-CMIP6 models under SSP2-4.5, and every crop is re-scored. Each card shows how many points it gained or lost against today.
 4. **Ask your field.** Questions in Tamil or English, answered from the village's data and scores only. It works with no internet connection.
+5. **Fertilizer plan.** Each crop card opens to the published fertilizer recommendation for that crop and place: nitrogen, phosphorus and potash per hectare, the same as bags of urea, super phosphate and potash per acre, plus farmyard manure and biofertilizer where the source gives them.
 
 It runs for three pilot places with the same engine: Vellode (Erode, India), Fresno County (California, USA) and Kano (Nigeria). Tapping the map loads the climate for any other point on Earth.
 
@@ -71,6 +72,9 @@ The irrigation top-up matters. Vellode gets about 727 mm of rain a year and turm
 | Fresno County Crop & Livestock Report 2025 | Profit rank for Fresno (gross value per acre) | https://www.fresnocountyca.gov/files/sharedassets/county/v/1/agricultural-commissioner/ag-crop-reports/ag-crop-and-livestock-report-2025.pdf |
 | USDA Census of Agriculture 2022 | Which Fresno crops are irrigated | https://www.nass.usda.gov/Publications/AgCensus/2022/ |
 | IITA KKM baseline study (Ayanwale et al. 2011) | Order of the rain-fed crops in Kano (gross margin) | https://cgspace.cgiar.org/bitstream/10568/88189/3/U11RepAyanwaleBaselineNothomDev.pdf |
+| TNAU Crop Production Guide 2020 | Fertilizer plan for the Tamil Nadu crops (inorganic, farmyard manure, biofertilizer) | https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf |
+| CDFA FREP California Fertilization Guidelines | Fertilizer plan for Fresno | https://www.cdfa.ca.gov/is/ffldrs/frep/FertilizationGuidelines/ |
+| Nigeria FMARD recommendation, in the IFDC AfricaFertilizer review 2018; NAERLS bulletins 239 and 242 | Fertilizer plan for Kano | https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content |
 | FAO Fertilizer and Plant Nutrition Bulletin 16 | Soil effect classes: nitrogen fixed by legumes, nutrients taken up by other crops | https://www.fao.org/4/a0443e/a0443e03.pdf |
 
 Roadmap, not used yet: NASA SMAP soil moisture, and NISAR, the radar satellite built by NASA and ISRO.
@@ -79,6 +83,7 @@ Roadmap, not used yet: NASA SMAP soil moisture, and NISAR, the radar satellite b
 
 - The 2050 view is a scenario, not a forecast. The projected change is modest: about +0.9 °C and +6% annual rain at Vellode, +1.1 °C at Fresno, +1.0 °C at Kano.
 - Some values are still the team's estimate because no published figure was found: the profit rank for sesame at Vellode and for rice, vegetables, sesame and soybean at Kano; whether turmeric, maize, the pulses and sesame count as irrigated at Vellode; water need for green gram, cowpea and garlic. The page marks each one under "See the math".
+- Fertilizer plans are the general published recommendation, not adjusted to a soil test. No organic-manure quantity was found for Fresno or Kano, and no recommendation at all for sesame at Kano.
 - The profit figures are net return in Tamil Nadu, gross value in Fresno and gross margin in Kano, so ranks are compared only inside one village.
 - The 0 to 1 soil effect given to each class of crop is the team's judgement; the classes come from FAO Bulletin 16.
 - SoilGrids has no value at the exact Vellode and Kano points; the soil card uses the nearest cell that has data and says how far away it is.

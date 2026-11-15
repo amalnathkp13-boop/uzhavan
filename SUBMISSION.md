@@ -65,7 +65,7 @@ The irrigation top-up matters. Vellode gets about 727 mm of rain a year and turm
 | NASA NEX-GDDP-CMIP6 | 2030, 2040 and 2050 climate: daily temperature and rain at each village, SSP2-4.5, models ACCESS-CM2, GFDL-ESM4, IITM-ESM, MIROC6, MPI-ESM1-2-HR | https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6 |
 | NASA GIBS, MODIS Terra NDVI 8-day | Greenness layer on the map | https://nasa-gibs.github.io/gibs-api-docs/ |
 | ISRIC SoilGrids v2.0 | Soil texture, pH, organic carbon | https://soilgrids.org |
-| TNAU Agritech Portal | Water need and duration of Tamil Nadu crops | https://agritech.tnau.ac.in |
+| TNAU Agritech Portal | Water need and duration of Tamil Nadu crops | https://tnau.ac.in/site/research/wp-content/uploads/sites/60/2020/02/Agriculture-CPG-2020.pdf |
 | FAO Irrigation Water Management Training Manual 3 | Water need and duration of the other crops | https://www.fao.org/4/s2022e/s2022e00.htm |
 | FAO EcoCrop | Crop temperature ranges | https://gaez.fao.org/pages/ecocrop |
 | Govt of India DES, cost of cultivation 2021-22 | Profit rank for Tamil Nadu crops (net return per hectare) | https://desagri.gov.in/wp-content/uploads/2023/06/CS-Consolidated-Crop-year-wise-2021-22-4.xlsx |
@@ -73,7 +73,7 @@ The irrigation top-up matters. Vellode gets about 727 mm of rain a year and turm
 | Fresno County Crop & Livestock Report 2025 | Profit rank for Fresno (gross value per acre) | https://www.fresnocountyca.gov/files/sharedassets/county/v/1/agricultural-commissioner/ag-crop-reports/ag-crop-and-livestock-report-2025.pdf |
 | USDA Census of Agriculture 2022 | Which Fresno crops are irrigated | https://www.nass.usda.gov/Publications/AgCensus/2022/ |
 | IITA KKM baseline study (Ayanwale et al. 2011) | Order of the rain-fed crops in Kano (gross margin) | https://cgspace.cgiar.org/bitstream/10568/88189/3/U11RepAyanwaleBaselineNothomDev.pdf |
-| TNAU Crop Production Guide 2020 | Fertilizer plan for the Tamil Nadu crops (inorganic, farmyard manure, biofertilizer) | https://web.archive.org/web/20250521115847/https://agritech.tnau.ac.in//pdf/AGRICULTURE.pdf |
+| TNAU Crop Production Guide 2020 | Fertilizer plan for the Tamil Nadu crops (inorganic, farmyard manure, biofertilizer) | https://tnau.ac.in/site/research/wp-content/uploads/sites/60/2020/02/Agriculture-CPG-2020.pdf |
 | CDFA FREP California Fertilization Guidelines | Fertilizer plan for Fresno | https://www.cdfa.ca.gov/is/ffldrs/frep/FertilizationGuidelines/ |
 | Nigeria FMARD recommendation, in the IFDC AfricaFertilizer review 2018; NAERLS bulletins 239 and 242 | Fertilizer plan for Kano | https://api.hub.ifdc.org/server/api/core/bitstreams/6c5b908e-68d8-446d-90ca-4ac36076841e/content |
 | FAO Fertilizer and Plant Nutrition Bulletin 16 | Soil effect classes: nitrogen fixed by legumes, nutrients taken up by other crops | https://www.fao.org/4/a0443e/a0443e03.pdf |

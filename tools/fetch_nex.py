@@ -11,9 +11,12 @@ POINTS = {"vellode": (11.34, 77.72), "fresno": (36.60, -119.90), "kano": (12.00,
           "c45_309": (11.375, 77.375), "c46_309": (11.625, 77.375), "c44_311": (11.125, 77.875), "c44_310": (11.125, 77.625),
           "c46_310": (11.625, 77.625), "c47_308": (11.875, 77.125), "c45_308": (11.375, 77.125)}
 YEARS = list(range(2001, 2056))
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nex_cache.json")
+# NEX_MODELS (comma list) and NEX_OUT let several copies run side by side on different models; each starts from nex_cache.json
+if os.environ.get("NEX_MODELS"): MODELS = os.environ["NEX_MODELS"].split(",")
+MAIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nex_cache.json")
+OUT = os.environ.get("NEX_OUT") or MAIN
 lock = threading.Lock()
-cache = json.load(open(OUT)) if os.path.exists(OUT) else {}
+cache = json.load(open(OUT)) if os.path.exists(OUT) else (json.load(open(MAIN)) if os.path.exists(MAIN) else {})
 
 
 def get(url, timeout=180):
@@ -83,7 +86,7 @@ todo = [t for t in tasks if f"{t[0]}|{t[1]}|{t[2]}|{t[4]}" not in cache]
 print("tasks", len(tasks), "todo", len(todo), flush=True)
 done = fail = 0
 t0 = time.time()
-with ThreadPoolExecutor(8) as ex:
+with ThreadPoolExecutor(int(os.environ.get("NEX_THREADS", "8"))) as ex:
     futs = {ex.submit(job, *t): t for t in todo}
     for f in as_completed(futs):
         try:
